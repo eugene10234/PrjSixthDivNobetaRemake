@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1125802692895463063}
   - component: {fileID: 2499585980250502091}
   m_Layer: 0
-  m_Name: Third Person Aim Camera 2
+  m_Name: Third Person Aim Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
