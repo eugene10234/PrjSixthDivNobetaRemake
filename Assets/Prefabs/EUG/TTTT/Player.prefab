@@ -20159,8 +20159,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3702919924221808637}
   - component: {fileID: 2785447390824538233}
-  - component: {fileID: 8518992600756251007}
-  - component: {fileID: 2148980729025424445}
   - component: {fileID: 7813341636895675953}
   m_Layer: 3
   m_Name: Player
@@ -20211,44 +20209,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.7, z: 0}
---- !u!114 &8518992600756251007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8669587372789732533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fc0d03f80b690543849524b7904096e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aimLaser: {fileID: 0}
-  aim: {fileID: 0}
-  isAimingPrecisly: 0
-  isLockingToTarget: 0
-  cameraTarget: {fileID: 0}
-  mFollowPoint: {fileID: 7114945921547768294}
-  mHorizontalSensetivity: 5
-  mVerticalSensetivity: 2
-  minCameraDistance: 1
-  maxCameraDistance: 3
-  cameraSensetivity: 5
-  aimLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &2148980729025424445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8669587372789732533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69a0ae65372c42b49a56537a91ba932b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7813341636895675953
 MonoBehaviour:
   m_ObjectHideFlags: 0

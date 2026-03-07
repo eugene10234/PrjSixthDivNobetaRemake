@@ -19,9 +19,9 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
 
             // 應用跳躍速度
-            context.MovementService.ApplyJump(
-                context.Config.jumpHeight,
-                context.Config.gravity
+            ctx.MovementService.ApplyJump(
+                ctx.Config.jumpHeight,
+                ctx.Config.gravity
             );
 
             PlayAnimation("Jump");
@@ -33,7 +33,7 @@ namespace Nobeta.EUG.FSM.States
             base.Update();
 
             // 當開始下落時，轉換到下落狀態
-            if (context.MovementService.CurrentVelocity.y < 0)
+            if (ctx.MovementService.CurrentVelocity.y < 0)
             {
                 stateMachine.ChangeState<FallingState>();
             }

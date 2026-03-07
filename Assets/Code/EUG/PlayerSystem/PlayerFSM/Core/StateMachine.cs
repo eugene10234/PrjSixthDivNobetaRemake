@@ -119,7 +119,7 @@ namespace Nobeta.EUG.FSM.Core
             OnStateChanged?.Invoke(previousState, currentState);
 
 #if UNITY_EDITOR
-            Debug.Log($"[FSM] {previousState?.StateName ?? "None"} → {currentState.StateName}");
+            //Debug.Log($"[FSM] {previousState?.StateName ?? "None"} → {currentState.StateName}");
 #endif
         }
 

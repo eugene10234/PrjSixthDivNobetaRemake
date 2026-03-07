@@ -8,7 +8,6 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-[RequireComponent(typeof(mbPlayerController))]
 public class PlayerLifetimeScope : LifetimeScope
 {
     [Header("配置")]
@@ -17,7 +16,6 @@ public class PlayerLifetimeScope : LifetimeScope
     [Header("組件")]
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
-    //[SerializeField] PlayerController playerController;
     //[Header("除錯選項")]
     //[SerializeField] private bool showDebugInfo = true;
     //[SerializeField] private bool logStateTransitions = true;
@@ -41,7 +39,6 @@ public class PlayerLifetimeScope : LifetimeScope
 
         base.Awake();
     }
-
 
     protected override void Configure(IContainerBuilder builder)
     {
@@ -72,7 +69,7 @@ public class PlayerLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<PlayerControlPrensenter>();
         // 註冊 PlayerController（自動從 Hierarchy 注入）
         Debug.LogWarning("RegisterComponentInHierarchy<mbPlayerController>");
-        builder.RegisterComponentInHierarchy<mbPlayerController>();
+        //builder.RegisterComponentInHierarchy<mbPlayerController>();
         //var mbCharacterController = GetComponent<mbPlayerController>();
         //builder.RegisterComponent(mbCharacterController);
         //builder.RegisterComponent(playerController);
@@ -87,8 +84,8 @@ public class PlayerLifetimeScope : LifetimeScope
         //builder.Register<IPlayerInputService, PlayerInputService>(Lifetime.Singleton);
 
 
-        // 攝影機服務
-        builder.Register<ICameraService, CameraService>(Lifetime.Scoped);
+        //// 攝影機服務
+        //builder.Register<ICameraService, CameraService>(Lifetime.Scoped);
 
         // 動畫服務
         builder.Register<IAnimationService, AnimationService>(Lifetime.Scoped);

@@ -18,7 +18,7 @@ namespace Nobeta.EUG.FSM.Services
             this.animator = animator;
         }
 
-        public void PlayAnimation(string animationName, float crossFadeDuration = 0.1f)
+        public void PlayAnimation(string animationName, float crossFadeDuration = 0.25f)
         {
             if (animator == null)
             {

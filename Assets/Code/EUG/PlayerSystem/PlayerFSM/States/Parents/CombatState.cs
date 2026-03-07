@@ -51,7 +51,7 @@ namespace Nobeta.EUG.FSM.States
         /// </summary>
         protected bool HasEnoughMana(int cost)
         {
-            return context.CurrentMana >= cost;
+            return ctx.CurrentMana >= cost;
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nobeta.EUG.FSM.States
         /// </summary>
         protected void ConsumeMana(int cost)
         {
-            context.CurrentMana = Mathf.Max(0, context.CurrentMana - cost);
+            ctx.CurrentMana = Mathf.Max(0, ctx.CurrentMana - cost);
 
             // 發布事件
             //PublishEvent(new ManaConsumedEvent
@@ -74,7 +74,7 @@ namespace Nobeta.EUG.FSM.States
         /// </summary>
         protected Vector3 GetAimDirection()
         {
-            return context.CameraService.GetCameraForward();
+            return ctx.CameraService.GetCameraForward();
         }
     }
 }

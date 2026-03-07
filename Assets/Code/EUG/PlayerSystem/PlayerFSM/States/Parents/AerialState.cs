@@ -18,13 +18,13 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            _previousSpeed = context.CurrentSpeed;
+            _previousSpeed = ctx.CurrentSpeed;
             _previousMoveDirection = GetMoveDirection();
         }
         public virtual void Update()
         {
             // 檢查著地
-            if (context.IsGrounded && context.MovementService.CurrentVelocity.y <= 0)
+            if (ctx.IsGrounded && ctx.MovementService.CurrentVelocity.y <= 0)
             {
                 stateMachine.ChangeState<LandingState>();
             }
@@ -35,19 +35,19 @@ namespace Nobeta.EUG.FSM.States
             // 應用空中移動
             Vector3 direction = GetMoveDirection();
 
-            context.MovementService.ApplyAirMovement(
+            ctx.MovementService.ApplyAirMovement(
                 _previousSpeed,
                 _previousMoveDirection,
                 direction,
-                context.Config.walkSpeed,
+                ctx.Config.walkSpeed,
                 0.5f // 空中控制係數
             );
 
             // 應用重力
-            context.MovementService.ApplyGravity(context.Config.gravity);
+            ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
             // 執行移動
-            context.MovementService.ExecuteMovement();
+            ctx.MovementService.ExecuteMovement();
         }
 
         #region Input Handlers
@@ -55,7 +55,7 @@ namespace Nobeta.EUG.FSM.States
         public override void OnDodgeInput()
         {
             // 空中閃避
-            if (context.CanDodge)
+            if (ctx.CanDodge)
             {
                 stateMachine.ChangeState<DodgingState>();
             }
@@ -67,8 +67,8 @@ namespace Nobeta.EUG.FSM.States
 
         protected Vector3 GetMoveDirection()
         {
-            Vector2 input = context.InputService.MoveInput;
-            return context.CameraService.GetCameraRelativeDirection(input);
+            Vector2 input = ctx.InputService.MoveInput;
+            return ctx.CameraService.GetCameraRelativeDirection(input);
         }
 
         #endregion

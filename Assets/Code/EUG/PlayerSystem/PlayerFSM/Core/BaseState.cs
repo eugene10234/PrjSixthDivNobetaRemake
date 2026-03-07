@@ -12,7 +12,7 @@ namespace Nobeta.EUG.FSM.Core
     /// </summary>
     public abstract class BaseState : IState, IEnterable
     {
-        protected readonly StateContext context;
+        protected readonly StateContext ctx;
         protected readonly StateMachine stateMachine;
 
         public virtual string StateName => GetType().Name;
@@ -21,7 +21,7 @@ namespace Nobeta.EUG.FSM.Core
         // 構造函數（VContainer 注入）
         protected BaseState(StateContext context, StateMachine stateMachine)
         {
-            this.context = context;
+            this.ctx = context;
             this.stateMachine = stateMachine;
         }
 
@@ -124,7 +124,7 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         protected void PlayAnimation(string animationName, float crossFadeDuration = 0.25f)
         {
-            context.AnimationService.PlayAnimation(animationName, crossFadeDuration);
+            ctx.AnimationService.PlayAnimation(animationName, crossFadeDuration);
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         protected void PlaySound(string soundName, float volume = 1f)
         {
-            context.AudioService.PlaySFX(soundName, volume);
+            ctx.AudioService.PlaySFX(soundName, volume);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         protected void PublishEvent<T>(T gameEvent) where T : struct
         {
-            context.EventBus.Publish(gameEvent);
+            ctx.EventBus.Publish(gameEvent);
         }
 
         #endregion

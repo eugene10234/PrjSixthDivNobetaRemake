@@ -29,8 +29,8 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            hitTimer = context.Config.hitStunDuration;
-            context.MovementService.ResetVelocity();
+            hitTimer = ctx.Config.hitStunDuration;
+            ctx.MovementService.ResetVelocity();
 
             PlayAnimation("Hit");
             PlaySound("Hit");
@@ -57,7 +57,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            context.MovementService.ResetVelocity();
+            ctx.MovementService.ResetVelocity();
 
             PlayAnimation("Die");
             PlaySound("Die");

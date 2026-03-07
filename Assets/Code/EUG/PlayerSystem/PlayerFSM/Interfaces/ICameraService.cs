@@ -2,6 +2,7 @@
 // Camera Service - 攝影機服務接口
 // ========================================================================
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Nobeta.EUG.FSM.Interfaces
@@ -25,6 +26,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// 獲取攝影機右方向
         /// </summary>
         Vector3 GetCameraRight();
+        void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim);
+        void ExecuteCameraRotation();
+        void Initial(CinemachineCamera cinemachineCamera);
     }
 }
 

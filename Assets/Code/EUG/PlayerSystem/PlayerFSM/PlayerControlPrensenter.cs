@@ -17,7 +17,7 @@ namespace Nobeta.EUG.FSM
         private readonly IPlayerInputService _inputService;
         private readonly IDetectionService _detectionService;
         private readonly IEventBus _eventBus;
-        private readonly mbPlayerController _mb;
+        private readonly DebugServiceMb _debugService;
         private bool showDebugInfo;
         //public PlayerControlPrensenter(IObjectResolver container)
         //{
@@ -30,14 +30,14 @@ namespace Nobeta.EUG.FSM
         //    Debug.Log("PlayerControlPrensenter constructed via IObjectResolver");
         //}
         public PlayerControlPrensenter(
-            mbPlayerController mb,
+            DebugServiceMb debugServiceMb,
             StateMachine stateMachine,
             StateContext context,
             IPlayerInputService inputService,
             IDetectionService groundDetection,
             IEventBus eventBus)
         {
-            _mb = mb;
+            _debugService = debugServiceMb;
             _stateMachine = stateMachine;
             _context = context;
             _inputService = inputService;
@@ -51,7 +51,7 @@ namespace Nobeta.EUG.FSM
             // Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
             //showDebugInfo = true;
-            _mb.DebugGUI+=DrawDebugInfo;
+            _debugService.Add(DrawDebugInfo);
             // 訂閱輸入事件
             Debug.LogWarning("mbPlayerControllerStart");
 
@@ -71,8 +71,8 @@ namespace Nobeta.EUG.FSM
 
         public void Tick()
         {
-            // 更新地面檢測
-            _detectionService.UpdateGroundDetection();
+            // 更新檢測
+            _detectionService.UpdateGlobalDetection(_context);
 
             // 更新狀態機
             _stateMachine.Update();
@@ -175,38 +175,31 @@ namespace Nobeta.EUG.FSM
 
         private void DrawDebugInfo()
         {
-            if (!Application.isPlaying) return;
-
-            GUILayout.BeginArea(new Rect(10, 10, 300, 400));
             GUILayout.Box("=== Player Controller (Event-Driven) ===");
 
             GUILayout.Label($"<b>State:</b> {GetCurrentStateName()}");
-            GUILayout.Label($"Health: {_context.CurrentHealth}/{_context.MaxHealth}");
-            GUILayout.Label($"Mana: {_context.CurrentMana}/{_context.MaxMana}");
-            GUILayout.Label($"Dodge Charges: {_context.DodgeCharges}");
-            GUILayout.Label($"Is Grounded: {_context.IsGrounded}");
+            GUILayout.Label($"Health: {_context.CurrentHealth}/{_context.MaxHealth}  Mana: {_context.CurrentMana}/{_context.MaxMana}");
+            GUILayout.Label($"Dodge Charges: {_context.DodgeCharges}  IsGrounded: {_context.IsGrounded}");
             GUILayout.Label($"Speed: {_context.CurrentSpeed:F2}");
 
             GUILayout.Space(10);
 
-            GUILayout.Label("<b>Input:</b>");
-            GUILayout.Label($"Move: {_context.InputService.MoveInput}");
-            GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
-            GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
+            //GUILayout.Label("<b>Input:</b>");
+            //GUILayout.Label($"Move: {_context.InputService.MoveInput}");
+            //GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
+            //GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
 
-            GUILayout.Space(10);
+            //GUILayout.Space(10);
 
-            if (GUILayout.Button("Take Damage (20)"))
-            {
-                TakeDamage(20);
-            }
+            //if (GUILayout.Button("Take Damage (20)"))
+            //{
+            //    TakeDamage(20);
+            //}
 
-            if (GUILayout.Button("Respawn"))
-            {
-                Respawn();
-            }
-
-            GUILayout.EndArea();
+            //if (GUILayout.Button("Respawn"))
+            //{
+            //    Respawn();
+            //}
 
         }
 

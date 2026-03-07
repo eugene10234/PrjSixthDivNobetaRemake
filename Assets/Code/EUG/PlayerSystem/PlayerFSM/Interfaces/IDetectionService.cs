@@ -1,6 +1,7 @@
 ﻿// ========================================================================
 // Ground Detection Service - 地面檢測服務接口
 // ========================================================================
+using Nobeta.EUG.FSM.Core;
 using System;
 using UnityEngine;
 
@@ -25,7 +26,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// <summary>
         /// 更新地面檢測
         /// </summary>
-        void UpdateGroundDetection();
+        void UpdateGlobalDetection(StateContext ctx);
+
+        bool IsMoving { get; }
     }
 
 

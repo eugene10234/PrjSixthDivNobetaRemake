@@ -15,10 +15,13 @@ namespace Nobeta.EUG.FSM.Services
 
         private bool isGrounded;
         private float lastGroundedTime;
+        private float _turnAngle;
+        private Vector3 moveInput;
+
 
         public bool IsGrounded => isGrounded;
         public float LastGroundedTime => lastGroundedTime;
-
+        public bool IsMoving => moveInput.magnitude > 0.1f;
         [Inject]
         public DetectionService(
             CharacterController controller,
@@ -26,6 +29,17 @@ namespace Nobeta.EUG.FSM.Services
         {
             this.controller = controller;
             this.timeService = timeService;
+        }
+
+        public void UpdateGlobalDetection(StateContext ctx)
+        {
+            UpdateGroundDetection();
+            UpdateMoveDetection(ctx);
+        }
+
+        private void UpdateMoveDetection(StateContext ctx)
+        {
+            moveInput = ctx.InputService.MoveInput;
         }
 
         public void UpdateGroundDetection()
@@ -38,5 +52,6 @@ namespace Nobeta.EUG.FSM.Services
                 lastGroundedTime = timeService.GameTime;
             }
         }
+        
     }
 }

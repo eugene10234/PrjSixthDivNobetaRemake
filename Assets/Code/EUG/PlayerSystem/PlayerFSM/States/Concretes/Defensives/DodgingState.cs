@@ -21,33 +21,33 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             dodgeDirCheck = true;
             // 設置閃避方向
-            Vector2 input = context.InputService.MoveInput;
+            Vector2 input = ctx.InputService.MoveInput;
 
             if (input.magnitude > 0.1f)
             {
-                dodgeDirection = context.CameraService.GetCameraRelativeDirection(input);
+                dodgeDirection = ctx.CameraService.GetCameraRelativeDirection(input);
                 PlayAnimation("BarrellRoll");
             }
             else
             {
                 dodgeDirCheck = false;
-                dodgeDirection = -context.Transform.forward;
+                dodgeDirection = -ctx.Transform.forward;
                 PlayAnimation("Dodge_B");
             }
 
             // 應用閃避移動 閃避期間維持速度
-            context.MovementService.ApplyDodge(
+            ctx.MovementService.ApplyDodge(
                 dodgeDirection,
-                context.Config.dodgeDistance,
-                context.Config.dodgeDuration
+                ctx.Config.dodgeDistance,
+                ctx.Config.dodgeDuration
             );
    
             PlaySound("Dodge");
             // 消耗閃避次數
-            context.DodgeCharges--;
-            context.LastDodgeTime = Time.time;
+            ctx.DodgeCharges--;
+            ctx.LastDodgeTime = Time.time;
 
-            dodgeTimer = context.Config.dodgeDuration;
+            dodgeTimer = ctx.Config.dodgeDuration;
 
 
         }
@@ -59,7 +59,7 @@ namespace Nobeta.EUG.FSM.States
             if (dodgeTimer <= 0)
             {
                 // 閃避結束
-                if (context.IsGrounded)
+                if (ctx.IsGrounded)
                 {
                     Type LastGroundedState = stateMachine.GetLastGroundedState();
                     //Debug.Log("LastGroundedState" + LastGroundedState);
@@ -77,14 +77,14 @@ namespace Nobeta.EUG.FSM.States
             // 閃避期間維持速度
             if (dodgeDirCheck)
             {
-                context.MovementService.RotateTowards(
+                ctx.MovementService.RotateTowards(
                     dodgeDirection,
-                    context.Config.rotationSpeed
+                    ctx.Config.rotationSpeed
                     );
             }
 
 
-            context.MovementService.ExecuteMovement();
+            ctx.MovementService.ExecuteMovement();
         }
 
         public override bool CanTransitionTo(System.Type stateType)

@@ -25,17 +25,17 @@ namespace Nobeta.EUG.FSM.States
         public virtual void FixedUpdate()
         {
             // 默認行為：應用重力
-            context.MovementService.ApplyGravity(context.Config.gravity);
+            ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
             // 執行移動
-            context.MovementService.ExecuteMovement();
+            ctx.MovementService.ExecuteMovement();
         }
 
         #region Common Input Handlers
 
         public override void OnJumpInput()
         {
-            if (context.CanJump)
+            if (ctx.CanJump)
             {
                 stateMachine.ChangeState<JumpingState>();
             }
@@ -43,7 +43,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void OnDodgeInput()
         {
-            if (context.CanDodge)
+            if (ctx.CanDodge)
             {
                 stateMachine.ChangeState<DodgingState>();
             }
@@ -58,8 +58,8 @@ namespace Nobeta.EUG.FSM.States
         /// </summary>
         protected Vector3 GetMoveDirection()
         {
-            Vector2 input = context.InputService.MoveInput;
-            return context.CameraService.GetCameraRelativeDirection(input);
+            Vector2 input = ctx.InputService.MoveInput;
+            return ctx.CameraService.GetCameraRelativeDirection(input);
         }
 
         /// <summary>
@@ -72,22 +72,22 @@ namespace Nobeta.EUG.FSM.States
             if (direction.magnitude > 0.1f)
             {
                 // 應用移動
-                context.MovementService.ApplyGroundMovement(
+                ctx.MovementService.ApplyGroundMovement(
                     direction,
                     speed,
-                    context.Config.acceleration
+                    ctx.Config.acceleration
                 );
 
                 // 應用旋轉
-                context.MovementService.RotateTowards(
+                ctx.MovementService.RotateTowards(
                     direction,
-                    context.Config.rotationSpeed
+                    ctx.Config.rotationSpeed
                 );
             }
             else
             {
                 // 減速停止
-                context.MovementService.StopMovement(context.Config.acceleration);
+                ctx.MovementService.StopMovement(ctx.Config.acceleration);
             }
         }
 

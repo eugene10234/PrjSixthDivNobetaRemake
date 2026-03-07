@@ -17,37 +17,50 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Enter();
             // 重置垂直速度（貼地）
-            context.MovementService.SetVerticalVelocity(-2f);
+            ctx.MovementService.SetVerticalVelocity(-2f);
 
             // 恢復閃避次數
-            context.DodgeCharges = context.Config.maxDodgeCharges;
+            ctx.DodgeCharges = ctx.Config.maxDodgeCharges;
 
         }
 
         public virtual void Update()
         {
-            // 子類實現
+            DetectionHandler();
         }
 
         public virtual void FixedUpdate()
         {
             // 默認行為：應用重力
-            context.MovementService.ApplyGravity(context.Config.gravity);
+            ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
             // 執行移動
-            context.MovementService.ExecuteMovement();
+            ctx.MovementService.ExecuteMovement();
             //if (context.InputService.IsAimPressed)
             //{
             //    stateMachine.ChangeState<AimingState>();
 
             //}
         }
+        public void DetectionHandler()
+        {
+            
+            //float _turnAngle;
+            if (ctx.Detection.IsMoving)
+            {
+                //stateMachine.ChangeState<WalkingState>();
+            }
+            else
+            {
+                stateMachine.ChangeState<IdleState>();
+            }
 
+        }
         #region Common Input Handlers
 
         public override void OnJumpInput()
         {
-            if (context.CanJump)
+            if (ctx.CanJump)
             {
                 stateMachine.ChangeState<JumpingState>();
             }
@@ -55,18 +68,18 @@ namespace Nobeta.EUG.FSM.States
 
         public override void OnDodgeInput()
         {
-            if (context.CanDodge)
+            if (ctx.CanDodge)
             {
                 stateMachine.ChangeState<DodgingState>();
             }
         }
         public override void OnAimStartInput()
         {
-            Debug.LogWarning("OnAimStartInput");
-            //if (context.CanDodge)
-            //{
-            //    stateMachine.ChangeState<AimingState>();
-            //}
+            //Debug.LogWarning("OnAimStartInput");
+            if (ctx.CanDodge)
+            {
+                stateMachine.ChangeState<AimingState>();
+            }
         }
         #endregion
 
@@ -77,8 +90,8 @@ namespace Nobeta.EUG.FSM.States
         /// </summary>
         protected Vector3 GetMoveDirection()
         {
-            Vector2 input = context.InputService.MoveInput;
-            return context.CameraService.GetCameraRelativeDirection(input);
+            Vector2 input = ctx.InputService.MoveInput;
+            return ctx.CameraService.GetCameraRelativeDirection(input);
         }
 
         /// <summary>
@@ -91,22 +104,22 @@ namespace Nobeta.EUG.FSM.States
             if (direction.magnitude > 0.1f)
             {
                 // 應用移動
-                context.MovementService.ApplyGroundMovement(
+                ctx.MovementService.ApplyGroundMovement(
                     direction,
                     speed,
-                    context.Config.acceleration
+                    ctx.Config.acceleration
                 );
 
                 // 應用旋轉
-                context.MovementService.RotateTowards(
+                ctx.MovementService.RotateTowards(
                     direction,
-                    context.Config.rotationSpeed
+                    ctx.Config.rotationSpeed
                 );
             }
             else
             {
                 // 減速停止
-                context.MovementService.StopMovement(context.Config.acceleration);
+                ctx.MovementService.StopMovement(ctx.Config.acceleration);
             }
         }
 

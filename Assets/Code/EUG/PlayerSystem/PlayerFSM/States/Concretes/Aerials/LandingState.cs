@@ -23,8 +23,8 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
 
             landingTimer = LANDING_DURATION;
-            _currentVelocity = context.MovementService.CurrentVelocity;
-            context.MovementService.ResetVelocity();
+            _currentVelocity = ctx.MovementService.CurrentVelocity;
+            ctx.MovementService.ResetVelocity();
             //context.MovementService.remainVelocity(0.8f);
             PlayAnimation("Land");
         }

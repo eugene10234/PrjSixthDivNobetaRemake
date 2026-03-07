@@ -16,12 +16,12 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("IdleState");
+            PlayAnimation("IdleState",0.1f);
         }
         public override void Update()
         {
             base.Update();
-            if (context.InputService.MoveInput.magnitude > 0.1f)
+            if (ctx.InputService.MoveInput.magnitude > 0.1f)
             {
                 stateMachine.ChangeState<WalkingState>();
 
@@ -31,7 +31,7 @@ namespace Nobeta.EUG.FSM.States
         public override void FixedUpdate()
         {
             // 停止移動
-            context.MovementService.StopMovement(context.Config.acceleration);
+            ctx.MovementService.StopMovement(ctx.Config.acceleration);
 
             base.FixedUpdate();
         }

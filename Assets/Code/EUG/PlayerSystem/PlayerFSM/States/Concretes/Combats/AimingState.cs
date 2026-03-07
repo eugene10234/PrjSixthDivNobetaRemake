@@ -19,10 +19,13 @@ namespace Nobeta.EUG.FSM.States
         private Type _speedType;
         private float _targetSpeed;
         private Vector2 _movement;
+        DebugServiceMb _debugServiceMb;
+        private float _turnAngle;
 
-        public AimingState(StateContext context, StateMachine stateMachine)
+        public AimingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
             : base(context, stateMachine)
         {
+            _debugServiceMb = debugServiceMb;
         }
 
         public override void Enter()
@@ -37,8 +40,29 @@ namespace Nobeta.EUG.FSM.States
 
             // 發布事件（通知攝影機切換）
             //PublishEvent(new PlayerAimingStartedEvent());
+            //_debugServiceMb.AddGiz(() =>
+            //{
+            //    Gizmos.color = Color.red; // 甚至可以順便設顏色
+            //    Gizmos.DrawLine(context.Transform.position,
+            //        context.Transform.position + context.CameraService.GetCameraRelativeDirection(context.InputService.MoveInput) * 2f);
+            //    //_debugServiceMb.ClearGiz();
+            //});
+            //_debugServiceMb.AddGiz(() =>
+            //{
+            //    Gizmos.color = Color.blue; // 甚至可以順便設顏色
+            //    Gizmos.DrawLine(context.Transform.position,
+            //        context.Transform.position + context.Transform.forward);
+            //    //_debugServiceMb.ClearGiz();
+            //});
+            //Vector3 currentVelocity = context.MovementService.CurrentVelocity;
+            //_debugServiceMb.Add(DrawDebugInfo);
         }
-
+        private void DrawDebugInfo()
+        {
+            GUILayout.Box("=== AngleTest ===");
+            GUILayout.Label("<b>turnAngle:</b>");
+            GUILayout.Label($"turnAngle: {_turnAngle}");
+        }
         public override void Exit()
         {
             base.Exit();
@@ -65,43 +89,47 @@ namespace Nobeta.EUG.FSM.States
             //}
             // 持續面向瞄準方向
             Vector3 aimDirection = GetAimDirection();
-            context.MovementService.RotateTowards(aimDirection, context.Config.rotationSpeed);
+            ctx.MovementService.RotateTowards(aimDirection, ctx.Config.rotationSpeed);
+
+            Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
+            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
+           
             AnimatorSetting();
         }
 
         public void FixedUpdate()
         {
             // 瞄準時可以緩慢移動
-            _movement = context.InputService.MoveInput;
+            _movement = ctx.InputService.MoveInput;
 
             if (_movement.magnitude > 0.1f)
             {
-                Vector3 direction = context.CameraService.GetCameraRelativeDirection(_movement);
+                Vector3 direction = ctx.CameraService.GetCameraRelativeDirection(_movement);
 
                 // 使用較低的速度
-                context.MovementService.ApplyGroundMovement(
+                ctx.MovementService.ApplyGroundMovement(
                     direction,
                     _targetSpeed * 0.5f,  // 瞄準時速度減半
-                    context.Config.acceleration
+                    ctx.Config.acceleration
                 );
             }
             else
             {
                 // 沒有輸入時停止移動
-                context.MovementService.StopMovement(context.Config.acceleration * 2f);
+                ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
             }
 
             // 應用重力
             //context.MovementService.ApplyGravity(context.Config.gravity);
 
             // 執行移動
-            context.MovementService.ExecuteMovement();
+            //context.MovementService.ExecuteMovement();
         }
         private void AnimatorSetting()
         {
-            Vector3 Velocity = context.MovementService.CurrentVelocity;
-            context.AnimationService.SetFloat("xVelocity", Velocity.x);
-            context.AnimationService.SetFloat("zVelocity", Velocity.z);
+            Vector3 Velocity = ctx.MovementService.CurrentVelocity;
+            ctx.AnimationService.SetFloat("xVelocity", Velocity.x);
+            ctx.AnimationService.SetFloat("zVelocity", Velocity.z);
 
             //bool playRunAnimation = isRunning & movementDirection.magnitude > 0;
             //animator.SetBool("isRunning", playRunAnimation);
@@ -114,9 +142,9 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnFireStartInput()
         {
-            var offsetPosition = context.Transform.position;
-            offsetPosition+= context.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
-            Debug.LogWarning("發射武器"+ context.Transform.position);
+            var offsetPosition = ctx.Transform.position;
+            offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+            Debug.LogWarning("發射武器"+ ctx.Transform.position);
             //context.EventBus.Publish(new WeaponFiredEvent
             //{
             //    BulletType = BulletType.Fire,
@@ -127,7 +155,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnDodgeInput()
         {
-            if (context.CanDodge)
+            if (ctx.CanDodge)
             {
                 stateMachine.ChangeState<DodgingState>();
             }
@@ -156,7 +184,7 @@ namespace Nobeta.EUG.FSM.States
         public override void OnAimEndInput()
         {
             
-            if (context.IsGrounded)
+            if (ctx.IsGrounded)
             {
                 stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             }
@@ -173,11 +201,11 @@ namespace Nobeta.EUG.FSM.States
             }
             else if (typeof(WalkingState) == speedType)
             {
-                _targetSpeed = context.Config.walkSpeed;
+                _targetSpeed = ctx.Config.walkSpeed;
             }
             else if (typeof(RunningState) == speedType)
             {
-                _targetSpeed = context.Config.runSpeed;
+                _targetSpeed = ctx.Config.runSpeed;
             }
         }
     }

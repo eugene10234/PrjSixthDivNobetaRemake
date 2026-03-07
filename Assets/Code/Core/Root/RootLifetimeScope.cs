@@ -1,4 +1,5 @@
 using Assets.Scripts.Root;
+using Nobeta.EUG.FSM;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using UnityEngine;
@@ -16,7 +17,9 @@ namespace Nobeta.Root
             // 輸入服務（全局單例）
             builder.Register<PlayerInputService>(Lifetime.Singleton)
                 .AsImplementedInterfaces().AsSelf();
-
+            // 推薦寫法：直接註冊類，再告訴 VContainer 它要當作哪些介面使用
+            builder.Register<CameraService>(Lifetime.Singleton)
+                .AsImplementedInterfaces().AsSelf();
             //事件總線（全局單例）
             builder.Register<EventBusConfig>(Lifetime.Scoped);
             builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
@@ -28,6 +31,7 @@ namespace Nobeta.Root
             builder.Register<IAudioService, AudioService>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton).AsSelf();
+            builder.RegisterComponentInHierarchy<DebugServiceMb>();
             Debug.Log("Root LifetimeScope 配置完成");
 
         }

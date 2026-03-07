@@ -28,11 +28,12 @@ namespace Nobeta.EUG.FSM.Core
         #region Service Dependencies（服務依賴）
 
         // 通過構造函數注入，保持不可變性
+        public DebugServiceMb DebugService { get; }
         public IMovementService MovementService { get; }
         public IPlayerInputService InputService { get; }
         public ICameraService CameraService { get; }
         public IAnimationService AnimationService { get; }
-        public IDetectionService GroundDetection { get; }
+        public IDetectionService Detection { get; }
         public IAudioService AudioService { get; }
         public IEventBus EventBus { get; }
 
@@ -76,6 +77,7 @@ namespace Nobeta.EUG.FSM.Core
 
         [Inject]
         public StateContext(
+            DebugServiceMb debugServiceMb,
             IMovementService movementService,
             IPlayerInputService inputService,
             ICameraService cameraService,
@@ -87,11 +89,12 @@ namespace Nobeta.EUG.FSM.Core
             Transform transform)
         {
             // 注入服務
+            DebugService = debugServiceMb;
             MovementService = movementService;
             InputService = inputService;
             CameraService = cameraService;
             AnimationService = animationService;
-            GroundDetection = groundDetection;
+            Detection = groundDetection;
             AudioService = audioService;
             EventBus = eventBus;
 
@@ -135,7 +138,7 @@ namespace Nobeta.EUG.FSM.Core
         /// <summary>
         /// 是否在地面上
         /// </summary>
-        public bool IsGrounded => GroundDetection.IsGrounded;
+        public bool IsGrounded => Detection.IsGrounded;
 
         /// <summary>
         /// 是否可以跳躍（包含土狼時間）
@@ -144,7 +147,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             get
             {
-                float timeSinceGrounded = Time.time - GroundDetection.LastGroundedTime;
+                float timeSinceGrounded = Time.time - Detection.LastGroundedTime;
                 return IsGrounded || timeSinceGrounded < Config.coyoteTime;
             }
         }
