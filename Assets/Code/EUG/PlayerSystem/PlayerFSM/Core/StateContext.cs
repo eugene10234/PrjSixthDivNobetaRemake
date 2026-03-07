@@ -28,7 +28,6 @@ namespace Nobeta.EUG.FSM.Core
         #region Service Dependencies（服務依賴）
 
         // 通過構造函數注入，保持不可變性
-        public DebugServiceMb DebugService { get; }
         public IMovementService MovementService { get; }
         public IPlayerInputService InputService { get; }
         public ICameraService CameraService { get; }
@@ -36,6 +35,8 @@ namespace Nobeta.EUG.FSM.Core
         public IDetectionService Detection { get; }
         public IAudioService AudioService { get; }
         public IEventBus EventBus { get; }
+        public DebugServiceMb DebugService { get; }
+        public ITimeService TimeService { get; }
 
         #endregion
 
@@ -78,6 +79,7 @@ namespace Nobeta.EUG.FSM.Core
         [Inject]
         public StateContext(
             DebugServiceMb debugServiceMb,
+            ITimeService timeService,
             IMovementService movementService,
             IPlayerInputService inputService,
             ICameraService cameraService,
@@ -90,6 +92,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             // 注入服務
             DebugService = debugServiceMb;
+            TimeService = timeService;
             MovementService = movementService;
             InputService = inputService;
             CameraService = cameraService;

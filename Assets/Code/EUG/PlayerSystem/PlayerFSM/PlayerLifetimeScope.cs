@@ -68,7 +68,7 @@ public class PlayerLifetimeScope : LifetimeScope
 
         builder.RegisterEntryPoint<PlayerControlPrensenter>();
         // 註冊 PlayerController（自動從 Hierarchy 注入）
-        Debug.LogWarning("RegisterComponentInHierarchy<mbPlayerController>");
+        //Debug.LogWarning("RegisterComponentInHierarchy<mbPlayerController>");
         //builder.RegisterComponentInHierarchy<mbPlayerController>();
         //var mbCharacterController = GetComponent<mbPlayerController>();
         //builder.RegisterComponent(mbCharacterController);
@@ -102,6 +102,7 @@ public class PlayerLifetimeScope : LifetimeScope
         builder.Register<IdleState>(Lifetime.Transient);
         builder.Register<WalkingState>(Lifetime.Transient);
         builder.Register<RunningState>(Lifetime.Transient);
+        builder.Register<TurningState>(Lifetime.Transient);
 
         // 空中狀態
         builder.Register<JumpingState>(Lifetime.Transient);

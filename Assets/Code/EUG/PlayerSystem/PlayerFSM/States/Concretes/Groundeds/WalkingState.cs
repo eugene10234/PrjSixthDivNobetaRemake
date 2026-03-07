@@ -96,7 +96,7 @@ namespace Nobeta.EUG.FSM.States
             //        ctx.Transform.position + ctx.Transform.forward);
             //    //_debugServiceMb.ClearGiz();
             //});
-            _debugServiceMb.Add(DrawDebugInfo);
+            _debugServiceMb.GUI.Add(DrawDebugInfo);
         }
         private void DrawDebugInfo()
         {

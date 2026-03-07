@@ -28,11 +28,11 @@ namespace Nobeta.Scripts.PlayerSpace
         [SerializeField] private float mHorizontalSensetivity = 5f;
         [SerializeField] private float mVerticalSensetivity = 2f;
         [Range(.5f, 1)]
-        [SerializeField] private float minCameraDistance = 1.5f;
-        [Range(1, 3f)]
-        [SerializeField] private float maxCameraDistance = 4;
-        [Range(3f, 5f)]
-        [SerializeField] private float cameraSensetivity = 5f;
+        //[SerializeField] private float minCameraDistance = 1.5f;
+        //[Range(1, 3f)]
+        //[SerializeField] private float maxCameraDistance = 4;
+        //[Range(3f, 5f)]
+        //[SerializeField] private float cameraSensetivity = 5f;
 
         [Space]
 

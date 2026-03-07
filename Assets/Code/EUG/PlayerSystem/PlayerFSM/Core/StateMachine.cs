@@ -74,6 +74,8 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         private void ChangeState(Type stateType) 
         {
+            // 1. 避免重複切換
+            if (CurrentState?.GetType() == stateType) return;
             if (stateType.IsAbstract) { ToInitialState(); return; }
 
             // 從容器解析狀態（VContainer 自動注入依賴）

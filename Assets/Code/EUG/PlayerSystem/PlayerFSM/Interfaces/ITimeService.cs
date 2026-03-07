@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using UnityEngine;
 // ========================================================================
 // Time Service - 時間服務接口
@@ -39,6 +41,8 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// 恢復遊戲
         /// </summary>
         void Resume();
+        // 傳入傳回 bool 的委託，以及一個取消令牌（防止切換場景時報錯）
+        UniTask TaskDelayLock(float seconds, Action<bool> lockCallback, CancellationToken cancellationToken = default);
     }
 }
 

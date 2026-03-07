@@ -1,5 +1,4 @@
 ﻿using Nobeta.EUG.FSM.Core;
-using System;
 using UnityEngine;
 // ========================================================================
 // GroundedState - 地面狀態父類（更新版）
@@ -44,45 +43,12 @@ namespace Nobeta.EUG.FSM.States
         }
         public void DetectionHandler()
         {
-            
-            //float _turnAngle;
-            if (ctx.Detection.IsMoving)
-            {
-                //stateMachine.ChangeState<WalkingState>();
-            }
-            else
-            {
-                stateMachine.ChangeState<IdleState>();
-            }
+
+            if (!ctx.Detection.IsMoving) stateMachine.ChangeState<IdleState>();
+
+            if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
 
         }
-        #region Common Input Handlers
-
-        public override void OnJumpInput()
-        {
-            if (ctx.CanJump)
-            {
-                stateMachine.ChangeState<JumpingState>();
-            }
-        }
-
-        public override void OnDodgeInput()
-        {
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
-        public override void OnAimStartInput()
-        {
-            //Debug.LogWarning("OnAimStartInput");
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<AimingState>();
-            }
-        }
-        #endregion
-
         #region Helper Methods
 
         /// <summary>

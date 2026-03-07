@@ -29,6 +29,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         void UpdateGlobalDetection(StateContext ctx);
 
         bool IsMoving { get; }
+        bool IsTurning { get; }
     }
 
 

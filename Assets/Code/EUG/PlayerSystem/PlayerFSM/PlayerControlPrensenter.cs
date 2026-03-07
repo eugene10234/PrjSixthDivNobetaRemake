@@ -19,39 +19,38 @@ namespace Nobeta.EUG.FSM
         private readonly IEventBus _eventBus;
         private readonly DebugServiceMb _debugService;
         private bool showDebugInfo;
-        //public PlayerControlPrensenter(IObjectResolver container)
-        //{
-        //    _stateMachine = container.Resolve<StateMachine>();
-        //    //_context = container.Resolve<StateContext>();
-        //    _inputService = container.Resolve<IPlayerInputService>();
-        //    _detectionService = container.Resolve<IDetectionService>();
-        //    _eventBus = container.Resolve<IEventBus>();
-        //    _mb = container.Resolve<mbPlayerController>();
-        //    Debug.Log("PlayerControlPrensenter constructed via IObjectResolver");
-        //}
-        public PlayerControlPrensenter(
-            DebugServiceMb debugServiceMb,
-            StateMachine stateMachine,
-            StateContext context,
-            IPlayerInputService inputService,
-            IDetectionService groundDetection,
-            IEventBus eventBus)
+        public PlayerControlPrensenter(IObjectResolver container)
         {
-            _debugService = debugServiceMb;
-            _stateMachine = stateMachine;
-            _context = context;
-            _inputService = inputService;
-            _detectionService = groundDetection;
-            _eventBus = eventBus;
-
+            _stateMachine = container.Resolve<StateMachine>();
+            _context = container.Resolve<StateContext>();
+            _inputService = container.Resolve<IPlayerInputService>();
+            _detectionService = container.Resolve<IDetectionService>();
+            _eventBus = container.Resolve<IEventBus>();
+            _debugService = container.Resolve<DebugServiceMb>();           
         }
+        //public PlayerControlPrensenter(
+        //    DebugServiceMb debugServiceMb,
+        //    StateMachine stateMachine,
+        //    StateContext context,
+        //    IPlayerInputService inputService,
+        //    IDetectionService groundDetection,
+        //    IEventBus eventBus)
+        //{
+        //    _debugService = debugServiceMb;
+        //    _stateMachine = stateMachine;
+        //    _context = context;
+        //    _inputService = inputService;
+        //    _detectionService = groundDetection;
+        //    _eventBus = eventBus;
+
+        //}
         public void Initialize()
         {
             Debug.Log("PlayerController 初始化中（事件驅動模式）");
             // Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
             //showDebugInfo = true;
-            _debugService.Add(DrawDebugInfo);
+            _debugService.GUI.Add(DrawDebugInfo);
             // 訂閱輸入事件
             Debug.LogWarning("mbPlayerControllerStart");
 

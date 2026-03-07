@@ -22,6 +22,7 @@ namespace Nobeta.EUG.FSM.Services
         public bool IsGrounded => isGrounded;
         public float LastGroundedTime => lastGroundedTime;
         public bool IsMoving => moveInput.magnitude > 0.1f;
+        public bool IsTurning => _turnAngle >= 165f;
         [Inject]
         public DetectionService(
             CharacterController controller,
@@ -35,8 +36,13 @@ namespace Nobeta.EUG.FSM.Services
         {
             UpdateGroundDetection();
             UpdateMoveDetection(ctx);
+            UpdateTurnDetection(ctx);
         }
-
+        private void UpdateTurnDetection(StateContext ctx)
+        {
+            Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
+            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
+        }
         private void UpdateMoveDetection(StateContext ctx)
         {
             moveInput = ctx.InputService.MoveInput;

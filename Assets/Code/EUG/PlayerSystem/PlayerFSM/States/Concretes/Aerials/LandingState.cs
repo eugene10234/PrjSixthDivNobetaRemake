@@ -10,7 +10,9 @@ namespace Nobeta.EUG.FSM.States
     public class LandingState : GroundedState
     {
         private float landingTimer;
-        private const float LANDING_DURATION = 0.1f;
+        private bool landingTimerLock;
+        //public void LandingTimerLocker(bool a) => landingTimerLock = a;
+        private const float LANDING_DURATION = 0.15f;
         private Vector3 _currentVelocity;
 
         public LandingState(StateContext context, StateMachine stateMachine)
@@ -21,34 +23,35 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-
-            landingTimer = LANDING_DURATION;
+            //landingTimer = LANDING_DURATION;
+            ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
             _currentVelocity = ctx.MovementService.CurrentVelocity;
             ctx.MovementService.ResetVelocity();
-            //context.MovementService.remainVelocity(0.8f);
+            //ctx.MovementService.remainVelocity(0.8f);
             PlayAnimation("Land");
         }
 
         public override void Update()
         {
-            landingTimer -= Time.deltaTime;
+            //landingTimer -= Time.deltaTime;
 
-            if (landingTimer <= 0)
-            {
-                Type LastGroundedState = stateMachine.GetLastGroundedState();
-                //Debug.Log("LastGroundedState" + LastGroundedState);
-                // 落地硬直結束
-                stateMachine.ChangeStateByParent<GroundedState>(LastGroundedState);
-                //if (context.InputService.MoveInput.magnitude > 0.1f)
-                //{
-                //    stateMachine.ChangeState<WalkingState>();
+            //if (landingTimer <= 0)
+            if (landingTimerLock) return;
 
-                //}
-                //else
-                //{
-                //    stateMachine.ChangeState<IdleState>();
-                //}
-            }
+            Type LastGroundedState = stateMachine.GetLastGroundedState();
+            //Debug.Log("LastGroundedState" + LastGroundedState);
+            // 落地硬直結束
+            stateMachine.ChangeStateByParent<GroundedState>(LastGroundedState);
+            //if (context.InputService.MoveInput.magnitude > 0.1f)
+            //{
+            //    stateMachine.ChangeState<WalkingState>();
+
+            //}
+            //else
+            //{
+            //    stateMachine.ChangeState<IdleState>();
+            //}
+
         }
 
         public override bool CanTransitionTo(System.Type stateType)
