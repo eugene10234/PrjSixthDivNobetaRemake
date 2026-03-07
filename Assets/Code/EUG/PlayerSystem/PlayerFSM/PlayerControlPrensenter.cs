@@ -50,9 +50,20 @@ namespace Nobeta.EUG.FSM
             // Cursor.lockState = CursorLockMode.Locked;
             //Cursor.visible = false;
             //showDebugInfo = true;
+            if (_debugService == null)
+            {
+                Debug.LogError("PlayerControlPresenter: _debugService 未注入！");
+                return;
+            }
+
+            if (_stateMachine == null)
+            {
+                Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
+                return;
+            }
             _debugService.GUI.Add(DrawDebugInfo);
             // 訂閱輸入事件
-            Debug.LogWarning("mbPlayerControllerStart");
+            //Debug.LogWarning("mbPlayerControllerStart");
 
             // 設置初始狀態
             _stateMachine.SetInitialState<IdleState>();

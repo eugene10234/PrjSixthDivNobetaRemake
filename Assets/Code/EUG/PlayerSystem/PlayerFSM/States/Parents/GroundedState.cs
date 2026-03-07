@@ -41,12 +41,38 @@ namespace Nobeta.EUG.FSM.States
 
             //}
         }
+        #region Common Input Handlers
+
+        public override void OnJumpInput()
+        {
+            if (ctx.CanJump)
+            {
+                stateMachine.ChangeState<JumpingState>();
+            }
+        }
+
+        public override void OnDodgeInput()
+        {
+            if (ctx.CanDodge)
+            {
+                stateMachine.ChangeState<DodgingState>();
+            }
+        }
+        public override void OnAimStartInput()
+        {
+            //Debug.LogWarning("OnAimStartInput");
+            if (ctx.CanDodge)
+            {
+                stateMachine.ChangeState<AimingState>();
+            }
+        }
+        #endregion
         public void DetectionHandler()
         {
 
             if (!ctx.Detection.IsMoving) stateMachine.ChangeState<IdleState>();
 
-            if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
+            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
 
         }
         #region Helper Methods

@@ -23,14 +23,19 @@ namespace Nobeta.EUG.FSM
         // 儲存委託
         private Action DebugGizmos;
         private Action DebugGUI;
+        // 修改點：改為 Lazy 模式，確保存取時一定有物件
+        private GizProxy _giz;
+        public GizProxy Giz => _giz ??= new GizProxy(this);
 
-        public GizProxy Giz { get; private set; }
-        public GUIProxy GUI { get; private set; }
+        private GUIProxy _gui;
+        public GUIProxy GUI => _gui ??= new GUIProxy(this);
+        //public GizProxy Giz { get; private set; }
+        //public GUIProxy GUI { get; private set; }
 
         private void Awake()
         {
-            Giz = new GizProxy(this);
-            GUI = new GUIProxy(this);
+            //Giz = new GizProxy(this);
+            //GUI = new GUIProxy(this);
             GUISettings();
         }
         public void DrawDebugText(string text)

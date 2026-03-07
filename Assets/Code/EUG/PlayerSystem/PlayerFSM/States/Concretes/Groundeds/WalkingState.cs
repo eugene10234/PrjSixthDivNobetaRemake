@@ -44,8 +44,8 @@ namespace Nobeta.EUG.FSM.States
         private void AnimatorSetting()
         {
             //var endPoint = context.Transform.position + context.CameraService.GetCameraRelativeDirection(context.InputService.MoveInput) * 2f;
-            _debugServiceMb.Giz.DrawLine(ctx.Transform.position,
-                    ctx.Transform.position + ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput) * 2f, Color.red);
+            //_debugServiceMb.Giz.DrawLine(ctx.Transform.position,
+            //        ctx.Transform.position + ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput) * 2f, Color.red);
 
             //caculate();
             //Debug.Log($"Speed: {context.CurrentSpeed}");
@@ -96,7 +96,7 @@ namespace Nobeta.EUG.FSM.States
             //        ctx.Transform.position + ctx.Transform.forward);
             //    //_debugServiceMb.ClearGiz();
             //});
-            _debugServiceMb.GUI.Add(DrawDebugInfo);
+            //_debugServiceMb.GUI.Add(DrawDebugInfo);
         }
         private void DrawDebugInfo()
         {
