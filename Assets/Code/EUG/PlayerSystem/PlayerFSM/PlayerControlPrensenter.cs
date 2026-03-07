@@ -188,9 +188,9 @@ namespace Nobeta.EUG.FSM
             GUILayout.Box("=== Player Controller (Event-Driven) ===");
 
             GUILayout.Label($"<b>State:</b> {GetCurrentStateName()}");
-            GUILayout.Label($"Health: {_context.CurrentHealth}/{_context.MaxHealth}  Mana: {_context.CurrentMana}/{_context.MaxMana}");
-            GUILayout.Label($"Dodge Charges: {_context.DodgeCharges}  IsGrounded: {_context.IsGrounded}");
-            GUILayout.Label($"Speed: {_context.CurrentSpeed:F2}");
+            //GUILayout.Label($"Health: {_context.CurrentHealth}/{_context.MaxHealth}  Mana: {_context.CurrentMana}/{_context.MaxMana}");
+            //GUILayout.Label($"Dodge Charges: {_context.DodgeCharges}");
+            GUILayout.Label($"IsGrounded: {_context.IsGrounded} Speed: {_context.CurrentSpeed:F2}");
 
             GUILayout.Space(10);
 

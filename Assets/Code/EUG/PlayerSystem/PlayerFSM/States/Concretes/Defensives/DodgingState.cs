@@ -26,7 +26,7 @@ namespace Nobeta.EUG.FSM.States
             if (input.magnitude > 0.1f)
             {
                 dodgeDirection = ctx.CameraService.GetCameraRelativeDirection(input);
-                PlayAnimation("BarrellRoll");
+                PlayAnimation("Dodge_F");
             }
             else
             {

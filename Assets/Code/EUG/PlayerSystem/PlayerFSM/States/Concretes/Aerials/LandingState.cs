@@ -10,7 +10,7 @@ namespace Nobeta.EUG.FSM.States
     public class LandingState : GroundedState
     {
         private float landingTimer;
-        private bool landingTimerLock;
+        //private bool landingTimerLock;
         //public void LandingTimerLocker(bool a) => landingTimerLock = a;
         private const float LANDING_DURATION = 0.15f;
         private Vector3 _currentVelocity;
@@ -23,8 +23,8 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            //landingTimer = LANDING_DURATION;
-            ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
+            landingTimer = LANDING_DURATION;
+            //ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
             _currentVelocity = ctx.MovementService.CurrentVelocity;
             ctx.MovementService.ResetVelocity();
             //ctx.MovementService.remainVelocity(0.8f);
@@ -33,24 +33,26 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Update()
         {
-            //landingTimer -= Time.deltaTime;
+            landingTimer -= Time.deltaTime;
 
-            //if (landingTimer <= 0)
-            if (landingTimerLock) return;
+            if (landingTimer <= 0)
+            {
+                //if (landingTimerLock) return;
 
-            Type LastGroundedState = stateMachine.GetLastGroundedState();
-            //Debug.Log("LastGroundedState" + LastGroundedState);
-            // 落地硬直結束
-            stateMachine.ChangeStateByParent<GroundedState>(LastGroundedState);
-            //if (context.InputService.MoveInput.magnitude > 0.1f)
-            //{
-            //    stateMachine.ChangeState<WalkingState>();
+                Type LastGroundedState = stateMachine.GetLastGroundedState();
+                Debug.Log("LastGroundedState" + LastGroundedState);
+                //落地硬直結束
+                stateMachine.ChangeStateByParent<GroundedState>(LastGroundedState);
+                if (ctx.InputService.MoveInput.magnitude > 0.1f)
+                {
+                    stateMachine.ChangeState<WalkingState>();
 
-            //}
-            //else
-            //{
-            //    stateMachine.ChangeState<IdleState>();
-            //}
+                }
+                else
+                {
+                    stateMachine.ChangeState<IdleState>();
+                }
+            }
 
         }
 
