@@ -16,7 +16,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("Idle");
+            PlayAnimation("IdleState");
         }
         public override void Update()
         {

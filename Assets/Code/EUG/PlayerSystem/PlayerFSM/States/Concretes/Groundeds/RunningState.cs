@@ -16,7 +16,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("Run");
+            PlayAnimation("RunState");
         }
         public override void Update()
         {
