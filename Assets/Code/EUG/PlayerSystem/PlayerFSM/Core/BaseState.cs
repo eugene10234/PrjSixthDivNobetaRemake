@@ -122,7 +122,7 @@ namespace Nobeta.EUG.FSM.Core
         /// <summary>
         /// 播放動畫（委託給動畫服務）
         /// </summary>
-        protected void PlayAnimation(string animationName, float crossFadeDuration = 0.25f)
+        protected void PlayAnimation(string animationName, float crossFadeDuration = 0.1f)
         {
             ctx.AnimationService.PlayAnimation(animationName, crossFadeDuration);
         }

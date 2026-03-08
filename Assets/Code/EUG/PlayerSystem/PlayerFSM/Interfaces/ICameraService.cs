@@ -29,7 +29,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim);
         void ExecuteCameraRotation();
         void Initial(CinemachineCamera cinemachineCamera);
-        float GetFloat { get; }
+        float GetHorizonOffset { get; }
     }
 }
 

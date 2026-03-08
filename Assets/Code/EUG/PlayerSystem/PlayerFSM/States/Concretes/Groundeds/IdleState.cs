@@ -16,11 +16,13 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("IdleState",0.1f);
+            //PlayAnimation("IdleState",0.1f);
+            PlayAnimation("MovementState", 0.1f);
         }
         public override void Update()
         {
             base.Update();
+            AnimatorSetting();
             if (ctx.InputService.MoveInput.magnitude > 0.1f)
             {
                 stateMachine.ChangeState<WalkingState>();
@@ -35,7 +37,12 @@ namespace Nobeta.EUG.FSM.States
 
             base.FixedUpdate();
         }
+        private void AnimatorSetting()
+        {
+            ctx.AnimationService.SetFloat("Speed",-5f);
+            //ctx.AnimationService.SetFloat("Rotation", _turnAngle / 32f);
 
+        }
         // 輸入事件處理
         public override void OnMoveInput()
         {

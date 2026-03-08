@@ -14,14 +14,17 @@ namespace Nobeta.EUG.FSM.States
     {
         private float _turnAngle;
         private bool StartUpLock;
+        private object _yaw;
         private const float StartUp_DURATION = 0.15f;
         public WalkingState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
-        {          
+        {
         }
 
         public override void Enter()
         {
+            ctx.DebugService.GUI.Add(DrawDebugInfo);
+
             base.Enter();
             PlayAnimation("MovementState",0.1f);
             ctx.TimeService.TaskDelayLock(StartUp_DURATION, (b) => StartUpLock = b);
@@ -53,8 +56,10 @@ namespace Nobeta.EUG.FSM.States
             //    //Debug.Log($"Speed: {context.CurrentSpeed}");
             //    Debug.Log($"turnAngle: {_turnAngle }");
             //}
-            var tt = ctx.CameraService.GetFloat;
-            Debug.Log($"YAW: {tt}");
+            _yaw = ctx.CameraService.GetHorizonOffset;
+            //ctx.DebugService.GUI.Label($"turnAngle: {_turnAngle}");
+            //ctx.DebugService.GUI.Watch("YAW", yaw);
+            //Debug.Log($"YAW: {tt}");
             ctx.AnimationService.SetFloat("Speed", ctx.CurrentSpeed);
             ctx.AnimationService.SetFloat("Rotation",_turnAngle/32f );
             //debugServiceMb.DrawDebugText($"turnAngle: {turnAngle/Time.deltaTime}");
@@ -87,8 +92,8 @@ namespace Nobeta.EUG.FSM.States
         private void DrawDebugInfo()
         {
             GUILayout.Box("=== AngleTest ===");
-            GUILayout.Label("<b>turnAngle>165:</b>");
-            GUILayout.Label($"turnAngle: {_turnAngle}");
+            GUILayout.Label("<b>YAW:</b>");
+            GUILayout.Label($"YAW: {_yaw}");
         }
     }
 }

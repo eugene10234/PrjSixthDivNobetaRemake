@@ -3,6 +3,7 @@
 // 處理所有移動相關的計算和物理應用
 // ============================================================================
 
+using System;
 using Nobeta.EUG.FSM.Interfaces;
 using UnityEngine;
 using VContainer;
@@ -27,7 +28,7 @@ namespace Nobeta.EUG.FSM.Services
         private readonly CharacterController controller;
         private readonly Transform transform;
         private readonly ITimeService timeService;
-
+        private readonly ICameraService _cameraService;
         private Vector3 velocity;
 
         // 屬性
@@ -41,12 +42,14 @@ namespace Nobeta.EUG.FSM.Services
         public MovementService(
             CharacterController controller,
             Transform transform,
+            ICameraService cameraService,
             ITimeService timeService)
         {
             this.controller = controller;
             this.transform = transform;
-            this.timeService = timeService;
 
+            this.timeService = timeService;
+            _cameraService = cameraService;
             velocity = Vector3.zero;
         }
 
@@ -156,6 +159,8 @@ namespace Nobeta.EUG.FSM.Services
 
         public void RotateTowards(Vector3 direction, float rotationSpeed)
         {
+            //GetHorizonOffset
+            Debug.Log($"{DateTime.Now}direction: {direction}, rotationSpeed: {rotationSpeed},GetHorizonOffset:{_cameraService.GetHorizonOffset}");
             if (direction.magnitude < 0.1f) return;
 
             // 計算目標旋轉
@@ -165,7 +170,7 @@ namespace Nobeta.EUG.FSM.Services
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                timeService.DeltaTime * rotationSpeed
+                timeService.DeltaTime * (rotationSpeed+ _cameraService.GetHorizonOffset*50)
             );
             //transform.rotation = targetRotation;
         }

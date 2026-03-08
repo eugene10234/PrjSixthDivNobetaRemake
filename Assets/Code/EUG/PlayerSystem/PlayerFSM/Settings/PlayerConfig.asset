@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 6
   runSpeed: 10
-  rotationSpeed: 25
+  rotationSpeed: 15
   acceleration: 10
   jumpHeight: 2
   gravity: -15
   coyoteTime: 0.2
   dodgeDistance: 6
-  dodgeDuration: 0.5
+  dodgeDuration: 0.7
   dodgeCooldown: 1
   maxDodgeCharges: 2
   maxChargeTime: 2

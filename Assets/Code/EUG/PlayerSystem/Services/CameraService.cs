@@ -14,11 +14,12 @@ namespace Nobeta.EUG.FSM.Services
     {
         private float m_Pitch = 0f; // 上下旋轉
         private float m_Yaw = 0f;   // 左右旋轉
+        private float horizonOffset = 0f;
         private Transform m_followPoint;
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
-        public float GetFloat=> m_Yaw;
+        public float GetHorizonOffset=> horizonOffset;
 
         [Inject]
         public CameraService()
@@ -74,7 +75,8 @@ namespace Nobeta.EUG.FSM.Services
         public void ExecuteCameraRotation()
         {
             // 1. 取得並累加輸入值
-            m_Yaw += Input.GetAxis("Mouse X") * mHorizontalSensetivity;
+            horizonOffset = Input.GetAxis("Mouse X") * mHorizontalSensetivity;
+            m_Yaw += horizonOffset;
             m_Pitch -= Input.GetAxis("Mouse Y") * mVerticalSensetivity; // 通常 Y 軸輸入需要反轉
 
             // 2. 限制垂直角度（防止翻轉）
