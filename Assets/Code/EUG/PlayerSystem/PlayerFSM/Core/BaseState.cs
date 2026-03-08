@@ -10,7 +10,7 @@ namespace Nobeta.EUG.FSM.Core
     /// 狀態基類
     /// 提供狀態的基本結構和輸入事件處理
     /// </summary>
-    public abstract class BaseState : IState, IEnterable
+    public   class BaseState : IState, IEnterable
     {
         protected readonly StateContext ctx;
         protected readonly StateMachine stateMachine;

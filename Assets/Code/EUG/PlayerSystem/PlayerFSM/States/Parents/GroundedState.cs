@@ -44,7 +44,10 @@ namespace Nobeta.EUG.FSM.States
         public virtual void DetectionHandler()
         {
 
-            if (!ctx.Detection.IsMoving) stateMachine.ChangeState<IdleState>();
+            //Vector3 direction = GetMoveDirection();
+
+            //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
+            if (!ctx.Detection.CheckIfMoving(ctx)) stateMachine.ChangeState<IdleState>();
 
             //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
 

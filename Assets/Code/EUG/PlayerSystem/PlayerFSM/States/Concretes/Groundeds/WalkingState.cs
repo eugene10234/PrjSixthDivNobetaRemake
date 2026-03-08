@@ -23,7 +23,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
-            ctx.DebugService.GUI.Add(DrawDebugInfo);
+            //ctx.DebugService.GUI.Add(DrawDebugInfo);
 
             base.Enter();
             PlayAnimation("MovementState",0.1f);
@@ -89,11 +89,11 @@ namespace Nobeta.EUG.FSM.States
             stateMachine.ChangeState<RunningState>();
         }
 
-        private void DrawDebugInfo()
-        {
-            GUILayout.Box("=== AngleTest ===");
-            GUILayout.Label("<b>YAW:</b>");
-            GUILayout.Label($"YAW: {_yaw}");
-        }
+        //private void DrawDebugInfo()
+        //{
+        //    GUILayout.Box("=== AngleTest ===");
+        //    GUILayout.Label("<b>YAW:</b>");
+        //    GUILayout.Label($"YAW: {_yaw}");
+        //}
     }
 }

@@ -27,6 +27,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// 更新地面檢測
         /// </summary>
         void UpdateGlobalDetection(StateContext ctx);
+        bool CheckIfMoving(StateContext ctx);
 
         bool IsMoving { get; }
         bool IsTurning { get; }

@@ -173,6 +173,10 @@ namespace Nobeta.EUG.FSM
         {
             return stateMachine.CurrentState?.StateName ?? "None";
         }
+        public string GetPreviousStateName()
+        {
+            return stateMachine.PreviousState?.StateName ?? "None";
+        }
 
         /// <summary>
         /// 檢查是否在指定狀態
@@ -187,7 +191,8 @@ namespace Nobeta.EUG.FSM
         {
             GUILayout.Box("=== Player Controller (Event-Driven) ===");
 
-            GUILayout.Label($"<b>State:</b> {GetCurrentStateName()}");
+            GUILayout.Label($"<b>CurrentState:</b> {GetCurrentStateName()}");
+            GUILayout.Label($"<b>PreviousState:</b> {GetPreviousStateName()}");
             //GUILayout.Label($"Health: {_context.CurrentHealth}/{_context.MaxHealth}  Mana: {_context.CurrentMana}/{_context.MaxMana}");
             //GUILayout.Label($"Dodge Charges: {_context.DodgeCharges}");
             GUILayout.Label($"IsGrounded: {_context.IsGrounded} Speed: {_context.CurrentSpeed:F2}");

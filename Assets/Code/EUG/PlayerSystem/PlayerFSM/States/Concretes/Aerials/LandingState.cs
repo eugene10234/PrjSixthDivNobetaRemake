@@ -9,7 +9,7 @@ namespace Nobeta.EUG.FSM.States
 {
     public class LandingState : GroundedState
     {
-        private float landingTimer;
+        //private float landingTimer;
         private bool landingTimerLock;
         //public void LandingTimerLocker(bool a) => landingTimerLock = a;
         private const float LANDING_DURATION = 0.15f;
@@ -23,7 +23,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            landingTimer = LANDING_DURATION;
+            //landingTimer = LANDING_DURATION;
             ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
             _currentVelocity = ctx.MovementService.CurrentVelocity;
             ctx.MovementService.ResetVelocity();

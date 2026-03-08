@@ -36,23 +36,37 @@ namespace Nobeta.EUG.FSM.Services
 
         public float CurrentHorizontalSpeed =>
             new Vector3(velocity.x, 0, velocity.z).magnitude;
+        DebugServiceMb _debugServiceMb;
+        private float text1;
+        private float text2;
+        private float text3;
 
         // 構造函數注入
         [Inject]
         public MovementService(
+            DebugServiceMb debugServiceMb,
             CharacterController controller,
             Transform transform,
             ICameraService cameraService,
             ITimeService timeService)
         {
+            _debugServiceMb = debugServiceMb;
             this.controller = controller;
             this.transform = transform;
 
             this.timeService = timeService;
             _cameraService = cameraService;
             velocity = Vector3.zero;
+            //_debugServiceMb.GUI.Add(DrawDebugInfo);
         }
 
+        private void DrawDebugInfo()
+        {
+            GUILayout.Box("=== MovementService ===");
+            GUILayout.Label($"Camera Influence: {text1}");
+            GUILayout.Label($"Dynamic Speed: {text2}");
+            GUILayout.Label($"angleBoost Dynamic Speed: {text3}");
+        }
         #region Ground Movement
 
         public void ApplyGroundMovement(
@@ -157,24 +171,63 @@ namespace Nobeta.EUG.FSM.Services
 
         #region Rotation
 
-        public void RotateTowards(Vector3 direction, float rotationSpeed)
+
+        /// <summary>
+        /// 平滑旋轉到目標方向(帶相機影響的動態速度)
+        /// </summary>
+        public void RotateTowards(Vector3 direction, float baseRotationSpeed)
         {
-            //GetHorizonOffset
-            Debug.Log($"{DateTime.Now}direction: {direction}, rotationSpeed: {rotationSpeed},GetHorizonOffset:{_cameraService.GetHorizonOffset}");
             if (direction.magnitude < 0.1f) return;
 
             // 計算目標旋轉
             Quaternion targetRotation = Quaternion.LookRotation(direction);
 
+            // 計算當前角度差
+            float angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
+
+            // 方案1: 根據相機旋轉速度動態調整
+            // 當玩家快速轉動相機時,角色也快速跟上
+            float cameraInfluence = Mathf.Abs(_cameraService.GetHorizonOffset);
+            float dynamicSpeed = baseRotationSpeed * (1f + cameraInfluence * 1.05f);
+            //Debug.Log($"Camera Influence: {cameraInfluence}, Dynamic Speed: {dynamicSpeed}");
+            //text1 = cameraInfluence;
+            //text2 = dynamicSpeed;
+            // 方案2(可選): 根據角度差額外加速
+            // 當需要轉很大角度時,加快旋轉避免轉太慢
+            float angleBoost = Mathf.Clamp01(angleDifference / 120f) * 1.2f;
+            if(angleDifference>45f) dynamicSpeed *= (1f + angleBoost);
+            //Debug.Log($"angleBoost Dynamic Speed: {dynamicSpeed}");
+            //text3 = angleDifference;
             // 平滑旋轉
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                timeService.DeltaTime * (rotationSpeed+ _cameraService.GetHorizonOffset*50)
+                timeService.DeltaTime * dynamicSpeed
             );
-            //transform.rotation = targetRotation;
+        }
+        /// <summary>
+        /// 即時旋轉(不平滑,用於射擊等需要精確對準的情況)
+        /// </summary>
+        public void RotateTowardsImmediate(Vector3 direction)
+        {
+            if (direction.magnitude < 0.1f) return;
+            transform.rotation = Quaternion.LookRotation(direction);
         }
 
+        /// <summary>
+        /// 固定速度平滑旋轉(不受相機影響)
+        /// </summary>
+        public void RotateTowardsSteady(Vector3 direction, float rotationSpeed)
+        {
+            if (direction.magnitude < 0.1f) return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                timeService.DeltaTime * rotationSpeed
+            );
+        }
         #endregion
 
         #region Utility Methods

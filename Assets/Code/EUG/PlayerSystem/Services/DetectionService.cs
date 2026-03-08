@@ -10,6 +10,7 @@ namespace Nobeta.EUG.FSM.Services
 {
     public class DetectionService : IDetectionService
     {
+        //private readonly StateContext ctx;
         private readonly CharacterController controller;
         private readonly ITimeService timeService;
 
@@ -21,13 +22,15 @@ namespace Nobeta.EUG.FSM.Services
 
         public bool IsGrounded => isGrounded;
         public float LastGroundedTime => lastGroundedTime;
-        public bool IsMoving => moveInput.magnitude > 0.1f;
+        public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
         public bool IsTurning => _turnAngle >= 165f;
         [Inject]
         public DetectionService(
+           // StateContext stateContext,
             CharacterController controller,
             ITimeService timeService)
         {
+            //ctx = stateContext;
             this.controller = controller;
             this.timeService = timeService;
         }
@@ -58,6 +61,10 @@ namespace Nobeta.EUG.FSM.Services
                 lastGroundedTime = timeService.GameTime;
             }
         }
-        
+        public bool CheckIfMoving(StateContext ctx)
+        {
+            UpdateMoveDetection(ctx);
+            return moveInput.sqrMagnitude > 0.01f;
+        }
     }
 }
