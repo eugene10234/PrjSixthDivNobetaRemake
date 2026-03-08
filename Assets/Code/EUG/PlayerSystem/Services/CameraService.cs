@@ -18,6 +18,7 @@ namespace Nobeta.EUG.FSM.Services
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
+        public float GetFloat=> m_Yaw;
 
         [Inject]
         public CameraService()

@@ -12,20 +12,19 @@ namespace Nobeta.EUG.FSM.States
 {
     public class WalkingState : GroundedState
     {
-        DebugServiceMb _debugServiceMb;
         private float _turnAngle;
-
-        public WalkingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
+        private bool StartUpLock;
+        private const float StartUp_DURATION = 0.15f;
+        public WalkingState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
-        {
-            _debugServiceMb = debugServiceMb;
-            Initialize();
+        {          
         }
 
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("MovementState");
+            PlayAnimation("MovementState",0.1f);
+            ctx.TimeService.TaskDelayLock(StartUp_DURATION, (b) => StartUpLock = b);
         }
         public override void Update()
         {
@@ -37,8 +36,7 @@ namespace Nobeta.EUG.FSM.States
         public override void FixedUpdate()
         {
             caculate();
-
-            ApplyMovementAndRotation(ctx.Config.walkSpeed);
+            ApplyMovementAndRotation(ctx.Config.walkSpeed, StartUpLock);
             base.FixedUpdate();
         }
         private void AnimatorSetting()
@@ -49,18 +47,24 @@ namespace Nobeta.EUG.FSM.States
 
             //caculate();
             //Debug.Log($"Speed: {context.CurrentSpeed}");
-            if (Mathf.Abs(_turnAngle) >= 160f)
-            {
-                //_turnAngle100 = _turnAngle ;
-                //Debug.Log($"Speed: {context.CurrentSpeed}");
-                Debug.Log($"turnAngle: {_turnAngle }");
-            }
-
+            //if (Mathf.Abs(_turnAngle) >= 160f)
+            //{
+            //    //_turnAngle100 = _turnAngle ;
+            //    //Debug.Log($"Speed: {context.CurrentSpeed}");
+            //    Debug.Log($"turnAngle: {_turnAngle }");
+            //}
+            var tt = ctx.CameraService.GetFloat;
+            Debug.Log($"YAW: {tt}");
             ctx.AnimationService.SetFloat("Speed", ctx.CurrentSpeed);
-            ctx.AnimationService.SetFloat("Rotation", _turnAngle / 165f);
+            ctx.AnimationService.SetFloat("Rotation",_turnAngle/32f );
             //debugServiceMb.DrawDebugText($"turnAngle: {turnAngle/Time.deltaTime}");
             //bool playRunAnimation = isRunning & movementDirection.magnitude > 0;
             //animator.SetBool("isRunning", playRunAnimation);
+        }
+        public override void DetectionHandler()
+        {
+            base.DetectionHandler();
+            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
         }
 
         private void caculate()
@@ -80,24 +84,6 @@ namespace Nobeta.EUG.FSM.States
             stateMachine.ChangeState<RunningState>();
         }
 
-        public void Initialize()
-        {
-            //_debugServiceMb.Giz.Add(() =>
-            //{
-            //    Gizmos.color = Color.red; // 甚至可以順便設顏色
-            //    Gizmos.DrawLine(ctx.Transform.position,
-            //        ctx.Transform.position + ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput) * 2f);
-            //    //_debugServiceMb.ClearGiz();
-            //});
-            //_debugServiceMb.Giz.Add(() =>
-            //{
-            //    Gizmos.color = Color.blue; // 甚至可以順便設顏色
-            //    Gizmos.DrawLine(ctx.Transform.position,
-            //        ctx.Transform.position + ctx.Transform.forward);
-            //    //_debugServiceMb.ClearGiz();
-            //});
-            //_debugServiceMb.GUI.Add(DrawDebugInfo);
-        }
         private void DrawDebugInfo()
         {
             GUILayout.Box("=== AngleTest ===");

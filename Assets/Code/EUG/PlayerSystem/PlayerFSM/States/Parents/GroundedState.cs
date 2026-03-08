@@ -41,6 +41,14 @@ namespace Nobeta.EUG.FSM.States
 
             //}
         }
+        public virtual void DetectionHandler()
+        {
+
+            if (!ctx.Detection.IsMoving) stateMachine.ChangeState<IdleState>();
+
+            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
+
+        }
         #region Common Input Handlers
 
         public override void OnJumpInput()
@@ -67,14 +75,7 @@ namespace Nobeta.EUG.FSM.States
             }
         }
         #endregion
-        public void DetectionHandler()
-        {
-
-            if (!ctx.Detection.IsMoving) stateMachine.ChangeState<IdleState>();
-
-            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
-
-        }
+ 
         #region Helper Methods
 
         /// <summary>
@@ -89,12 +90,17 @@ namespace Nobeta.EUG.FSM.States
         /// <summary>
         /// 應用地面移動和旋轉
         /// </summary>
-        protected void ApplyMovementAndRotation(float speed)
+        protected void ApplyMovementAndRotation(float speed, bool startUpLock=false)
         {
             Vector3 direction = GetMoveDirection();
 
             if (direction.magnitude > 0.1f)
             {
+                if (startUpLock)
+                {
+                    // 起步鎖定期間減速
+                    speed *= 0.15f;
+                }
                 // 應用移動
                 ctx.MovementService.ApplyGroundMovement(
                     direction,

@@ -10,7 +10,7 @@ namespace Nobeta.EUG.FSM.States
     public class LandingState : GroundedState
     {
         private float landingTimer;
-        //private bool landingTimerLock;
+        private bool landingTimerLock;
         //public void LandingTimerLocker(bool a) => landingTimerLock = a;
         private const float LANDING_DURATION = 0.15f;
         private Vector3 _currentVelocity;
@@ -24,7 +24,7 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Enter();
             landingTimer = LANDING_DURATION;
-            //ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
+            ctx.TimeService.TaskDelayLock(LANDING_DURATION, (b) => landingTimerLock = b);
             _currentVelocity = ctx.MovementService.CurrentVelocity;
             ctx.MovementService.ResetVelocity();
             //ctx.MovementService.remainVelocity(0.8f);
@@ -33,11 +33,12 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Update()
         {
-            landingTimer -= Time.deltaTime;
+            //landingTimer -= Time.deltaTime;
 
-            if (landingTimer <= 0)
+            //if (landingTimer <= 0)
+            if (!landingTimerLock)
             {
-                //if (landingTimerLock) return;
+
 
                 Type LastGroundedState = stateMachine.GetLastGroundedState();
                 Debug.Log("LastGroundedState" + LastGroundedState);
@@ -62,7 +63,7 @@ namespace Nobeta.EUG.FSM.States
             if (stateType == typeof(HitState) || stateType == typeof(DyingState))
                 return true;
 
-            return landingTimer <= 0;
+            return !landingTimerLock;// landingTimer <= 0;
         }
     }
 }

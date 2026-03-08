@@ -9,7 +9,7 @@ namespace Nobeta.EUG.FSM.States
     public class TurningState : GroundedState
     {
         private bool TurningTimerLock;
-        private const float Turning_DURATION = 0.1f;
+        private const float Turning_DURATION = 0.7f;
         public TurningState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
@@ -18,6 +18,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            PlayAnimation("TurningState", 0.1f);
             ctx.TimeService.TaskDelayLock(Turning_DURATION, (b) => TurningTimerLock = b);
             // 煞車
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 1.5f);
