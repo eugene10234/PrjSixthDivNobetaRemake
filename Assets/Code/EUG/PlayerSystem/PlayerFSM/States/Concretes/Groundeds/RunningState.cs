@@ -8,6 +8,10 @@ namespace Nobeta.EUG.FSM.States
 {
     public class RunningState : GroundedState
     {
+        private float RunningTimer;
+        private const float RUNNING_DURATION = 1.4f;
+        private float _turnAngle;
+
         public RunningState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
@@ -15,18 +19,28 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
+            RunningTimer = RUNNING_DURATION;
             base.Enter();
             PlayAnimation("MovementState");
         }
         public override void Update()
         {
+            RunningTimer -= Time.deltaTime;
             base.Update();
             AnimatorSetting();
         }
         public override void FixedUpdate()
         {
+            caculate();
+            ctx.Detection.UpdateTurnDetection(ctx);
             ApplyMovementAndRotation(ctx.Config.runSpeed);
             base.FixedUpdate();
+        }
+        private void caculate()
+        {
+            Vector3 fff = ctx.Transform.forward;
+            Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
+            _turnAngle = Vector3.SignedAngle(fff, movement, Vector3.up);
         }
         private void AnimatorSetting()
         {
@@ -38,26 +52,37 @@ namespace Nobeta.EUG.FSM.States
             //        context.Transform.position + context.CameraService.GetCameraRelativeDirection(context.InputService.MoveInput) * 2f);
             //    //_debugServiceMb.ClearGiz();
             //});
-            Vector3 currentVelocity = ctx.MovementService.CurrentVelocity;
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
             float turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
-            Debug.Log($"Speed: {ctx.CurrentSpeed}");
-            if (Mathf.Abs(turnAngle) >= 60f)
-            {
-                //Debug.Log($"Speed: {context.CurrentSpeed}");
-                Debug.Log($"turnAngle: {turnAngle / Time.deltaTime}");
-            }
-
             ctx.AnimationService.SetFloat("Speed", ctx.CurrentSpeed);
-            ctx.AnimationService.SetFloat("Rotation", turnAngle / 165f);
+            ctx.AnimationService.SetFloat("Rotation", turnAngle / 32f);
             //debugServiceMb.DrawDebugText($"turnAngle: {turnAngle/Time.deltaTime}");
             //bool playRunAnimation = isRunning & movementDirection.magnitude > 0;
             //animator.SetBool("isRunning", playRunAnimation);
         }
+        public override void DetectionHandler()
+        {
+            if (RunningTimer < 0.01)
+            {
+                base.DetectionHandler();
+            }
+            if (ctx.CurrentSpeed<1.5f) stateMachine.ChangeState<IdleState>();
+            var absTurnAngle = Mathf.Abs(_turnAngle);
+            if (absTurnAngle > 0)
+            Debug.Log($"turnAngle: {absTurnAngle}");
+            if (absTurnAngle > 150f)
+            {
+                stateMachine.ChangeState<TurningState>();
+            }
+        }
 
         public override void OnStopInput()
         {
-            stateMachine.ChangeState<IdleState>();
+            //stateMachine.ChangeState<IdleState>();
+        }
+        public override void OnMoveInput()
+        {
+            RunningTimer = RUNNING_DURATION;
         }
     }
 

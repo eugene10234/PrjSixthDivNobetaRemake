@@ -36,7 +36,7 @@ namespace Nobeta.EUG.FSM.States
             PlayAnimation("AimingWalk");
 
             // 降低移動速度
-            //context.MovementService.StopMovement(context.Config.acceleration * 2f);
+            ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
 
             // 發布事件（通知攝影機切換）
             //PublishEvent(new PlayerAimingStartedEvent());
@@ -54,7 +54,7 @@ namespace Nobeta.EUG.FSM.States
             //        context.Transform.position + context.Transform.forward);
             //    //_debugServiceMb.ClearGiz();
             //});
-            //Vector3 currentVelocity = context.MovementService.CurrentVelocity;
+            Vector3 currentVelocity = ctx.MovementService.CurrentVelocity;
             //_debugServiceMb.Add(DrawDebugInfo);
         }
         private void DrawDebugInfo()

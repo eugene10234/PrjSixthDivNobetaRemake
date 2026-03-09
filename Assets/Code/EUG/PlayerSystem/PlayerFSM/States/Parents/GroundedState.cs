@@ -29,7 +29,7 @@ namespace Nobeta.EUG.FSM.States
         }
 
         public virtual void FixedUpdate()
-        {
+        {            
             // 默認行為：應用重力
             ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
@@ -48,7 +48,6 @@ namespace Nobeta.EUG.FSM.States
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
             if (!ctx.Detection.CheckIfMoving(ctx)) stateMachine.ChangeState<IdleState>();
-
             //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
 
         }

@@ -188,7 +188,7 @@ namespace Nobeta.EUG.FSM.Services
             // 方案1: 根據相機旋轉速度動態調整
             // 當玩家快速轉動相機時,角色也快速跟上
             float cameraInfluence = Mathf.Abs(_cameraService.GetHorizonOffset);
-            float dynamicSpeed = baseRotationSpeed * (1f + cameraInfluence * 1.05f);
+            float dynamicSpeed = baseRotationSpeed * (1f + cameraInfluence * 1f);
             //Debug.Log($"Camera Influence: {cameraInfluence}, Dynamic Speed: {dynamicSpeed}");
             //text1 = cameraInfluence;
             //text2 = dynamicSpeed;

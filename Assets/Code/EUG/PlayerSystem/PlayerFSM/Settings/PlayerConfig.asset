@@ -15,7 +15,7 @@ MonoBehaviour:
   walkSpeed: 6
   runSpeed: 10
   rotationSpeed: 5
-  acceleration: 10
+  acceleration: 8
   jumpHeight: 2
   gravity: -15
   coyoteTime: 0.2

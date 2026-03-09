@@ -14,7 +14,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// <summary>
         /// 播放動畫
         /// </summary>
-        void PlayAnimation(string animationName, float crossFadeDuration = 0.1f);
+        void PlayAnimation(string animationName, float crossFadeDuration = 0.1f, bool force = false);
 
         /// <summary>
         /// 設置動畫參數（浮點）

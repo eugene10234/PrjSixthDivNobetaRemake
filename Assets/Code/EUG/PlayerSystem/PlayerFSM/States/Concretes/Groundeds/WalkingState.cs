@@ -38,41 +38,22 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void FixedUpdate()
         {
-            caculate();
+            //AngleCaculate();
             ApplyMovementAndRotation(ctx.Config.walkSpeed, StartUpLock);
             base.FixedUpdate();
         }
         private void AnimatorSetting()
         {
-            //var endPoint = context.Transform.position + context.CameraService.GetCameraRelativeDirection(context.InputService.MoveInput) * 2f;
-            //_debugServiceMb.Giz.DrawLine(ctx.Transform.position,
-            //        ctx.Transform.position + ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput) * 2f, Color.red);
-
-            //caculate();
-            //Debug.Log($"Speed: {context.CurrentSpeed}");
-            //if (Mathf.Abs(_turnAngle) >= 160f)
-            //{
-            //    //_turnAngle100 = _turnAngle ;
-            //    //Debug.Log($"Speed: {context.CurrentSpeed}");
-            //    Debug.Log($"turnAngle: {_turnAngle }");
-            //}
-            _yaw = ctx.CameraService.GetHorizonOffset;
-            //ctx.DebugService.GUI.Label($"turnAngle: {_turnAngle}");
-            //ctx.DebugService.GUI.Watch("YAW", yaw);
-            //Debug.Log($"YAW: {tt}");
             ctx.AnimationService.SetFloat("Speed", ctx.CurrentSpeed);
             ctx.AnimationService.SetFloat("Rotation",_turnAngle/32f );
-            //debugServiceMb.DrawDebugText($"turnAngle: {turnAngle/Time.deltaTime}");
-            //bool playRunAnimation = isRunning & movementDirection.magnitude > 0;
-            //animator.SetBool("isRunning", playRunAnimation);
         }
         public override void DetectionHandler()
         {
             base.DetectionHandler();
-            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
+            if (ctx.InputService.IsRunPressed) stateMachine.ChangeState<RunningState>();
         }
 
-        private void caculate()
+        private void AngleCaculate()
         {
             Vector3 fff = ctx.Transform.forward;
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);

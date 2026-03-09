@@ -17,7 +17,7 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Enter();
             //PlayAnimation("IdleState",0.1f);
-            PlayAnimation("MovementState", 0.1f);
+            PlayAnimation("MovementState", 0.15f);
         }
         public override void Update()
         {

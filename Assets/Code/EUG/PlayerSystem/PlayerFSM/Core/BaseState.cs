@@ -12,6 +12,10 @@ namespace Nobeta.EUG.FSM.Core
     /// </summary>
     public   class BaseState : IState, IEnterable
     {
+        protected float EnterTime;
+        // 設定最小持續時間，0.02s 確保至少跨越 1-2 幀
+        public virtual float MinDuration => 0.01f;
+
         protected readonly StateContext ctx;
         protected readonly StateMachine stateMachine;
 
@@ -29,6 +33,7 @@ namespace Nobeta.EUG.FSM.Core
 
         public virtual void Enter()
         {
+            EnterTime = Time.time;
             // 子類覆寫以實現進入邏輯
         }
 
@@ -36,7 +41,10 @@ namespace Nobeta.EUG.FSM.Core
         {
             // 子類覆寫以實現退出邏輯
         }
-
+        public virtual bool CanExit()
+        {
+            return (Time.time - EnterTime) >= MinDuration;
+        }
         #endregion
 
         #region Input Event Handlers（輸入事件處理器）
@@ -112,7 +120,8 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         public virtual bool CanTransitionTo(Type stateType)
         {
-            return true; // 默認允許所有轉換
+            //return true; // 默認允許所有轉換
+            return CanExit();
         }
 
         #endregion
