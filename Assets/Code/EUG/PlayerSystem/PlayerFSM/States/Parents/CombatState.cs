@@ -76,5 +76,10 @@ namespace Nobeta.EUG.FSM.States
         {
             return ctx.CameraService.GetCameraForward();
         }
+        protected Vector3 GetMoveDirection()
+        {
+            Vector2 input = ctx.InputService.MoveInput;
+            return ctx.CameraService.GetCameraRelativeDirection(input);
+        }
     }
 }

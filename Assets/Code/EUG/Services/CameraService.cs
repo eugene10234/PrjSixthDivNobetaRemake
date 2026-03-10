@@ -16,15 +16,18 @@ namespace Nobeta.EUG.Services
         private float m_Pitch = 0f; // 上下旋轉
         private float m_Yaw = 0f;   // 左右旋轉
         private float horizonOffset = 0f;
+        private CinemachineCamera _cinemachineCamera;
         private Transform m_followPoint;
+        private readonly IPlayerInputService _playerInputService;
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
         public float GetHorizonOffset=> horizonOffset;
 
         [Inject]
-        public CameraService()
+        public CameraService( IPlayerInputService playerInputService )
         {
+            _playerInputService = playerInputService;
             mainCamera = Camera.main;
             AssignInputEvents();
         }
@@ -63,6 +66,7 @@ namespace Nobeta.EUG.Services
         }
         public void Initial(CinemachineCamera CinemachineCamera)
         {
+            _cinemachineCamera = CinemachineCamera;
             m_followPoint = CinemachineCamera.Target.TrackingTarget;
             // 讓初始角度等於當前物體的角度，避免瞬移
             Vector3 currentEuler = m_followPoint.eulerAngles;
@@ -82,7 +86,8 @@ namespace Nobeta.EUG.Services
 
             // 2. 限制垂直角度（防止翻轉）
             // 假設 0 是水平，90 是看腳下，-90 是看天空
-            m_Pitch = Mathf.Clamp(m_Pitch, -89f, 89f);
+            //Debug.Log($"Raw Pitch: {m_Pitch}");
+            m_Pitch = Mathf.Clamp(m_Pitch, -55f, 55f);
 
             // 3. 直接計算新的四元數旋轉
             // 使用 Euler 組合出新的旋轉，這不會受上一幀的旋轉偏移影響
@@ -103,17 +108,31 @@ namespace Nobeta.EUG.Services
 
         private void AssignInputEvents()
         {
+            //_playerInputService.OnAimStart += OnCameraAimStart;
+           //_playerInputService.OnAimEnd += OnCameraAimEnd;
             //throw new NotImplementedException();
         }
 
         private void UnAssignInputEvents()
         {
+            //_playerInputService.OnAimStart -= OnCameraAimStart;
+            //_playerInputService.OnAimEnd -= OnCameraAimEnd;
             //throw new NotImplementedException();
         }
 
         public void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim)
         {
             throw new NotImplementedException();
+        }
+        private void OnCameraAimStart()
+        {
+            //throw new NotImplementedException();
+            _cinemachineCamera.Lens.FieldOfView = 40f; // 縮小視野，模擬瞄準效果
+        }
+        private void OnCameraAimEnd()
+        {
+            //throw new NotImplementedException();
+            _cinemachineCamera.Lens.FieldOfView = 60f; // 縮小視野，模擬瞄準效果
         }
     }
 }

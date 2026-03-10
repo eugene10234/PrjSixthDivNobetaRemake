@@ -21,7 +21,10 @@ namespace Nobeta.EUG.FSM.Services
             this.animator = animator;
 
         }
-
+        public bool IsInTransition(int layerId) 
+        {
+            return animator != null && animator.IsInTransition(layerId);
+        }
         public void PlayAnimation(string animationName, float crossFadeDuration = 0.1f , bool force = false)
         {
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);

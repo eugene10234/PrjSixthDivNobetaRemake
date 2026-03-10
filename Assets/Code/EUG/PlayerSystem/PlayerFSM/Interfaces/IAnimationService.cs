@@ -30,6 +30,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// 設置動畫參數（觸發器）
         /// </summary>
         void SetTrigger(string parameterName);
+        bool IsInTransition(int v);
     }
 }
 

@@ -43,7 +43,9 @@ namespace Nobeta.EUG.FSM.Core
         }
         public virtual bool CanExit()
         {
-            return (Time.time - EnterTime) >= MinDuration;
+            bool aniCanTrans = !ctx.AnimationService.IsInTransition(0);
+            bool timePassed = (Time.time - EnterTime) >= MinDuration;
+            return timePassed && aniCanTrans;
         }
         #endregion
 
