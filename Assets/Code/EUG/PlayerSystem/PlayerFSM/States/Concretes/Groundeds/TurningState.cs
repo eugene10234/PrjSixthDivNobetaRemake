@@ -25,13 +25,13 @@ namespace Nobeta.EUG.FSM.States
             Vector3 currentForward = ctx.Transform.forward;
             // 3. 計算叉積
             Vector3 crossProduct = Vector3.Cross(currentForward, targetDir);
-
+            //Debug.Log($"crossProduct{crossProduct}");
             if (crossProduct.y >= 0)
             {
                 // 目標在右側，需要右轉
                 PlayAnimation("Turn_R", 0.1f);
             }
-            else if (crossProduct.y < 0)
+            else if (crossProduct.y <= 0)
             {
                 // 目標在左側，需要左轉
                 PlayAnimation("Turn_L", 0.1f);
