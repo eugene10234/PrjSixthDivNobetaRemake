@@ -178,7 +178,7 @@ namespace Nobeta.EUG.FSM.Services
         /// </summary>
         public void RotateTowards(Vector3 direction, float baseRotationSpeed)
         {
-            if (direction.magnitude < 0.1f) return;
+            if (direction.sqrMagnitude < 0.01f) return;
 
             // 計算目標旋轉
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -211,7 +211,7 @@ namespace Nobeta.EUG.FSM.Services
         /// </summary>
         public void RotateTowardsImmediate(Vector3 direction)
         {
-            if (direction.magnitude < 0.1f) return;
+            if (direction.sqrMagnitude < 0.01f) return;
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
@@ -220,7 +220,7 @@ namespace Nobeta.EUG.FSM.Services
         /// </summary>
         public void RotateTowardsSteady(Vector3 direction, float rotationSpeed)
         {
-            if (direction.magnitude < 0.1f) return;
+            if (direction.sqrMagnitude < 0.01f) return;
 
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Slerp(

@@ -65,7 +65,13 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// <param name="direction">目標方向</param>
         /// <param name="rotationSpeed">旋轉速度</param>
         void RotateTowards(Vector3 direction, float rotationSpeed);
+        public void RotateTowardsImmediate(Vector3 direction);
 
+
+        /// <summary>
+        /// 固定速度平滑旋轉(不受相機影響)
+        /// </summary>
+        public void RotateTowardsSteady(Vector3 direction, float rotationSpeed);
         /// <summary>
         /// 停止移動（平滑減速）
         /// </summary>
