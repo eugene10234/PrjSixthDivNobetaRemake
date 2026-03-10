@@ -20,10 +20,28 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PlayAnimation("TurningState", 0.1f);
+            Vector3 targetDir = GetMoveDirection();
+            // 2. 計算當前物體的前方
+            Vector3 currentForward = ctx.Transform.forward;
+            // 3. 計算叉積
+            Vector3 crossProduct = Vector3.Cross(currentForward, targetDir);
+
+            if (crossProduct.y >= 0)
+            {
+                // 目標在右側，需要右轉
+                PlayAnimation("Turn_R", 0.1f);
+            }
+            else if (crossProduct.y < 0)
+            {
+                // 目標在左側，需要左轉
+                PlayAnimation("Turn_L", 0.1f);
+            }
+            //Debug.Log($"進入轉向狀態{direction.x}");
+            //if (direction.x > 0) PlayAnimation("Turn_R", 0.1f);
+            //else PlayAnimation("Turn_L", 0.1f);
             ctx.TimeService.TaskDelayLock(Turning_DURATION, (b) => TurningTimerLock = b);
             // 煞車
-            ctx.MovementService.StopMovement(ctx.Config.acceleration * 1.5f);
+            ctx.MovementService.StopMovement(ctx.Config.acceleration * 0.5f);
         }
         public override void Update()
         {
@@ -50,7 +68,7 @@ namespace Nobeta.EUG.FSM.States
         public override void FixedUpdate()
         {
             // 停止移動
-            if (TurningTimerLock) ctx.MovementService.StopMovement(ctx.Config.acceleration*0.5f);
+            if (TurningTimerLock) ctx.MovementService.StopMovement(ctx.Config.acceleration*0.45f);
             //else ApplyMovementAndRotation(ctx.Config.walkSpeed);
             base.FixedUpdate();
         }

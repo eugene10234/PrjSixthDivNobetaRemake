@@ -1,14 +1,11 @@
-﻿
-using Nobeta.EUG.FSM.Interfaces;
+﻿using Nobeta.EUG.Interfaces;
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-namespace Nobeta.EUG.FSM.Services
+namespace Nobeta.EUG.Services
 {
-    public class PlayerInputService : IPlayerInputService ,IDisposable
+    public class PlayerInputService : IPlayerInputService, IDisposable
     {
 
         #region PlayerInputService_Construct_Dipose

@@ -1,5 +1,6 @@
 ﻿using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.Interfaces;
 using System;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -8,7 +9,7 @@ using VContainer;
 // CameraService - 攝影機服務
 // ========================================================================
 
-namespace Nobeta.EUG.FSM.Services
+namespace Nobeta.EUG.Services
 {
     public class CameraService : ICameraService, IDisposable
     {

@@ -4,7 +4,7 @@
 // ========================================================================
 
 using UnityEngine;
-namespace Nobeta.EUG.FSM.Settings
+namespace Nobeta.EUG.Settings
 {
     /// <summary>
     /// 玩家配置

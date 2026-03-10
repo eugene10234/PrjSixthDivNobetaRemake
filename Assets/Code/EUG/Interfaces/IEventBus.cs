@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Event Bus - 事件總線接口
 // ========================================================================
-namespace Nobeta.EUG.FSM.Interfaces
+namespace Nobeta.EUG.Interfaces
 {
     /// <summary>
     /// 事件總線接口 - 全局事件系統

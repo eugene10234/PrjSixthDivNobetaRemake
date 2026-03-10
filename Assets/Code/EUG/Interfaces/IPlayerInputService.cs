@@ -4,7 +4,7 @@
 using System;
 using UnityEngine;
 
-namespace Nobeta.EUG.FSM.Interfaces
+namespace Nobeta.EUG.Interfaces
 {
     /// <summary>
     /// 輸入服務接口 - 提供輸入狀態和事件

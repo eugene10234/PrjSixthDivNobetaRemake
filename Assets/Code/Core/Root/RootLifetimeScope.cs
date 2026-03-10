@@ -2,6 +2,8 @@ using Assets.Scripts.Root;
 using Nobeta.EUG.FSM;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
+using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.Services;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

@@ -38,7 +38,7 @@ namespace Nobeta.EUG.FSM.Services
                 animator.Play(animationName, 0, 0f);
             }
             _LatetestStateInfo = stateInfo;
-            Debug.Log($"Playing animation: {animationName}, Current state: {_LatetestStateInfo.fullPathHash}, Normalized time: {_LatetestStateInfo.normalizedTime}");
+            //Debug.Log($"Playing animation: {animationName}, Current state: {_LatetestStateInfo.fullPathHash}, Normalized time: {_LatetestStateInfo.normalizedTime}");
             animator.CrossFade(animationName, crossFadeDuration);
 
         }

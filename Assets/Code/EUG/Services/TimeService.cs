@@ -1,13 +1,14 @@
 ﻿using Cysharp.Threading.Tasks;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.Interfaces;
 using System;
 using System.Threading;
 using UnityEngine;
 // ========================================================================
 // TimeService - 時間服務
 // ========================================================================
-namespace Nobeta.EUG.FSM.Services
+namespace Nobeta.EUG.Services
 {
     public class TimeService : ITimeService
     {

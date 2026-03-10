@@ -10,10 +10,9 @@ using Nobeta.EUG.FSM.States;
 using System;
 using UnityEngine;
 using VContainer;
-using static Nobeta.EUG.FSM.DebugServiceMb;
 using static UnityEngine.EventSystems.EventTrigger;
 
-namespace Nobeta.EUG.FSM
+namespace Nobeta.EUG.FSM.Services
 {
     public class DebugServiceMb : MonoBehaviour
     {

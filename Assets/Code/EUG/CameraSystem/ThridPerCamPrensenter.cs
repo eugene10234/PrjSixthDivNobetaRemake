@@ -1,16 +1,11 @@
-﻿using Nobeta.EUG.Events;
-using Nobeta.EUG.FSM.Core;
-using Nobeta.EUG.FSM.Interfaces;
-using Nobeta.EUG.FSM.States;
+﻿using Nobeta.EUG.Interfaces;
 using System;
 using Unity.Cinemachine;
-using UnityEngine;
-using VContainer;
 using VContainer.Unity;
 
 namespace Nobeta.EUG.CameraSystem
 {
-    public class ThridPerCamPrensenter : IInitializable, ITickable,ILateTickable, IDisposable
+    public class ThridPerCamPrensenter : IInitializable, ITickable, ILateTickable, IDisposable
     {
         //private readonly StateContext _context;
         private readonly IPlayerInputService _inputService;

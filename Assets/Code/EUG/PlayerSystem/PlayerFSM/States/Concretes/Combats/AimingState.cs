@@ -1,5 +1,6 @@
 ﻿
 using Nobeta.EUG.FSM.Core;
+using Nobeta.EUG.FSM.Services;
 using System;
 using UnityEngine;
 
@@ -120,10 +121,10 @@ namespace Nobeta.EUG.FSM.States
             }
 
             // 應用重力
-            //context.MovementService.ApplyGravity(context.Config.gravity);
+            ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
             // 執行移動
-            //context.MovementService.ExecuteMovement();
+            ctx.MovementService.ExecuteMovement();
         }
         private void AnimatorSetting()
         {

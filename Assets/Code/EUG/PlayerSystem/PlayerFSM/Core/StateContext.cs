@@ -5,7 +5,9 @@
 
 
 using Nobeta.EUG.FSM.Interfaces;
-using Nobeta.EUG.FSM.Settings;
+using Nobeta.EUG.FSM.Services;
+using Nobeta.EUG.Settings;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
 

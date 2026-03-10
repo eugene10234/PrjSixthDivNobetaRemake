@@ -2,7 +2,7 @@
 // StateMachine - 狀態機核心（VContainer 版本）
 // ============================================================================
 
-using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

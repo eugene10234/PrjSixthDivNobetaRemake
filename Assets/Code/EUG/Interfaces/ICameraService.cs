@@ -5,7 +5,7 @@ using System;
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace Nobeta.EUG.FSM.Interfaces
+namespace Nobeta.EUG.Interfaces
 {
     /// <summary>
     /// 攝影機服務接口 - 提供攝影機相關信息

@@ -5,6 +5,7 @@
 
 using System;
 using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
 

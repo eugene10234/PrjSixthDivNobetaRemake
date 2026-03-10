@@ -5,7 +5,7 @@ using UnityEngine;
 // ========================================================================
 // Time Service - 時間服務接口
 // ========================================================================
-namespace Nobeta.EUG.FSM.Interfaces
+namespace Nobeta.EUG.Interfaces
 {
     /// <summary>
     /// 時間服務接口

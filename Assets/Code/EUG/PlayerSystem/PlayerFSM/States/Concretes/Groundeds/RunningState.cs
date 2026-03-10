@@ -66,10 +66,10 @@ namespace Nobeta.EUG.FSM.States
             {
                 base.DetectionHandler();
             }
-            if (ctx.CurrentSpeed<1.5f) stateMachine.ChangeState<IdleState>();
+            if (ctx.CurrentSpeed < 1.5f) stateMachine.ChangeState<IdleState>();
             var absTurnAngle = Mathf.Abs(_turnAngle);
             if (absTurnAngle > 0)
-            Debug.Log($"turnAngle: {absTurnAngle}");
+                //Debug.Log($"turnAngle: {absTurnAngle}");
             if (absTurnAngle > 150f)
             {
                 stateMachine.ChangeState<TurningState>();
