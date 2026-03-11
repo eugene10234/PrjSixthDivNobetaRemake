@@ -92,7 +92,7 @@ namespace Nobeta.EUG.FSM.States
             // 持續面向瞄準方向
             Vector3 aimDirection = GetAimDirection();
             ctx.MovementService.RotateTowards(aimDirection, ctx.Config.rotationSpeed);
-
+            
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
             _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);           
             SetTargetSpeed(_speedType);
@@ -101,11 +101,14 @@ namespace Nobeta.EUG.FSM.States
 
         public void FixedUpdate()
         {
+            //Debug.LogWarning($"111111111111111111111111111:{DateTime.Now}");
             // 瞄準時可以緩慢移動
             _movement = ctx.InputService.MoveInput;
             //Debug.LogWarning($"MoveInput: {_movement}:{DateTime.Now}");
+            if(!ctx.InputService.IsAimPressed) stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             if (_movement.magnitude > 0.1f)
             {
+               // Debug.LogWarning($"222222222222222222:{DateTime.Now}");
                 if (typeof(IdleState) == _speedType) _speedType = typeof(WalkingState);
                 Vector3 direction = ctx.CameraService.GetCameraRelativeDirection(_movement);
                 //Debug.LogWarning($"_targetSpeed==={_targetSpeed}:{DateTime.Now}");
@@ -118,6 +121,7 @@ namespace Nobeta.EUG.FSM.States
             }
             else
             {
+
                 // 沒有輸入時停止移動
                 ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
             }

@@ -8,8 +8,7 @@ namespace Nobeta.EUG.FSM.States
 {
     public class RunningState : GroundedState
     {
-        private float RunningTimer;
-        private const float RUNNING_DURATION = 1.4f;
+
         private float _turnAngle;
 
         public RunningState(StateContext context, StateMachine stateMachine)
@@ -62,10 +61,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void DetectionHandler()
         {
-            if (RunningTimer < 0.01)
-            {
                 base.DetectionHandler();
-            }
             if (ctx.CurrentSpeed < 1.5f) stateMachine.ChangeState<IdleState>();
             var absTurnAngle = Mathf.Abs(_turnAngle);
             if (absTurnAngle > 0)
