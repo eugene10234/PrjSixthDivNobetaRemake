@@ -27,8 +27,9 @@ namespace Nobeta.EUG.Interfaces
         /// </summary>
         Vector3 GetCameraRight();
         void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim);
-        void ExecuteCameraRotation();
         void Initial(CinemachineCamera cinemachineCamera);
+        void LateUpdate();
+
         float GetHorizonOffset { get; }
     }
 }

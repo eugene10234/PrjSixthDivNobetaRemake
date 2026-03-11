@@ -3,6 +3,7 @@
 // ============================================================================
 
 using Nobeta.EUG.FSM.Core;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 
 namespace Nobeta.EUG.FSM.States

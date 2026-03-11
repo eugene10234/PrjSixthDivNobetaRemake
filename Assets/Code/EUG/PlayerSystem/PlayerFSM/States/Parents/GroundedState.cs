@@ -1,4 +1,5 @@
 ﻿using Nobeta.EUG.FSM.Core;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 // ========================================================================
 // GroundedState - 地面狀態父類（更新版）

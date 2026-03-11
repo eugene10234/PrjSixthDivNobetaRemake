@@ -287,19 +287,5 @@ namespace Nobeta.EUG.FSM.Core
         void Exit();
     }
 
-    /// <summary>
-    /// 可更新的狀態
-    /// </summary>
-    public interface IUpdatable
-    {
-        void Update();
-    }
 
-    /// <summary>
-    /// 可固定更新的狀態
-    /// </summary>
-    public interface IFixedUpdatable
-    {
-        void FixedUpdate();
-    }
 }

@@ -37,7 +37,7 @@ namespace Nobeta.EUG.CameraSystem
         }
         public void LateTick()
         {
-            _cameraService.ExecuteCameraRotation();
+            _cameraService.LateUpdate();
         }
 
     }

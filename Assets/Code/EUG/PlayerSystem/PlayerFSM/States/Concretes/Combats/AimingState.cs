@@ -1,6 +1,7 @@
 ﻿
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
+using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
 
@@ -93,8 +94,7 @@ namespace Nobeta.EUG.FSM.States
             ctx.MovementService.RotateTowards(aimDirection, ctx.Config.rotationSpeed);
 
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
-            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
-            Debug.LogWarning($"444444444444444:{DateTime.Now}");
+            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);           
             SetTargetSpeed(_speedType);
             AnimatorSetting();
         }
@@ -103,14 +103,12 @@ namespace Nobeta.EUG.FSM.States
         {
             // 瞄準時可以緩慢移動
             _movement = ctx.InputService.MoveInput;
-            Debug.LogWarning($"0000000000000000000000:{DateTime.Now}");
             //Debug.LogWarning($"MoveInput: {_movement}:{DateTime.Now}");
             if (_movement.magnitude > 0.1f)
             {
                 if (typeof(IdleState) == _speedType) _speedType = typeof(WalkingState);
-                Debug.LogWarning($"1A1111111111111111111111111111:{DateTime.Now}");
                 Vector3 direction = ctx.CameraService.GetCameraRelativeDirection(_movement);
-                Debug.LogWarning($"_targetSpeed==={_targetSpeed}:{DateTime.Now}");
+                //Debug.LogWarning($"_targetSpeed==={_targetSpeed}:{DateTime.Now}");
                 // 使用較低的速度
                 ctx.MovementService.ApplyGroundMovement(
                     direction,
@@ -120,11 +118,9 @@ namespace Nobeta.EUG.FSM.States
             }
             else
             {
-                Debug.LogWarning($"2222222222222222222222222:{DateTime.Now}");
                 // 沒有輸入時停止移動
                 ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
             }
-            Debug.LogWarning($"333333333333:{DateTime.Now}");
             // 應用重力
             ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
@@ -133,7 +129,6 @@ namespace Nobeta.EUG.FSM.States
         }
         private void AnimatorSetting()
         {
-            Debug.LogWarning($"555555:{DateTime.Now}");
             Vector2 dir = ctx.InputService.MoveInput;
             ctx.AnimationService.SetFloat("xVelocity", dir.x);
             ctx.AnimationService.SetFloat("zVelocity", dir.y);

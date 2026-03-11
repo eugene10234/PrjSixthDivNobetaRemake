@@ -11,7 +11,7 @@ using VContainer;
 
 namespace Nobeta.EUG.Services
 {
-    public class CameraService : ICameraService, IDisposable
+    public class CameraService : ICameraService, IDisposable,IUpdatable, ILateUpdatable
     {
         private float m_Pitch = 0f; // 上下旋轉
         private float m_Yaw = 0f;   // 左右旋轉
@@ -22,8 +22,11 @@ namespace Nobeta.EUG.Services
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
-        public float GetHorizonOffset=> horizonOffset;
+        private float _targetFOV = 60f;
+        private float _smoothFOVSpeed = 0.25f;
 
+        public float GetHorizonOffset=> horizonOffset;
+        public float FieldOfView { get =>_cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
         [Inject]
         public CameraService( IPlayerInputService playerInputService )
         {
@@ -77,7 +80,7 @@ namespace Nobeta.EUG.Services
             //player = GetComponent<mbPlayer>();
 
         }
-        public void ExecuteCameraRotation()
+        private void ExecuteCameraRotation()
         {
             // 1. 取得並累加輸入值
             horizonOffset = Input.GetAxis("Mouse X") * mHorizontalSensetivity;
@@ -100,7 +103,12 @@ namespace Nobeta.EUG.Services
             // 5. 套用旋轉
             m_followPoint.rotation = targetRotation;
         }
-
+        private void ExecuteCameraZoom()
+        {
+            // 3. 使用 Lerp 進行平滑插值
+            // 這裡的 smoothSpeed 決定了相機跟隨目標 FOV 的速度
+            FieldOfView = Mathf.Lerp(FieldOfView, _targetFOV, _smoothFOVSpeed);
+        }
         public void Dispose()
         {
             UnAssignInputEvents();
@@ -108,16 +116,14 @@ namespace Nobeta.EUG.Services
 
         private void AssignInputEvents()
         {
-            //_playerInputService.OnAimStart += OnCameraAimStart;
-           //_playerInputService.OnAimEnd += OnCameraAimEnd;
-            //throw new NotImplementedException();
+            _playerInputService.OnAimStart += OnCameraAimStart;
+            _playerInputService.OnAimEnd += OnCameraAimEnd;
         }
 
         private void UnAssignInputEvents()
         {
-            //_playerInputService.OnAimStart -= OnCameraAimStart;
-            //_playerInputService.OnAimEnd -= OnCameraAimEnd;
-            //throw new NotImplementedException();
+            _playerInputService.OnAimStart -= OnCameraAimStart;
+            _playerInputService.OnAimEnd -= OnCameraAimEnd;
         }
 
         public void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim)
@@ -127,12 +133,23 @@ namespace Nobeta.EUG.Services
         private void OnCameraAimStart()
         {
             //throw new NotImplementedException();
-            _cinemachineCamera.Lens.FieldOfView = 40f; // 縮小視野，模擬瞄準效果
+            _targetFOV = 40f; // 縮小視野，模擬瞄準效果
         }
         private void OnCameraAimEnd()
         {
             //throw new NotImplementedException();
-            _cinemachineCamera.Lens.FieldOfView = 60f; // 縮小視野，模擬瞄準效果
+            _targetFOV = 60f; // 縮小視野，模擬瞄準效果
+        }
+
+        public void LateUpdate()
+        {
+            ExecuteCameraZoom();
+            ExecuteCameraRotation();
+        }
+
+        public void Update()
+        {
+            throw new NotImplementedException();
         }
     }
 }
