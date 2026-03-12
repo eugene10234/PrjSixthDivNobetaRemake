@@ -33,20 +33,27 @@ namespace Nobeta.EUG.Services
 
         // 暴露給外部讀取的狀態
         public Vector2 MoveInput { get; private set; }
+        public Vector2 MousePosOffset { get; private set; }
         public bool IsJumpPressed { get; private set; }
         public bool IsRunPressed { get; private set; }
         public bool IsAimPressed { get; private set; }
         public bool IsFirePressed { get; private set; }
+        public bool IsCusorSwitchPressed { get; private set; }
 
         // 提供事件訂閱
         public event Action OnMove;
         public event Action OnStop;
+        public event Action OnMouseMove;
+        public event Action OnMouseStop;
         public event Action OnRun;
         public event Action OnJump;
         public event Action OnDodge;
         public event Action OnAimStart;
         public event Action OnAimEnd;
         public event Action OnFireStart;
+        //鼠標切換事件（如果需要的話）
+        public event Action OnCusorSwitchStart;
+        public event Action OnCusorSwitchEnd;
         //=========================================================
 
         private void OnMovementPerformed(InputAction.CallbackContext ctx)
@@ -58,6 +65,17 @@ namespace Nobeta.EUG.Services
         {
             MoveInput = Vector2.zero;
             OnStop?.Invoke();
+        }
+        private void OnMousePosPerformed(InputAction.CallbackContext ctx)
+        {
+            if (IsCusorSwitchPressed) MousePosOffset = Vector2.zero;
+            else MousePosOffset = ctx.ReadValue<Vector2>();
+            OnMouseMove?.Invoke();
+        }
+        private void OnMousePosCanceled(InputAction.CallbackContext _)
+        {
+            MousePosOffset = Vector2.zero;
+            OnMouseStop?.Invoke();
         }
         private void RunPerformed(InputAction.CallbackContext _)
         {
@@ -93,6 +111,7 @@ namespace Nobeta.EUG.Services
         }
         private void FirePerformed(InputAction.CallbackContext _)
         {
+            if (IsCusorSwitchPressed) return;
             IsFirePressed = true;
             OnFireStart?.Invoke();
         }
@@ -100,12 +119,26 @@ namespace Nobeta.EUG.Services
         {
             IsFirePressed = false;
         }
+        private void CusorSwitchPerformed(InputAction.CallbackContext _)
+        {
+            IsCusorSwitchPressed = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        private void CusorSwitchCanceled(InputAction.CallbackContext _)
+        {
+            IsCusorSwitchPressed = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
         //=========================================================
         #region InputEvents_Assign_Unassign
         private void AssignInputEvents()
         {
             _actions.Player.Movement.performed += OnMovementPerformed;
             _actions.Player.Movement.canceled += OnMovementCanceled;
+            _actions.Player.MousePos.performed += OnMousePosPerformed;
+            _actions.Player.MousePos.canceled += OnMousePosCanceled;
             _actions.Player.Run.performed += RunPerformed;
             _actions.Player.Run.canceled += RunCanceled;
             _actions.Player.Jump.performed += JumpPerformed;
@@ -115,6 +148,9 @@ namespace Nobeta.EUG.Services
             _actions.Player.Aim.canceled += AimCanceled;
             _actions.Player.Fire.performed += FirePerformed;
             _actions.Player.Fire.canceled += FireCanceled;
+            _actions.Player.CursorSwitch.performed += CusorSwitchPerformed;
+            _actions.Player.CursorSwitch.canceled += CusorSwitchCanceled;
+
         }
         private void UnassignInputEvents()
         {
@@ -129,6 +165,8 @@ namespace Nobeta.EUG.Services
             _actions.Player.Aim.canceled -= AimCanceled;
             _actions.Player.Fire.performed -= FirePerformed;
             _actions.Player.Fire.canceled -= FireCanceled;
+            _actions.Player.CursorSwitch.performed -= CusorSwitchPerformed;
+            _actions.Player.CursorSwitch.canceled -= CusorSwitchCanceled;
         }
         #endregion
 

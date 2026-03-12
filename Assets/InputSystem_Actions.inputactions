@@ -122,6 +122,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CursorSwitch",
+                    "type": "Button",
+                    "id": "d0e3d767-0a33-4d9b-b1e2-42f02765efaf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -183,7 +192,7 @@
                 {
                     "name": "",
                     "id": "c9b25f59-dae0-4ce1-8456-4ea257860759",
-                    "path": "<Mouse>/position",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -309,6 +318,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8011db4-0df1-42e2-b479-fec03e35ec72",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "CursorSwitch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

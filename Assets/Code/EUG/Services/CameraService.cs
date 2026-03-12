@@ -11,7 +11,7 @@ using VContainer;
 
 namespace Nobeta.EUG.Services
 {
-    public class CameraService : ICameraService, IDisposable,IUpdatable, ILateUpdatable
+    public class CameraService : ICameraService, IDisposable, IUpdatable, ILateUpdatable
     {
         private float m_Pitch = 0f; // 上下旋轉
         private float m_Yaw = 0f;   // 左右旋轉
@@ -25,10 +25,10 @@ namespace Nobeta.EUG.Services
         private float _targetFOV = 60f;
         private float _smoothFOVSpeed = 0.25f;
 
-        public float GetHorizonOffset=> horizonOffset;
-        public float FieldOfView { get =>_cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
+        public float GetHorizonOffset => horizonOffset;
+        public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
         [Inject]
-        public CameraService( IPlayerInputService playerInputService )
+        public CameraService(IPlayerInputService playerInputService)
         {
             _playerInputService = playerInputService;
             mainCamera = Camera.main;
@@ -82,10 +82,15 @@ namespace Nobeta.EUG.Services
         }
         private void ExecuteCameraRotation()
         {
+            var mouseMoveOffset = _playerInputService.MousePosOffset;
+            //Debug.Log($"Mouse Move Offset11: {Input.GetAxis("Mouse X")}:{Input.GetAxis("Mouse Y")}");
+            float x = mouseMoveOffset.x / 20f;//Input.GetAxis("Mouse X")
+            float y = mouseMoveOffset.y / 20f;//Input.GetAxis("Mouse Y")
+            //Debug.Log($"Mouse Move Offset22: {mouseMoveOffset.x}:{mouseMoveOffset.y}");
             // 1. 取得並累加輸入值
-            horizonOffset = Input.GetAxis("Mouse X") * mHorizontalSensetivity;
+            horizonOffset = x * mHorizontalSensetivity;
             m_Yaw += horizonOffset;
-            m_Pitch -= Input.GetAxis("Mouse Y") * mVerticalSensetivity; // 通常 Y 軸輸入需要反轉
+            m_Pitch -= y * mVerticalSensetivity; // 通常 Y 軸輸入需要反轉
 
             // 2. 限制垂直角度（防止翻轉）
             // 假設 0 是水平，90 是看腳下，-90 是看天空

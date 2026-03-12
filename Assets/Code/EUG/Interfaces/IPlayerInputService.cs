@@ -17,7 +17,7 @@ namespace Nobeta.EUG.Interfaces
         /// 移動輸入（歸一化）
         /// </summary>
         Vector2 MoveInput { get; }
-
+        Vector2 MousePosOffset { get; }
         /// <summary>
         /// 是否按下跳躍
         /// </summary>
@@ -28,7 +28,7 @@ namespace Nobeta.EUG.Interfaces
         /// </summary>
         bool IsRunPressed { get; }
         bool IsAimPressed { get; }
-
+        
         /// <summary>
         /// 移動事件
         /// </summary>

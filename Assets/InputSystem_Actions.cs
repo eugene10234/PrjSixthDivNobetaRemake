@@ -208,6 +208,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CursorSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""d0e3d767-0a33-4d9b-b1e2-42f02765efaf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -269,7 +278,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c9b25f59-dae0-4ce1-8456-4ea257860759"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -395,6 +404,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8011db4-0df1-42e2-b479-fec03e35ec72"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""CursorSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -995,6 +1015,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
         m_Player_ISwitch = m_Player.FindAction("ISwitch", throwIfNotFound: true);
         m_Player_IUse = m_Player.FindAction("IUse", throwIfNotFound: true);
+        m_Player_CursorSwitch = m_Player.FindAction("CursorSwitch", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1101,6 +1122,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LockOn;
     private readonly InputAction m_Player_ISwitch;
     private readonly InputAction m_Player_IUse;
+    private readonly InputAction m_Player_CursorSwitch;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1164,6 +1186,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/IUse".
         /// </summary>
         public InputAction @IUse => m_Wrapper.m_Player_IUse;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CursorSwitch".
+        /// </summary>
+        public InputAction @CursorSwitch => m_Wrapper.m_Player_CursorSwitch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1229,6 +1255,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @IUse.started += instance.OnIUse;
             @IUse.performed += instance.OnIUse;
             @IUse.canceled += instance.OnIUse;
+            @CursorSwitch.started += instance.OnCursorSwitch;
+            @CursorSwitch.performed += instance.OnCursorSwitch;
+            @CursorSwitch.canceled += instance.OnCursorSwitch;
         }
 
         /// <summary>
@@ -1279,6 +1308,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @IUse.started -= instance.OnIUse;
             @IUse.performed -= instance.OnIUse;
             @IUse.canceled -= instance.OnIUse;
+            @CursorSwitch.started -= instance.OnCursorSwitch;
+            @CursorSwitch.performed -= instance.OnCursorSwitch;
+            @CursorSwitch.canceled -= instance.OnCursorSwitch;
         }
 
         /// <summary>
@@ -1670,6 +1702,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnIUse(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CursorSwitch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCursorSwitch(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
