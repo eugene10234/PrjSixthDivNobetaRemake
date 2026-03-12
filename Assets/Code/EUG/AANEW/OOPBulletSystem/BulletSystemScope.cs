@@ -32,6 +32,9 @@ namespace Nobeta.EUG.BulletSystem
             // 註冊 Bullet（Transient - 每次創建新的）
             builder.Register<Bullet>(Lifetime.Transient);
 
+            builder.RegisterComponentInHierarchy<BulletSystemBridge>();
+            builder.RegisterComponentInHierarchy<WeaponSystem>();
+
             Debug.Log("[BulletSystem] VContainer 註冊完成");
         }
     }
