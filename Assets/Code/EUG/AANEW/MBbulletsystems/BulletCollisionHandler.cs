@@ -1,5 +1,4 @@
-﻿using Nobeta.BulletSystem.OOP;
-using Nobeta.EUG.Interfaces;
+﻿using Nobeta.EUG.Interfaces;
 using UnityEngine;
 namespace Nobeta.EUG.AANEW.MBbulletsystems
 {
