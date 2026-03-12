@@ -1,5 +1,5 @@
 ﻿using Nobeta.EUG.BulletSystem.OOP;
-using Nobeta.EUG.BulletSystem.UnityBridge;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.Services;
 using UnityEngine;

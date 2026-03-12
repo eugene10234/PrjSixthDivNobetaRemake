@@ -21,7 +21,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
     {
         #region Constants
 
-        private const int POOL_CAPACITY = 500;
+        private const int POOL_CAPACITY = 5000;
 
         #endregion
 

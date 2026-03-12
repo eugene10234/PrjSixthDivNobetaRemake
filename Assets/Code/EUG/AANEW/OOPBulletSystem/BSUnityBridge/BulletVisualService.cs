@@ -9,7 +9,7 @@ using VContainer.Unity;
 // ========================================================================
 // VisualService (視覺服務)
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.UnityBridge
+namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 {
     /// <summary>
     /// 視覺服務（管理子彈視覺效果）

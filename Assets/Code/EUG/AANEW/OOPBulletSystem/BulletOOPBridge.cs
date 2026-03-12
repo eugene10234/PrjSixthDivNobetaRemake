@@ -9,7 +9,7 @@ using VContainer.Unity;
     // ========================================================================
     // BulletSystemBridge (Unity 橋接層 - 唯一的 MonoBehaviour)
     // ========================================================================
-namespace Nobeta.EUG.BulletSystem.UnityBridge
+namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 {
 
     /// <summary>

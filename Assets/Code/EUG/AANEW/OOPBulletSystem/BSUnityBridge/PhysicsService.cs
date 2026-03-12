@@ -9,7 +9,7 @@ using VContainer.Unity;
 // ========================================================================
 // PhysicsService (物理服務實現)
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.UnityBridge
+namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 {
 
     /// <summary>

@@ -3,11 +3,12 @@ using Nobeta.EUG.BulletSystem.OOP;
 //using Nobeta.EUG.Core.Events;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.Services;
+using Unity.Mathematics;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace Nobeta.EUG.BulletSystem.UnityBridge
+namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 {
     // ========================================================================
     // Usage Example (使用示例)
@@ -25,19 +26,25 @@ namespace Nobeta.EUG.BulletSystem.UnityBridge
 
         private void Start()
         {
-            inputService.OnFireStart += Fire;
+            for (int i = 0; i < 80; i++)
+            {
+                inputService.OnFireStart += Fire;
+            }
         }
 
         private void OnDestroy()
         {
-            inputService.OnFireStart -= Fire;
+            for (int i = 0; i < 80; i++)
+            {
+                inputService.OnFireStart -= Fire;
+            }
         }
 
         private void Fire()
         {
             bulletSystem.Fire(
                 BulletConfig.Normal,
-                firePoint.position,
+                firePoint.position + UnityEngine.Random.Range(-20f, 20f) * firePoint.up + UnityEngine.Random.Range(-20f, 20f) * firePoint.right,
                 firePoint.forward
             );
         }
