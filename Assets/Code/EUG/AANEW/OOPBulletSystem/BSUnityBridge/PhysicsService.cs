@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Assets.Code.EUG.AANEW.Temp;
 using Nobeta.EUG.BulletSystem.OOP;
 //using Nobeta.EUG.Core.Events;
 using Nobeta.EUG.Interfaces;
@@ -23,11 +24,16 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
             if (hits.Length > 0)
             {
+                IDamageable target;
+                if (DamageSystem.TryGetTarget(hits[0], out target))
+                {
+                    target.TakeDamage(100);
+                }               
                 return new CollisionHit
                 {
                     HasHit = true,
                     GameObject = hits[0].gameObject,
-                    Normal = (position - hits[0].transform.position).normalized
+                    Normal = (position - hits[0].transform.position).normalized                    
                 };
             }
 

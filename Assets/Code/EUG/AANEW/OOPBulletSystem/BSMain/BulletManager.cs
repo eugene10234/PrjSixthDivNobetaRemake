@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Nobeta.EUG.Interfaces;
+using System;
 using System.Collections.Generic;
-using Nobeta.EUG.Interfaces;
 using UnityEngine;
+using UnityEngine.UIElements;
 using VContainer;
+using static UnityEngine.Rendering.STP;
 // ========================================================================
 // BulletManager (管理器 - Pure C#)
 // ========================================================================
@@ -140,7 +142,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 return;
 
             bullet.IsActive = false;
-            activeBullets.Remove(bullet);
+            eventBus.Publish(new BulletExpiredEvent
+            {
+                Bullet = bullet,
+                Position = bullet.Position
+            });
             ReturnToPool(bullet);
         }
 
@@ -151,6 +157,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             foreach (var bullet in activeBullets)
             {
+                eventBus.Publish(new BulletExpiredEvent
+                {
+                    Bullet = bullet,
+                    Position = bullet.Position
+                });
                 ReturnToPool(bullet);
             }
 
