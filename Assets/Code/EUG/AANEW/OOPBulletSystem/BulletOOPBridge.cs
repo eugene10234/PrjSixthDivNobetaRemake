@@ -164,37 +164,37 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
         private void OnGUI()
         {
-            if (!showDebugUI) return;
+            //if (!showDebugUI) return;
 
-            GUILayout.BeginArea(new Rect(10, 10, 300, 200));
-            GUILayout.Box("=== Pure C# OOP Bullet System ===");
+            //GUILayout.BeginArea(new Rect(10, 10, 300, 200));
+            //GUILayout.Box("=== Pure C# OOP Bullet System ===");
 
-            GUILayout.Label($"<b>Active Bullets:</b> {bulletManager.ActiveBulletCount}");
-            GUILayout.Label($"<b>FPS:</b> {1f / Time.deltaTime:F0}");
+            //GUILayout.Label($"<b>Active Bullets:</b> {bulletManager.ActiveBulletCount}");
+            //GUILayout.Label($"<b>FPS:</b> {1f / Time.deltaTime:F0}");
 
-            GUILayout.Space(10);
+            //GUILayout.Space(10);
 
-            if (GUILayout.Button("Fire Normal"))
-            {
-                Fire(BulletConfig.Normal, transform.position, transform.forward);
-            }
+            //if (GUILayout.Button("Fire Normal"))
+            //{
+            //    Fire(BulletConfig.Normal, transform.position, transform.forward);
+            //}
 
-            if (GUILayout.Button("Fire FireBall"))
-            {
-                Fire(BulletConfig.FireBall, transform.position, transform.forward);
-            }
+            //if (GUILayout.Button("Fire FireBall"))
+            //{
+            //    Fire(BulletConfig.FireBall, transform.position, transform.forward);
+            //}
 
-            if (GUILayout.Button("Fire Pattern (16)"))
-            {
-                FirePattern(BulletConfig.Normal, transform.position, 16, 22.5f);
-            }
+            //if (GUILayout.Button("Fire Pattern (16)"))
+            //{
+            //    FirePattern(BulletConfig.Normal, transform.position, 16, 22.5f);
+            //}
 
-            if (GUILayout.Button("Clear All"))
-            {
-                ClearAll();
-            }
+            //if (GUILayout.Button("Clear All"))
+            //{
+            //    ClearAll();
+            //}
 
-            GUILayout.EndArea();
+            //GUILayout.EndArea();
         }
 
         #endregion

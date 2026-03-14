@@ -38,6 +38,7 @@ namespace Nobeta.EUG.Services
         public bool IsRunPressed { get; private set; }
         public bool IsAimPressed { get; private set; }
         public bool IsFirePressed { get; private set; }
+        public bool IsAttackPressed { get; private set; }
         public bool IsCusorSwitchPressed { get; private set; }
 
         // 提供事件訂閱
@@ -51,6 +52,7 @@ namespace Nobeta.EUG.Services
         public event Action OnAimStart;
         public event Action OnAimEnd;
         public event Action OnFireStart;
+        public event Action OnAttack;
         //鼠標切換事件（如果需要的話）
         public event Action OnCusorSwitchStart;
         public event Action OnCusorSwitchEnd;
@@ -119,6 +121,15 @@ namespace Nobeta.EUG.Services
         {
             IsFirePressed = false;
         }
+        private void AttackPerformed(InputAction.CallbackContext _)
+        {
+            IsAttackPressed = true;
+            OnAttack?.Invoke();
+        }
+        private void AttackCanceled(InputAction.CallbackContext _)
+        {
+            IsAttackPressed = false;
+        }
         private void CusorSwitchPerformed(InputAction.CallbackContext _)
         {
             IsCusorSwitchPressed = true;
@@ -148,6 +159,8 @@ namespace Nobeta.EUG.Services
             _actions.Player.Aim.canceled += AimCanceled;
             _actions.Player.Fire.performed += FirePerformed;
             _actions.Player.Fire.canceled += FireCanceled;
+            _actions.Player.Attack.performed += AttackPerformed;
+            _actions.Player.Attack.canceled += AttackCanceled;
             _actions.Player.CursorSwitch.performed += CusorSwitchPerformed;
             _actions.Player.CursorSwitch.canceled += CusorSwitchCanceled;
 
@@ -165,6 +178,8 @@ namespace Nobeta.EUG.Services
             _actions.Player.Aim.canceled -= AimCanceled;
             _actions.Player.Fire.performed -= FirePerformed;
             _actions.Player.Fire.canceled -= FireCanceled;
+            _actions.Player.Attack.performed -= AttackPerformed;
+            _actions.Player.Attack.canceled -= AttackCanceled;
             _actions.Player.CursorSwitch.performed -= CusorSwitchPerformed;
             _actions.Player.CursorSwitch.canceled -= CusorSwitchCanceled;
         }

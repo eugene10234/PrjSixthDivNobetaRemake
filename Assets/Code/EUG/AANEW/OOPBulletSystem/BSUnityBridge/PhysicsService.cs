@@ -33,7 +33,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                 {
                     HasHit = true,
                     GameObject = hits[0].gameObject,
-                    Normal = (position - hits[0].transform.position).normalized                    
+                    //Normal = (position - hits[0].transform.position).normalized                    
                 };
             }
 

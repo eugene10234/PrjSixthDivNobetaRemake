@@ -28,7 +28,7 @@ namespace Nobeta.EUG.Interfaces
         /// </summary>
         bool IsRunPressed { get; }
         bool IsAimPressed { get; }
-        
+
         /// <summary>
         /// 移動事件
         /// </summary>
@@ -64,6 +64,9 @@ namespace Nobeta.EUG.Interfaces
         /// 發射事件
         /// </summary>
         event Action OnFireStart;
+        event Action OnAttack;
+        event Action OnCusorSwitchStart;
+        event Action OnCusorSwitchEnd;
     }
 
 

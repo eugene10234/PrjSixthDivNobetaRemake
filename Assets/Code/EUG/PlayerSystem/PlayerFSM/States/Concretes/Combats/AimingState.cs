@@ -35,7 +35,7 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
-            PlayAnimation("AimingWalk",0.1f);
+            PlayAnimation("AimingWalk2",0.1f);
 
             // 降低移動速度
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);

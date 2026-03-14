@@ -45,6 +45,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             bool aniCanTrans = !ctx.AnimationService.IsInTransition(0);
             bool timePassed = (Time.time - EnterTime) >= MinDuration;
+            if (timePassed && aniCanTrans) ctx.MovementService.RootMotionClear();
             return timePassed && aniCanTrans;
         }
         #endregion

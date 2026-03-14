@@ -28,8 +28,9 @@ namespace Nobeta.EUG.FSM.Services
     {
         private readonly CharacterController controller;
         private readonly Transform transform;
-        private readonly ITimeService timeService;
+        private readonly ITimeService _timeService;
         private readonly ICameraService _cameraService;
+        private readonly RootMotionProxy _rootMotionProxy;
         private Vector3 velocity;
 
         // 屬性
@@ -38,6 +39,7 @@ namespace Nobeta.EUG.FSM.Services
         public float CurrentHorizontalSpeed =>
             new Vector3(velocity.x, 0, velocity.z).magnitude;
         DebugServiceMb _debugServiceMb;
+
         private float text1;
         private float text2;
         private float text3;
@@ -46,21 +48,23 @@ namespace Nobeta.EUG.FSM.Services
         [Inject]
         public MovementService(
             DebugServiceMb debugServiceMb,
+            RootMotionProxy rootMotionProxy,
             CharacterController controller,
             Transform transform,
             ICameraService cameraService,
             ITimeService timeService)
         {
-            _debugServiceMb = debugServiceMb;
+            _debugServiceMb = debugServiceMb;           
             this.controller = controller;
             this.transform = transform;
 
-            this.timeService = timeService;
+             _rootMotionProxy = rootMotionProxy;
+            _timeService = timeService;
             _cameraService = cameraService;
             velocity = Vector3.zero;
             //_debugServiceMb.GUI.Add(DrawDebugInfo);
         }
-
+        
         private void DrawDebugInfo()
         {
             GUILayout.Box("=== MovementService ===");
@@ -68,6 +72,28 @@ namespace Nobeta.EUG.FSM.Services
             GUILayout.Label($"Dynamic Speed: {text2}");
             GUILayout.Label($"angleBoost Dynamic Speed: {text3}");
         }
+        #region RootMotion Movement
+        public void RootMotionStart()
+        { 
+            _rootMotionProxy.OnMoveDelta += HandleRootMotion;
+        }
+        public void RootMotionEnd()
+        {
+            _rootMotionProxy.OnMoveDelta -= HandleRootMotion;
+        }
+        public void RootMotionClear()
+        {
+            _rootMotionProxy.OnMoveDelta = null;
+        }
+        private void HandleRootMotion(Vector3 deltaPos, Quaternion deltaRot)
+        {
+            // 在這裡執行你的戰鬥位移邏輯
+            controller.Move(deltaPos);
+            // 處理 Hip-rotation
+            controller.transform.rotation *= deltaRot;
+        }
+        #endregion
+
         #region Ground Movement
 
         public void ApplyGroundMovement(
@@ -84,13 +110,13 @@ namespace Nobeta.EUG.FSM.Services
                 velocity.x = Mathf.Lerp(
                     velocity.x,
                     targetVelocity.x,
-                    timeService.DeltaTime * acceleration
+                    _timeService.DeltaTime * acceleration
                 );
 
                 velocity.z = Mathf.Lerp(
                     velocity.z,
                     targetVelocity.z,
-                    timeService.DeltaTime * acceleration
+                    _timeService.DeltaTime * acceleration
                 );
             }
             else
@@ -123,13 +149,13 @@ namespace Nobeta.EUG.FSM.Services
                 velocity.x = Mathf.Lerp(
                     velocity.x,
                     offsettedTargetVelocity.x,
-                    timeService.DeltaTime * airAcceleration
+                    _timeService.DeltaTime * airAcceleration
                 );
 
                 velocity.z = Mathf.Lerp(
                     velocity.z,
                     offsettedTargetVelocity.z,
-                    timeService.DeltaTime * airAcceleration
+                    _timeService.DeltaTime * airAcceleration
                 );
 
             }
@@ -141,7 +167,7 @@ namespace Nobeta.EUG.FSM.Services
 
         public void ApplyGravity(float gravity)
         {
-            velocity.y += gravity * timeService.DeltaTime;
+            velocity.y += gravity * _timeService.DeltaTime;
 
             // 限制最大下落速度（可選）
             velocity.y = Mathf.Max(velocity.y, -50f);
@@ -203,7 +229,7 @@ namespace Nobeta.EUG.FSM.Services
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                timeService.DeltaTime * dynamicSpeed
+                _timeService.DeltaTime * dynamicSpeed
             );
         }
         /// <summary>
@@ -226,7 +252,7 @@ namespace Nobeta.EUG.FSM.Services
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
-                timeService.DeltaTime * rotationSpeed
+                _timeService.DeltaTime * rotationSpeed
             );
         }
         #endregion
@@ -239,13 +265,13 @@ namespace Nobeta.EUG.FSM.Services
             velocity.x = Mathf.Lerp(
                 velocity.x,
                 0,
-                timeService.DeltaTime * deceleration
+                _timeService.DeltaTime * deceleration
             );
 
             velocity.z = Mathf.Lerp(
                 velocity.z,
                 0,
-                timeService.DeltaTime * deceleration
+                _timeService.DeltaTime * deceleration
             );
         }
         public void ReduceMovement(float deceleration,float reducevalue)
@@ -254,13 +280,13 @@ namespace Nobeta.EUG.FSM.Services
             velocity.x = Mathf.Lerp(
                 velocity.x,
                 velocity.x* reducevalue,
-                timeService.DeltaTime * deceleration
+                _timeService.DeltaTime * deceleration
             );
 
             velocity.z = Mathf.Lerp(
                 velocity.z,
                 velocity.z* reducevalue,
-                timeService.DeltaTime * deceleration
+                _timeService.DeltaTime * deceleration
             );
         }
         public void ResetVelocity()
@@ -276,7 +302,36 @@ namespace Nobeta.EUG.FSM.Services
         {
             velocity.y = verticalVelocity;
         }
+        /// <summary>
+        /// 將物體貼齊地面，僅針對 Ground 與 Obstacle 圖層
+        /// </summary>
+        public void SetGround()
+        {
+            // 1. 取得 Layer 的索引並轉換為 Bitmask
+            // 這裡會同時偵測 "Ground" 或 "Obstacle" 層
+            int layerMask = LayerMask.GetMask("Ground", "Obstacle");
 
+            // 2. 設定射線參數
+            float rayOffset = 0.5f; // 從中心往上提一點，避免穿模
+            float maxDistance = 20f; // 往下偵測的距離
+            Vector3 rayStart = transform.position + Vector3.up * rayOffset;
+
+            // 3. 執行 Raycast
+            if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, maxDistance, layerMask))
+            {
+                // 移動到碰撞點
+                transform.position = hit.point;
+
+                // 偵錯用：在 Scene 視窗畫出一條紅線
+                Debug.DrawLine(rayStart, hit.point, Color.green, 2.0f);
+            }
+            else
+            {
+                // 偵錯用：如果沒打到，畫一條紅線表示範圍
+                Debug.DrawRay(rayStart, Vector3.down * maxDistance, Color.red, 2.0f);
+                Debug.LogWarning($"{transform.name} 下方沒有找到 Ground 或 Obstacle 層的物體。");
+            }
+        }
         #endregion
 
         #region Execute Movement
@@ -284,7 +339,7 @@ namespace Nobeta.EUG.FSM.Services
         public void ExecuteMovement()
         {
             // 應用速度到 CharacterController
-            controller.Move(velocity * timeService.DeltaTime);
+            controller.Move(velocity * _timeService.DeltaTime);
         }
 
         #endregion

@@ -67,9 +67,10 @@ public class PlayerLifetimeScope : LifetimeScope
         RegisterStates(builder);
 
         builder.RegisterEntryPoint<PlayerControlPrensenter>();
-        // 註冊 PlayerController（自動從 Hierarchy 注入）
+        // 註冊 Component（自動從 Hierarchy 注入）
+        builder.RegisterComponentInHierarchy<RootMotionProxy>();
         //Debug.LogWarning("RegisterComponentInHierarchy<mbPlayerController>");
-        //builder.RegisterComponentInHierarchy<mbPlayerController>();
+        //builder.RegisterComponentInHierarchy<mdler>();
         //var mbCharacterController = GetComponent<mbPlayerController>();
         //builder.RegisterComponent(mbCharacterController);
         //builder.RegisterComponent(playerController);
@@ -118,6 +119,7 @@ public class PlayerLifetimeScope : LifetimeScope
 
         // 戰鬥狀態
         builder.Register<AimingState>(Lifetime.Transient);
+        builder.Register<MeleeAttackState>(Lifetime.Transient);
 
         // TODO: 添加更多狀態
 

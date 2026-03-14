@@ -2,6 +2,7 @@
 // StateMachine - 狀態機核心（VContainer 版本）
 // ============================================================================
 
+using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace Nobeta.EUG.FSM.Core
         public StateMachine(IObjectResolver container)
         {
             this.container = container;
-            _inputService = container.Resolve<IPlayerInputService>();
+            _inputService = container.Resolve<IPlayerInputService>();            
             SubscribeInputEvents();
             this.stateCache = new Dictionary<Type, BaseState>();
             this.stateHistory = new Queue<Type>();
@@ -51,6 +52,8 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         public void SetInitialState<T>() where T : BaseState
         {
+            var movementService = container.Resolve<IMovementService>();
+            movementService.SetGround();
             ActionToInitialState = ChangeState<T>;
             ToInitialState();
         }
@@ -240,6 +243,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAimStart += HandleAimStartInput;
             _inputService.OnAimEnd += HandleAimEndInput;
             _inputService.OnFireStart += HandleFireStartInput;
+            _inputService.OnAttack += HandleAttackStartInput;
             Debug.Log("已訂閱輸入事件");
         }
         private void UnsubscribeInputEvents()
@@ -263,6 +267,7 @@ namespace Nobeta.EUG.FSM.Core
         private void HandleAimStartInput() => stateMachine.CurrentState?.OnAimStartInput();
         private void HandleAimEndInput() => stateMachine.CurrentState?.OnAimEndInput();
         private void HandleFireStartInput() => stateMachine.CurrentState?.OnFireStartInput();
+        private void HandleAttackStartInput() => stateMachine.CurrentState?.OnAttackInput();
     }
 
     // ========================================================================

@@ -92,7 +92,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// 執行移動（應用到 CharacterController）
         /// </summary>
         void ExecuteMovement();
-
+        void SetGround();
+        void RootMotionStart();
+        void RootMotionClear();
     }
 
     

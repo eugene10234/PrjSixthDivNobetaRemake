@@ -30,7 +30,7 @@ namespace Nobeta.EUG.FSM.States
         }
 
         public virtual void FixedUpdate()
-        {            
+        {
             // 默認行為：應用重力
             ctx.MovementService.ApplyGravity(ctx.Config.gravity);
 
@@ -73,13 +73,16 @@ namespace Nobeta.EUG.FSM.States
         public override void OnAimStartInput()
         {
             //Debug.LogWarning("OnAimStartInput");
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<AimingState>();
-            }
+
+            stateMachine.ChangeState<AimingState>();
+
+        }
+        public override void OnAttackInput()
+        {
+            stateMachine.ChangeState<MeleeAttackState>();
         }
         #endregion
- 
+
         #region Helper Methods
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace Nobeta.EUG.FSM.States
         /// <summary>
         /// 應用地面移動和旋轉
         /// </summary>
-        protected void ApplyMovementAndRotation(float speed, bool startUpLock=false)
+        protected void ApplyMovementAndRotation(float speed, bool startUpLock = false)
         {
             Vector3 direction = GetMoveDirection();
 
