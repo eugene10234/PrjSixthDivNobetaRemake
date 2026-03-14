@@ -16,10 +16,11 @@ namespace Assets.Code.EUG.AANEW.Temp
         {
             _dummy = GetComponent<HealthSystemForDummies>();
         }
-        public override void TakeDamage(float damage)
+
+        public override void TakeDamage(float amount, Vector3 position)
         {
-            _dummy.TakeDamage(damage);
-            //_goblin.TakeDamage(damage);
+            //_dummy.TakeDamage(damage);
+            ////_goblin.TakeDamage(damage);
         }
     }
 }

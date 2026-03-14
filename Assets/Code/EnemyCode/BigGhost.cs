@@ -1,13 +1,15 @@
+using Assets.Code.EUG.AANEW.Temp;
 using System;
 using System.Collections;
 using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Nobeta.Sam.Enemy
 {
-    public class BigGhost : MonoBehaviour, IEnemy 
+    public class BigGhost : EnemyProvider, IEnemy 
     {
         private float _maxHP;
         private float _currentHP;
@@ -67,11 +69,17 @@ namespace Nobeta.Sam.Enemy
         {
             _visuals.OnDeath();
         }
-        public void OnDamageTaken(IEnemy enemy, float amount, Vector3 hitPosition)
+        public override void TakeDamage(float amount, Vector3 hitPosition)
         {
             _currentHP -= amount;
             _visuals.OnHit(hitPosition);
             CheckDeath();
+        }
+        public void OnDamageTaken(IEnemy enemy, float amount, Vector3 hitPosition)
+        {
+            //_currentHP -= amount;
+            //_visuals.OnHit(hitPosition);
+            //CheckDeath();
         }
     }
 }

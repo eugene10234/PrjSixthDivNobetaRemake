@@ -16,8 +16,8 @@ namespace Nobeta.Sam.Enemy
         {
             builder.Register<EnemyManager>(Lifetime.Singleton).As<IEnemyManager>();
             builder.Register<EnemyVisuals>(Lifetime.Scoped).AsSelf();
-            builder.RegisterComponent(_bulletInScene)
-                        .AsSelf();
+            //builder.RegisterComponent(_bulletInScene)
+            //            .AsSelf();
             
             
             //BigGhostDependencies: Stats. Factory. Spawner.

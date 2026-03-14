@@ -11,6 +11,6 @@ namespace Assets.Code.EUG.AANEW.Temp
     {
         void OnEnable() => DamageSystem.Targets[gameObject.GetInstanceID()] = this;
         void OnDisable() => DamageSystem.Targets.Remove(gameObject.GetInstanceID());
-        public abstract void TakeDamage(float amount);
+        public abstract void TakeDamage(float amount, Vector3 position);
     }
 }

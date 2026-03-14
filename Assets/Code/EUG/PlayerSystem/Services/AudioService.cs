@@ -25,7 +25,7 @@ namespace Nobeta.EUG.FSM.Services
             Debug.Log($"Playing SFX: {sfxName} at volume {volume}");
 
             // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
-            // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);
+            // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
         }
 
         public void PlayMusic(string musicName, bool loop = true)
