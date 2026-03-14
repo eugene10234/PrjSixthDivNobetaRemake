@@ -23,7 +23,7 @@ namespace Nobeta.EUG.Services
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
         private float _targetFOV = 60f;
-        private float _smoothFOVSpeed = 0.25f;
+        private float _smoothFOVSpeed = 0.2f;
 
         public float GetHorizonOffset => horizonOffset;
         public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
@@ -110,7 +110,6 @@ namespace Nobeta.EUG.Services
         }
         private void ExecuteCameraZoom()
         {
-            // 3. 使用 Lerp 進行平滑插值
             // 這裡的 smoothSpeed 決定了相機跟隨目標 FOV 的速度
             FieldOfView = Mathf.Lerp(FieldOfView, _targetFOV, _smoothFOVSpeed);
         }

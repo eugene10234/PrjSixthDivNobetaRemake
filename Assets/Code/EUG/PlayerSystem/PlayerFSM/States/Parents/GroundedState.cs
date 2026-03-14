@@ -8,6 +8,8 @@ namespace Nobeta.EUG.FSM.States
 {
     public abstract class GroundedState : BaseState, IUpdatable, IFixedUpdatable
     {
+        protected float RunningTimer;
+        protected const float RUNNING_DURATION = 1.4f;
         protected GroundedState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
@@ -49,9 +51,12 @@ namespace Nobeta.EUG.FSM.States
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
-            if (!ctx.Detection.CheckIfMoving(ctx)) stateMachine.ChangeState<IdleState>();
-            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
 
+            if (RunningTimer < 0.01)
+            {
+                if (!ctx.Detection.CheckIfMoving(ctx)) stateMachine.ChangeState<IdleState>();
+            }
+            //if (ctx.Detection.IsTurning) stateMachine.ChangeState<TurningState>();
         }
         #region Common Input Handlers
 
