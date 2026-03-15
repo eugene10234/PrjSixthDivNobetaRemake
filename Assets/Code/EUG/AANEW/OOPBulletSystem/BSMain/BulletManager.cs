@@ -142,11 +142,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 return;
 
             bullet.IsActive = false;
-            eventBus.Publish(new BulletExpiredEvent
-            {
-                Bullet = bullet,
-                Position = bullet.Position
-            });
+            //eventBus.Publish(new BulletExpiredEvent
+            //{
+            //    Bullet = bullet,
+            //    Position = bullet.Position
+            //});
             ReturnToPool(bullet);
         }
 
@@ -157,11 +157,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             foreach (var bullet in activeBullets)
             {
-                eventBus.Publish(new BulletExpiredEvent
-                {
-                    Bullet = bullet,
-                    Position = bullet.Position
-                });
+                //eventBus.Publish(new BulletExpiredEvent
+                //{
+                //    Bullet = bullet,
+                //    Position = bullet.Position
+                //});
                 ReturnToPool(bullet);
             }
 
@@ -185,6 +185,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
 
         private void ReturnToPool(Bullet bullet)
         {
+            eventBus.Publish(new BulletExpiredEvent
+            {
+                Bullet = bullet,
+                Position = bullet.Position
+            });
             bullet.Reset();
             bulletPool.Push(bullet);
         }

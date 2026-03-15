@@ -110,6 +110,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         private void OnBulletSpawned(BulletSpawnedEvent evt)
         {
             // 視覺服務會在 SyncVisualsToLogic 中處理
+            //visualService.SyncVisualsToLogic(bulletManager.ActiveBullets);
         }
 
         private void OnBulletHit(BulletHitEvent evt)

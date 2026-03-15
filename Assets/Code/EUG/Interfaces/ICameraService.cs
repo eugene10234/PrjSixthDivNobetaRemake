@@ -29,6 +29,7 @@ namespace Nobeta.EUG.Interfaces
         void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim);
         void Initial(CinemachineCamera cinemachineCamera);
         void LateUpdate();
+        bool TryGetCameraSphereHit(float v1, float v2, out RaycastHit hitInfo, LayerMask mask = default);
 
         float GetHorizonOffset { get; }
     }

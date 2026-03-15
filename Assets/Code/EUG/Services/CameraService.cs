@@ -150,10 +150,20 @@ namespace Nobeta.EUG.Services
             ExecuteCameraZoom();
             ExecuteCameraRotation();
         }
+        public bool TryGetCameraSphereHit(float radius, float maxDistance, out RaycastHit hit, LayerMask mask = default)
+        {
+            // 取得相機中心射線
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
+            if (mask == default) mask = ~0;
+
+            // 執行 SphereCast
+            return Physics.SphereCast(ray, radius, out hit, maxDistance, mask);
+        }
         public void Update()
         {
             throw new NotImplementedException();
         }
+
     }
 }

@@ -23,6 +23,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         [SerializeField] private Transform firePoint;
 
         [Inject] private IPlayerInputService inputService;
+        [Inject] private ICameraService cameraService;
 
         private void Start()
         {
@@ -42,10 +43,22 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
         private void Fire()
         {
+            Vector3 targetPoint = firePoint.position+cameraService.GetCameraForward();
+            if (cameraService.TryGetCameraSphereHit(0.2f, 50f, out RaycastHit hitInfo))
+            {
+                // 1. 取得擊中點
+                targetPoint = hitInfo.point;
+
+                // 2. 取得擊中物件的名字
+                Debug.Log("擊中了: " + hitInfo.collider.name);
+
+                // 3. 在擊中位置畫一顆小紅球（Debug 用）
+                Debug.DrawRay(hitInfo.point, hitInfo.normal, Color.red);
+            }
             bulletSystem.Fire(
                 BulletConfig.Normal,
                 firePoint.position ,
-                firePoint.forward
+                targetPoint- firePoint.position
             );
         }
         //+ UnityEngine.Random.Range(-20f, 20f) * firePoint.up + UnityEngine.Random.Range(-20f, 20f) * firePoint.right
