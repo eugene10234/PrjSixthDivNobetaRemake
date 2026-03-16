@@ -107,7 +107,7 @@ public class RigHeadTargetController : MonoBehaviour
             // 0 ~ 90 度：從 0.36 平滑過渡到 -0.36
             // 使用 t = normalizedYaw / -180f，當 yaw 為 0 時 t=0，當 yaw 為 90 時 t=1
             float t = normalizedYaw / -90f;
-            return Mathf.Lerp(0.36f, 1f, t);
+            return Mathf.Lerp(0.40f, 0.65f, t);
             //return 0.42f;
         }
         else
@@ -115,7 +115,7 @@ public class RigHeadTargetController : MonoBehaviour
             // 0 ~ 90 度：從 0.36 平滑過渡到 -0.36
             // 使用 t = normalizedYaw / -180f，當 yaw 為 0 時 t=0，當 yaw 為 90 時 t=1
             float t = normalizedYaw / 90f;
-            return Mathf.Lerp(0.36f, -0.36f, t);
+            return Mathf.Lerp(0.40f, -0.36f, t);
         }
     }
 }

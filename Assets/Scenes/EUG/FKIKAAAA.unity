@@ -322,6 +322,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BigGhost_Root
       objectReference: {fileID: 0}
+    - target: {fileID: 4873241245094420533, guid: a08d9a265a7f7224580e9fc3734e8af3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6932559854071371261, guid: a08d9a265a7f7224580e9fc3734e8af3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.831
