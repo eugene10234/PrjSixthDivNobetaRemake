@@ -21110,7 +21110,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: -12.5, y: 0, z: -12.14}
+    m_Offset: {x: -12.5, y: -4, z: -12.14}
     m_MinLimit: -180
     m_MaxLimit: 180
     m_AimAxis: 4
