@@ -1075,6 +1075,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1918419124935334975, guid: 0139c5f9db32ec645a37abfceebbf78e, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3040946918501713111, guid: 0139c5f9db32ec645a37abfceebbf78e, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0.1000061
@@ -1224,10 +1228,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7398125051932619269, guid: ba3e25464dcbfba47ac05fbf4fe6d22b, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1829170621}
     - target: {fileID: 8156509701159068175, guid: ba3e25464dcbfba47ac05fbf4fe6d22b, type: 3}
       propertyPath: m_Name
       value: Player

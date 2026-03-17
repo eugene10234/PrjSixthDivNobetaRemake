@@ -7,8 +7,8 @@ using VContainer;
 
 public class RigHeadTargetController : MonoBehaviour
 {
-    [Header("目標設定")]
-    public Transform target; // 想要看的目標
+    //[Header("目標設定")]
+    //public Transform target; // 想要看的目標
 
     [Header("Rig 設定")]
     public Rig rig;                   // 你的 Rig 元件

@@ -67,11 +67,22 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                 visual = Object.Instantiate(visualPrefabs[type], visualContainer);
             }
 
-            // 激活並設置位置
-            visual.SetActive(true);
+            //  先設位置，再激活，避免一幀閃在舊位置
             visual.transform.position = bullet.Position;
             visual.transform.rotation = bullet.Rotation;
+            visual.SetActive(true);
 
+            // 重啟粒子系統
+            foreach (var ps in visual.GetComponentsInChildren<ParticleSystem>())
+            {
+                ps.Clear();
+                ps.Play();
+            }
+            // 清除 TrailRenderer 歷史路徑（這是拖影的真正原因）
+            foreach (var tr in visual.GetComponentsInChildren<TrailRenderer>())
+            {
+                tr.Clear();
+            }
             // 記錄映射
             activeVisuals[bullet] = visual;
         }
@@ -83,7 +94,16 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         {
             if (!activeVisuals.TryGetValue(bullet, out var visual))
                 return;
-
+            // 先停止並清除粒子，再停用
+            foreach (var ps in visual.GetComponentsInChildren<ParticleSystem>())
+            {
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+            // 回收前也 Clear Trail，防止下次 Pop 出來時有殘留
+            foreach (var tr in visual.GetComponentsInChildren<TrailRenderer>())
+            {
+                tr.Clear();
+            }
             // 停用
             visual.SetActive(false);
 

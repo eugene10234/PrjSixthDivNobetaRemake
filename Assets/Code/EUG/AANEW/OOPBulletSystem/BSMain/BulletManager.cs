@@ -185,11 +185,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
 
         private void ReturnToPool(Bullet bullet)
         {
-            eventBus.Publish(new BulletExpiredEvent
-            {
-                Bullet = bullet,
-                Position = bullet.Position
-            });
+            //eventBus.Publish(new BulletExpiredEvent
+            //{
+            //    Bullet = bullet,
+            //    Position = bullet.Position
+            //});
             bullet.Reset();
             bulletPool.Push(bullet);
         }
