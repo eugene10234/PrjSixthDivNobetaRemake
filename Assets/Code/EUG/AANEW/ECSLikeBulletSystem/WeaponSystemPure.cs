@@ -21,12 +21,12 @@ namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
 
         private void Start()
         {
-            inputService.OnFireStart += Fire;
+            //inputService.OnFireEnd += Fire;
         }
 
         private void OnDestroy()
         {
-            inputService.OnFireStart -= Fire;
+            //inputService.OnFireEnd -= Fire;
         }
 
         private void Fire()

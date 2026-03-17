@@ -1,4 +1,8 @@
+using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.Services;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
+using VContainer;
 
 
 public class RigHeadTargetController : MonoBehaviour
@@ -7,6 +11,7 @@ public class RigHeadTargetController : MonoBehaviour
     public Transform target; // 想要看的目標
 
     [Header("Rig 設定")]
+    public Rig rig;                   // 你的 Rig 元件
     public Transform rigTarget;      // 你的 Animation Rigging Target 物件
     public Transform headBone;     // 頭部骨骼（用來當作發射基準點）
     public Transform target2222; // 想要看的目標
@@ -21,25 +26,60 @@ public class RigHeadTargetController : MonoBehaviour
     [Header("平滑設定")]
     public float smoothTime = 0.4f;
     public float returnSmoothTime = 0.8f;
+    public float weightSpeed = 20f;    // 權重增減的速度
 
     private float currentYaw;
     private float currentPitch;
     private float yawVelocity;
     private float pitchVelocity;
-
+    [Inject] private readonly IPlayerInputService _playerInputService;
+    [Inject] private readonly ITimeService _timeService;
+    [Inject] private ICameraService _cameraService;
+    [Inject] private Animator _animator;
+    private float LookingTimer = 0f;
+    private const float LOOKING_DURATION = 0.25f;
+    private float targetWeight = 0f;
+    private float targetweightSpeed = 0f;
     void Update()
     {
+        bool isLooking = _playerInputService.IsFirePressed || _playerInputService.IsAimPressed;
+        if (isLooking) LookingTimer = LOOKING_DURATION;
+        LookingTimer -= Time.deltaTime;
+        //bool hasTarget = target != null;
+        if (LookingTimer > 0.01f)
+        {
+            targetWeight = 1f;
+            targetweightSpeed = weightSpeed * Time.fixedDeltaTime;
+        }
+        else
+        {
+            targetWeight = 0f;
+            targetweightSpeed = 2f * weightSpeed * Time.deltaTime;
+        }
+
+        // 1. 處理 Rig 權重的平滑切換 (Fade In/Out)
+        if (rig != null)
+        {
+            rig.weight = Mathf.MoveTowards(rig.weight, targetWeight, targetweightSpeed);
+            _animator.SetLayerWeight(2, rig.weight * 0.7f);
+        }
+
         if (rigTarget == null || headBone == null) return;
 
         float targetYaw = 0f;
         float targetPitch = 0f;
         float currentSmooth = returnSmoothTime;
+        Vector3 targetPoint = transform.position + _cameraService.GetCameraForward() * 50f;
+        if (_cameraService.TryGetCameraSphereHit(0.2f, 50f, out RaycastHit hitInfo))
+        {
+            targetPoint = hitInfo.point;
 
+        }
         // 1. 計算目標角度
-        if (target != null) // 假設你有一個外部傳入的 target Transform
+        if (true) // 假設你有一個外部傳入的 target Transform//target != null
         {
             // 注意：這裡使用 headBone 的父物件作為參考坐標系
-            Vector3 localTarget = headBone.parent.InverseTransformPoint(target.position);
+            Vector3 localTarget = headBone.parent.InverseTransformPoint(targetPoint);
 
             targetYaw = Mathf.Atan2(localTarget.x, localTarget.z) * Mathf.Rad2Deg;
             float horizontalDistance = new Vector2(localTarget.x, localTarget.z).magnitude;

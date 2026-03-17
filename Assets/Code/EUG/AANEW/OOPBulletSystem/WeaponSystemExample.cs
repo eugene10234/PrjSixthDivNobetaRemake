@@ -29,7 +29,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         {
             for (int i = 0; i < 1; i++)
             {
-                inputService.OnFireStart += Fire;
+                inputService.OnFireEnd += Fire;
             }
         }
 
@@ -37,7 +37,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         {
             for (int i = 0; i < 1; i++)
             {
-                inputService.OnFireStart -= Fire;
+                inputService.OnFireEnd -= Fire;
             }
         }
 

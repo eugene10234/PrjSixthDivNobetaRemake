@@ -69,6 +69,7 @@ public class PlayerLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<PlayerControlPrensenter>();
         // 註冊 Component（自動從 Hierarchy 注入）
         builder.RegisterComponentInHierarchy<RootMotionProxy>();
+        builder.RegisterComponentInHierarchy<RigHeadTargetController>();        
         //Debug.LogWarning("RegisterComponentInHierarchy<mbPlayerController>");
         //builder.RegisterComponentInHierarchy<mdler>();
         //var mbCharacterController = GetComponent<mbPlayerController>();

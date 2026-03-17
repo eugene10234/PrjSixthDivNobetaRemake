@@ -2845,7 +2845,7 @@ Transform:
   m_GameObject: {fileID: 1129280842685394026}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.43, y: 0.9, z: 0.611}
+  m_LocalPosition: {x: 0.43, y: 0.9, z: 0.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22728,6 +22728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  rig: {fileID: 5000192356191040541}
   rigTarget: {fileID: 3303958725537344634}
   headBone: {fileID: 2912657839594539862}
   target2222: {fileID: 2951102326413927865}
@@ -22738,6 +22739,7 @@ MonoBehaviour:
   maxPitch: 50
   smoothTime: 0.15
   returnSmoothTime: 0.4
+  weightSpeed: 2
 --- !u!1 &9174985644588730230
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,6 +52,7 @@ namespace Nobeta.EUG.Services
         public event Action OnAimStart;
         public event Action OnAimEnd;
         public event Action OnFireStart;
+        public event Action OnFireEnd;
         public event Action OnAttack;
         //鼠標切換事件（如果需要的話）
         public event Action OnCusorSwitchStart;
@@ -120,6 +121,8 @@ namespace Nobeta.EUG.Services
         private void FireCanceled(InputAction.CallbackContext _)
         {
             IsFirePressed = false;
+            if (IsCusorSwitchPressed) return;
+            OnFireEnd?.Invoke();
         }
         private void AttackPerformed(InputAction.CallbackContext _)
         {
