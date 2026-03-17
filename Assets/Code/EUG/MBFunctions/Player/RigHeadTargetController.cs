@@ -45,12 +45,12 @@ public class RigHeadTargetController : MonoBehaviour
             float horizontalDistance = new Vector2(localTarget.x, localTarget.z).magnitude;
             targetPitch = Mathf.Atan2(localTarget.y, horizontalDistance) * Mathf.Rad2Deg;
             //======================
-            
+
 
             targetYaw = Mathf.Clamp(targetYaw, minYaw, maxYaw);
             targetPitch = Mathf.Clamp(targetPitch, minPitch, maxPitch);
-            target2222.localPosition = new Vector3(0, 0, GetCustomValue(targetYaw));
-            targetYaw = targetYaw*1.28f;
+            target2222.localPosition = GetCustomValue(targetYaw);
+            targetYaw = targetYaw * 1.28f;
             currentSmooth = smoothTime;
         }
         // 3. 【關鍵修改】使用一般的 SmoothDamp 而非 Angle 版本
@@ -95,7 +95,7 @@ public class RigHeadTargetController : MonoBehaviour
     /// </summary>
     /// <param name="yaw">輸入的角度 (-180 到 180)</param>
     /// <returns>輸出的數值 (-0.36 到 0.36)</returns>
-    public float GetCustomValue(float yaw)
+    public Vector3 GetCustomValue(float yaw)
     {
         //Debug.Log($"GetCustomValue called with yaw: {yaw}");
         // 確保輸入在 -180 到 180 之間
@@ -107,7 +107,10 @@ public class RigHeadTargetController : MonoBehaviour
             // 0 ~ 90 度：從 0.36 平滑過渡到 -0.36
             // 使用 t = normalizedYaw / -180f，當 yaw 為 0 時 t=0，當 yaw 為 90 時 t=1
             float t = normalizedYaw / -90f;
-            return Mathf.Lerp(0.40f, 0.65f, t);
+            //Mathf.Lerp(0.33f, -0.33f, t);
+            //0.069f
+            //Mathf.Lerp(0.40f, 0.65f, t);
+            return new Vector3(Mathf.Lerp(0.33f, -0.33f, t), 0.069f, Mathf.Lerp(0.40f, 0.243f, t));
             //return 0.42f;
         }
         else
@@ -115,7 +118,10 @@ public class RigHeadTargetController : MonoBehaviour
             // 0 ~ 90 度：從 0.36 平滑過渡到 -0.36
             // 使用 t = normalizedYaw / -180f，當 yaw 為 0 時 t=0，當 yaw 為 90 時 t=1
             float t = normalizedYaw / 90f;
-            return Mathf.Lerp(0.40f, -0.36f, t);
+            //Mathf.Lerp(0.33f, 0.33f, t);
+            //0.069f
+            //Mathf.Lerp(0.40f, -0.36f, t);
+            return new Vector3(Mathf.Lerp(0.33f, 0.33f, t), 0.069f, Mathf.Lerp(0.40f, -0.36f, t));
         }
     }
 }
