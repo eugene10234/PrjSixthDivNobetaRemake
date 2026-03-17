@@ -43,8 +43,8 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
         private void Fire()
         {
-            Vector3 targetPoint = firePoint.position+cameraService.GetCameraForward();
-            if (cameraService.TryGetCameraSphereHit(0.2f, 50f, out RaycastHit hitInfo))
+            Vector3 targetPoint = firePoint.position+ Camera.main.transform.forward*50f;
+            if (cameraService.TryGetCameraSphereHit(0.2f, Mathf.Infinity, out RaycastHit hitInfo))
             {
                 // 1. 取得擊中點
                 targetPoint = hitInfo.point;
