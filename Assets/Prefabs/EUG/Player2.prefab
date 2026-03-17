@@ -2845,7 +2845,7 @@ Transform:
   m_GameObject: {fileID: 1129280842685394026}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.601, y: 0.787, z: 0.611}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3383,7 +3383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4260388242985780540}
   m_Layer: 3
-  m_Name: Target
+  m_Name: EyePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3398,7 +3398,7 @@ Transform:
   m_GameObject: {fileID: 1586695226831898732}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17470,13 +17470,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6777519833995377007}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.32284385, w: 0.9464523}
+  m_LocalRotation: {x: 0, y: 0, z: 0.42261827, w: 0.9063079}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2735616715901079130}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 37.67}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 50}
 --- !u!1 &6805278481693832914
 GameObject:
   m_ObjectHideFlags: 0
@@ -20669,7 +20669,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8156509701159068175}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21110,7 +21110,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: -6.7, y: -10.42, z: -16.55}
+    m_Offset: {x: -12.5, y: 0, z: -12.14}
     m_MinLimit: -180
     m_MaxLimit: 180
     m_AimAxis: 4
@@ -22308,6 +22308,7 @@ GameObject:
   - component: {fileID: 2799744292863063645}
   - component: {fileID: 3301689673270799522}
   - component: {fileID: 3912663803631927093}
+  - component: {fileID: 7398125051932619269}
   m_Layer: 0
   m_Name: NobetaFFFF (1)
   m_TagString: Untagged
@@ -22714,6 +22715,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cc0116bc5e38834dbfffc4db4b411dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7398125051932619269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9157668119234485354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2c44bc8ce8fd745a9baf0b6c72a1b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  rigTarget: {fileID: 3303958725537344634}
+  headBone: {fileID: 2912657839594539862}
+  target2222: {fileID: 2951102326413927865}
+  targetDistance: 3
+  minYaw: -90
+  maxYaw: 90
+  minPitch: -50
+  maxPitch: 50
+  smoothTime: 0.15
+  returnSmoothTime: 0.4
 --- !u!1 &9174985644588730230
 GameObject:
   m_ObjectHideFlags: 0

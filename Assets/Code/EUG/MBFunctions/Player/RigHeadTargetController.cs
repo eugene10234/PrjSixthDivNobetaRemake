@@ -110,7 +110,7 @@ public class RigHeadTargetController : MonoBehaviour
             //Mathf.Lerp(0.33f, -0.33f, t);
             //0.069f
             //Mathf.Lerp(0.40f, 0.65f, t);
-            return new Vector3(Mathf.Lerp(0.33f, -0.33f, t), 0.069f, Mathf.Lerp(0.40f, 0.243f, t));
+            return new Vector3(Mathf.Lerp(0f, -0.33f, t), 0.069f, Mathf.Lerp(0.50f, 0.243f, t));
             //return 0.42f;
         }
         else
@@ -121,7 +121,7 @@ public class RigHeadTargetController : MonoBehaviour
             //Mathf.Lerp(0.33f, 0.33f, t);
             //0.069f
             //Mathf.Lerp(0.40f, -0.36f, t);
-            return new Vector3(Mathf.Lerp(0.33f, 0.33f, t), 0.069f, Mathf.Lerp(0.40f, -0.36f, t));
+            return new Vector3(Mathf.Lerp(0f, 0.33f, t), 0.069f, Mathf.Lerp(0.50f, -0.36f, t));
         }
     }
 }
