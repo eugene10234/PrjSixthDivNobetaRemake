@@ -1,11 +1,12 @@
-﻿using Nobeta.EUG.Events;
+﻿using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
-using System;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -112,7 +113,7 @@ namespace Nobeta.EUG.FSM
         {
             // 檢查死亡
             if (_context.CurrentHealth <= 0 && !stateMachine.IsInState<DyingState>())
-            {
+            {                
                 stateMachine.ChangeState<DyingState>();
                 return;
             }

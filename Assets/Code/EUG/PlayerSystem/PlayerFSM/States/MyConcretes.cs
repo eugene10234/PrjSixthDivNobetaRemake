@@ -2,6 +2,7 @@
 // Concrete States - 具體狀態實現（使用服務）
 // ============================================================================
 
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
@@ -62,6 +63,7 @@ namespace Nobeta.EUG.FSM.States
 
             PlayAnimation("Dying");
             PlaySound("Die");
+            ctx.EventBus.Publish(new PlayerDyingEvent { });
         }
     }
 }

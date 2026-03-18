@@ -1,5 +1,9 @@
+using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.Services;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using VContainer;
@@ -36,12 +40,27 @@ public class RigHeadTargetController : MonoBehaviour
     [Inject] private readonly ITimeService _timeService;
     [Inject] private ICameraService _cameraService;
     [Inject] private Animator _animator;
+    [Inject] private readonly IEventBus _eventBus;
     private float LookingTimer = 0f;
     private const float LOOKING_DURATION = 0.25f;
     private float targetWeight = 0f;
     private float targetweightSpeed = 0f;
+    private bool isPlayerLive = true;
+    private void OnEnable()
+    {
+        _eventBus.Subscribe<PlayerDyingEvent>(OnPlayerDying);
+    }
+    private void OnDisable()
+    {
+        _eventBus.Unsubscribe<PlayerDyingEvent>(OnPlayerDying);
+    }
+    private void OnPlayerDying(PlayerDyingEvent @event)
+    {
+        isPlayerLive = false;
+    }
     void Update()
     {
+        if (!isPlayerLive) return;
         bool isLooking = _playerInputService.IsFirePressed || _playerInputService.IsAimPressed;
         if (isLooking) LookingTimer = LOOKING_DURATION;
         LookingTimer -= Time.deltaTime;
