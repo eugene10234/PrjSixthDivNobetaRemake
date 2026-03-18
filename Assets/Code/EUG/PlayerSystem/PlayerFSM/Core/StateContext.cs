@@ -61,6 +61,8 @@ namespace Nobeta.EUG.FSM.Core
         public int MaxHealth { get; set; }
         public int CurrentMana { get; set; }
         public int MaxMana { get; set; }
+        public int CurrentStamina { get; set; }
+        public int MaxStamina { get; set; }
 
         // 閃避相關
         public int DodgeCharges { get; set; }
@@ -118,10 +120,12 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 100;
+            MaxHealth = 150;
             CurrentHealth = MaxHealth;
-            MaxMana = 100;
+            MaxMana = 300;
             CurrentMana = MaxMana;
+            MaxMana = 300;
+            CurrentStamina = MaxMana;
 
             // 閃避
             DodgeCharges = Config.maxDodgeCharges;

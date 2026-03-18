@@ -4,6 +4,7 @@ using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.MBFunctions.PlayerUI;
 using System;
 using UnityEngine;
 using VContainer;
@@ -28,7 +29,7 @@ namespace Nobeta.EUG.FSM
             _inputService = container.Resolve<IPlayerInputService>();
             _detectionService = container.Resolve<IDetectionService>();
             _eventBus = container.Resolve<IEventBus>();
-            _debugService = container.Resolve<DebugServiceMb>();           
+            _debugService = container.Resolve<DebugServiceMb>();
         }
         //public PlayerControlPrensenter(
         //    DebugServiceMb debugServiceMb,
@@ -91,7 +92,22 @@ namespace Nobeta.EUG.FSM
 
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
+            SyncStatusToGUI();
         }
+
+        private void SyncStatusToGUI()
+        {
+            _eventBus.Publish(new PlayerStatusUpdateEvent
+            {
+                CurrentHealth = _context.CurrentHealth,
+                MaxHealth = _context.MaxHealth,
+                CurrentMana = _context.CurrentMana,
+                MaxMana = _context.MaxMana,
+                CurrentStamina = _context.CurrentStamina,
+                MaxStamina = _context.MaxStamina
+            });
+        }
+
         private void CheckGlobalTransitions()
         {
             // 檢查死亡
@@ -201,22 +217,22 @@ namespace Nobeta.EUG.FSM
 
             GUILayout.Space(10);
 
-            //GUILayout.Label("<b>Input:</b>");
-            //GUILayout.Label($"Move: {_context.InputService.MoveInput}");
-            //GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
-            //GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
+            GUILayout.Label("<b>Input:</b>");
+            GUILayout.Label($"Move: {_context.InputService.MoveInput}");
+            GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
+            GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
 
-            //GUILayout.Space(10);
+            GUILayout.Space(10);
 
-            //if (GUILayout.Button("Take Damage (20)"))
-            //{
-            //    TakeDamage(20);
-            //}
+            if (GUILayout.Button("Take Damage (20)"))
+            {
+                TakeDamage(20);
+            }
 
-            //if (GUILayout.Button("Respawn"))
-            //{
-            //    Respawn();
-            //}
+            if (GUILayout.Button("Respawn"))
+            {
+                Respawn();
+            }
 
         }
 

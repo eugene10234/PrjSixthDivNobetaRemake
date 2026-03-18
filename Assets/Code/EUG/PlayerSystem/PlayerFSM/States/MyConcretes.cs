@@ -60,7 +60,7 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             ctx.MovementService.ResetVelocity();
 
-            PlayAnimation("Die");
+            PlayAnimation("Dying");
             PlaySound("Die");
         }
     }
