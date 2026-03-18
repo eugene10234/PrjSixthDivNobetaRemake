@@ -20,7 +20,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
     /// <summary>
     /// 武器系統（使用示例）
     /// </summary>
-    public class WeaponSystem : MonoBehaviour
+    public class PlayerWeaponSystem : MonoBehaviour
     {
         [SerializeField] private BulletSystemBridge bulletSystem;
         [SerializeField] private Transform firePoint;
@@ -80,43 +80,43 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             );
         }
         //+ UnityEngine.Random.Range(-20f, 20f) * firePoint.up + UnityEngine.Random.Range(-20f, 20f) * firePoint.right
-        private void OnGUI()
-        {
-            if (true)
-            {
-                DrawDebugInfo();
-            }
+        //private void OnGUI()
+        //{
+        //    if (true)
+        //    {
+        //        DrawDebugInfo();
+        //    }
 
-        }
-        private void DrawDebugInfo()
-        {
+        //}
+        //private void DrawDebugInfo()
+        //{
 
-            if (!Application.isPlaying) return;
+        //    //if (!Application.isPlaying) return;
 
-            GUILayout.BeginArea(new Rect(10, 10, 300, 400));
+        //    //GUILayout.BeginArea(new Rect(10, 10, 300, 400));
 
-            if (GUILayout.Button("Fire"))
-            {
-                _eventBus.Publish(new WeaponFiredEvent2
-                {
+        //    //if (GUILayout.Button("Fire"))
+        //    //{
+        //    //    _eventBus.Publish(new WeaponFiredEvent2
+        //    //    {
   
-                });
-            }
-            //if (GUILayout.Button("SwitchToFireBall"))
-            //{
-            //    SwitchToFireBall();
-            //}
-            //if (GUILayout.Button("SwitchToIceBall"))
-            //{
-            //    SwitchToIceBall();
-            //}
-            //if (GUILayout.Button("SwitchToLightningBall"))
-            //{
-            //    SwitchToLightningBall();
-            //}
-            GUILayout.EndArea();
+        //    //    });
+        //    //}
+        //    ////if (GUILayout.Button("SwitchToFireBall"))
+        //    ////{
+        //    ////    SwitchToFireBall();
+        //    ////}
+        //    ////if (GUILayout.Button("SwitchToIceBall"))
+        //    ////{
+        //    ////    SwitchToIceBall();
+        //    ////}
+        //    ////if (GUILayout.Button("SwitchToLightningBall"))
+        //    ////{
+        //    ////    SwitchToLightningBall();
+        //    ////}
+        //    //GUILayout.EndArea();
 
-        }
+        //}
     }
 }
 
