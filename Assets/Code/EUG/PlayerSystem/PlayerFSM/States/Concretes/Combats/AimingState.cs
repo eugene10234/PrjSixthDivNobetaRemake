@@ -151,9 +151,9 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnFireStartInput()
         {
-            var offsetPosition = ctx.Transform.position;
-            offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
-            Debug.LogWarning("發射武器"+ ctx.Transform.position);
+            //var offsetPosition = ctx.Transform.position;
+            //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+            //Debug.LogWarning("發射武器"+ ctx.Transform.position);
             //ctx.EventBus.Publish(new WeaponFiredEvent
             //{
             //    BulletType = BulletType.Fire,
@@ -161,10 +161,7 @@ namespace Nobeta.EUG.FSM.States
             //    Forward = context.Transform.forward
 
             //});
-            _eventBus.Publish(new WeaponFiredEvent2
-            {
-                //BulletType = BulletType.Fire,
-            });
+            _eventBus.Publish(new WeaponFiredEvent2{});
         }
         public override void OnDodgeInput()
         {
