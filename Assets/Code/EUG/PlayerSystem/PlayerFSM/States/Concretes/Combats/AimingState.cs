@@ -1,9 +1,12 @@
 ﻿
+using System;
+using Nobeta.EUG.AANEW.MBbulletsystems;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
-using System;
 using UnityEngine;
+using VContainer;
 
 
 namespace Nobeta.EUG.FSM.States
@@ -23,7 +26,7 @@ namespace Nobeta.EUG.FSM.States
         private Vector2 _movement;
         DebugServiceMb _debugServiceMb;
         private float _turnAngle;
-
+        [Inject] IEventBus _eventBus;
         public AimingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
             : base(context, stateMachine)
         {
@@ -151,13 +154,17 @@ namespace Nobeta.EUG.FSM.States
             var offsetPosition = ctx.Transform.position;
             offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
             Debug.LogWarning("發射武器"+ ctx.Transform.position);
-            //context.EventBus.Publish(new WeaponFiredEvent
+            //ctx.EventBus.Publish(new WeaponFiredEvent
             //{
             //    BulletType = BulletType.Fire,
             //    Position = offsetPosition,
             //    Forward = context.Transform.forward
 
             //});
+            _eventBus.Publish(new WeaponFiredEvent2
+            {
+                //BulletType = BulletType.Fire,
+            });
         }
         public override void OnDodgeInput()
         {

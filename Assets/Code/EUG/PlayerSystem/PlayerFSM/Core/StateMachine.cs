@@ -256,6 +256,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAimStart -= HandleAimStartInput;
             _inputService.OnAimEnd -= HandleAimEndInput;
             _inputService.OnFireStart -= HandleFireStartInput;
+            _inputService.OnAttack -= HandleAttackStartInput;
             Debug.Log("已取消訂閱輸入事件");
         }
         private StateMachine stateMachine => this;
