@@ -17,16 +17,25 @@ namespace Nobeta.EUG.Services
         private float m_Yaw = 0f;   // 左右旋轉
         private float horizonOffset = 0f;
         private CinemachineCamera _cinemachineCamera;
+        private CinemachineThirdPersonFollow _cinemachineThirdPersonFollow;
         private Transform m_followPoint;
         private readonly IPlayerInputService _playerInputService;
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 1.5f;
         private float mVerticalSensetivity = 1f;
-        private float _targetFOV = 60f;
+        private readonly static float DefaultFOV = 50f;
+        private readonly static float DefaultCamDistance = 2f;
+        private readonly static float DefaultShoulderHeight = -0.11f;
+        private float _targetFOV = DefaultFOV;        
+        private float _targetDistance = DefaultCamDistance;
+        private float _targetShoulderOffset = DefaultShoulderHeight;
+        private Vector3 _targetShoulder = new Vector3(0.5f, DefaultShoulderHeight, 0);
         private float _smoothFOVSpeed = 0.2f;
+
 
         public float GetHorizonOffset => horizonOffset;
         public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
+        public float CinCameraDistance { get => _cinemachineThirdPersonFollow.CameraDistance; set => _cinemachineThirdPersonFollow.CameraDistance= value; }
         [Inject]
         public CameraService(IPlayerInputService playerInputService)
         {
@@ -70,7 +79,9 @@ namespace Nobeta.EUG.Services
         public void Initial(CinemachineCamera CinemachineCamera)
         {
             _cinemachineCamera = CinemachineCamera;
+            _cinemachineThirdPersonFollow = _cinemachineCamera.GetComponent<CinemachineThirdPersonFollow>();
             m_followPoint = CinemachineCamera.Target.TrackingTarget;
+            _targetShoulder = new Vector3(0.5f, DefaultShoulderHeight, 0);
             // 讓初始角度等於當前物體的角度，避免瞬移
             Vector3 currentEuler = m_followPoint.eulerAngles;
             m_Yaw = currentEuler.y;
@@ -112,6 +123,16 @@ namespace Nobeta.EUG.Services
         {
             // 這裡的 smoothSpeed 決定了相機跟隨目標 FOV 的速度
             FieldOfView = Mathf.Lerp(FieldOfView, _targetFOV, _smoothFOVSpeed);
+            CinCameraDistance = Mathf.Lerp(CinCameraDistance, _targetDistance, _smoothFOVSpeed*0.6f);
+            _cinemachineThirdPersonFollow.ShoulderOffset = Vector3.Lerp(_cinemachineThirdPersonFollow.ShoulderOffset, SetTargerShoulderValue(_targetShoulder), _smoothFOVSpeed);
+
+        }
+        public Vector3 SetTargerShoulderValue(Vector3 targetShoulder)
+        {
+            targetShoulder.y = Mathf.Lerp(targetShoulder.y, _targetShoulderOffset, _targetFOV / DefaultFOV);
+
+            return targetShoulder;
+
         }
         public void Dispose()
         {
@@ -137,12 +158,16 @@ namespace Nobeta.EUG.Services
         private void OnCameraAimStart()
         {
             //throw new NotImplementedException();
-            _targetFOV = 40f; // 縮小視野，模擬瞄準效果
+            _targetFOV = 57.5f; // 縮小視野，模擬瞄準效果
+            _targetDistance = 0.9f; // 拉近相機距離，模擬瞄準效果
+            _targetShoulderOffset = -0.38f;
         }
         private void OnCameraAimEnd()
         {
             //throw new NotImplementedException();
-            _targetFOV = 60f; // 縮小視野，模擬瞄準效果
+            _targetFOV = DefaultFOV; // 縮小視野，模擬瞄準效果
+            _targetDistance = DefaultCamDistance; // 拉近相機距離，模擬瞄準效果
+            _targetShoulderOffset = DefaultShoulderHeight;
         }
 
         public void LateUpdate()

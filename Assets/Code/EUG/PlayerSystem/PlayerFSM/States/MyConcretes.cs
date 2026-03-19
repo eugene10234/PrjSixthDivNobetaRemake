@@ -63,7 +63,12 @@ namespace Nobeta.EUG.FSM.States
 
             PlayAnimation("Dying");
             PlaySound("Die");
-            ctx.EventBus.Publish(new PlayerDyingEvent { });
+            ctx.EventBus.Publish(new PlayerLiveStateEvent {IsLive = false });
+        }
+        public override void Exit()
+        {
+            base.Exit();
+            ctx.EventBus.Publish(new PlayerLiveStateEvent { IsLive = true });
         }
     }
 }
