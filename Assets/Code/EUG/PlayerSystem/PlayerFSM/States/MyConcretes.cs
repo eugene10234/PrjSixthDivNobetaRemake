@@ -34,7 +34,7 @@ namespace Nobeta.EUG.FSM.States
             hitTimer = ctx.Config.hitStunDuration;
             ctx.MovementService.ResetVelocity();
 
-            PlayAnimation("Hit");
+            PlayAnimation("Head_Hit_R");
             PlaySound("Hit");
         }
 

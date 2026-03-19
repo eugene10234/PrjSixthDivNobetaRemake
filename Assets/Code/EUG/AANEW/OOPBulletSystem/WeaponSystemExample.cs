@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Nobeta.EUG.AANEW.MBbulletsystems;
 using Nobeta.EUG.BulletSystem.OOP;
+using Nobeta.EUG.Events;
+
 //using Nobeta.EUG.Core.Events;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
@@ -42,13 +44,13 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             // 訂閱事件 (假設你的 EventBus 是全域單例或透過 DI 注入)
             // 這裡的語法取決於你 EventBus 的具體實作
             Debug.LogWarning("WeaponSystem OnEnable");
-            _eventBus.Subscribe<WeaponFiredEvent2>(OnFire);
+            _eventBus.Subscribe<BulletWeaponSysEvent>(OnFire);
         }
 
         private void OnDisable()
         {
             // 取消訂閱，防止記憶體洩漏
-            _eventBus.Unsubscribe<WeaponFiredEvent2>(OnFire);
+            _eventBus.Unsubscribe<BulletWeaponSysEvent>(OnFire);
         }
         private void OnDestroy()
         {
@@ -59,7 +61,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
            
         }
 
-        private void OnFire(WeaponFiredEvent2 evt)
+        private void OnFire(BulletWeaponSysEvent evt)
         {
             Vector3 targetPoint = firePoint.position+ Camera.main.transform.forward*50f;
             if (cameraService.TryGetCameraSphereHit(0.2f, Mathf.Infinity, out RaycastHit hitInfo))

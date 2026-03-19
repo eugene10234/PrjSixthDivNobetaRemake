@@ -10,6 +10,9 @@ using Nobeta.EUG.Settings;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
+using Nobeta.EUG.BulletSystem.OOP;
+using Nobeta.EUG.Events;
+
 
 namespace Nobeta.EUG.FSM.Core
 {
@@ -69,6 +72,7 @@ namespace Nobeta.EUG.FSM.Core
         public float LastDodgeTime { get; set; }
 
         // 魔法相關
+        public BulletConfig BulletConfig { get; set; }
         public float ChargeLevel { get; set; }
         public float ChargeStartTime { get; set; }
 
@@ -132,6 +136,7 @@ namespace Nobeta.EUG.FSM.Core
             LastDodgeTime = 0f;
 
             // 魔法
+            BulletConfig = BulletConfig.Normal;
             ChargeLevel = 0f;
             ChargeStartTime = 0f;
 
@@ -179,5 +184,44 @@ namespace Nobeta.EUG.FSM.Core
         public float CurrentSpeed => MovementService.CurrentHorizontalSpeed;
 
         #endregion
+        protected bool HasEnoughMana(int cost)
+        {
+            return CurrentMana >= cost;
+        }
+        protected void ConsumeMana(int cost)
+        {
+            CurrentMana = Mathf.Max(0, CurrentMana - cost);
+
+            //// 發布事件
+            //PublishEvent(new ManaConsumedEvent
+            //{
+            //    Amount = cost,
+            //    CurrentMana = context.CurrentMana
+            //});
+        }
+        public void FireMagic()
+        {
+
+            if (HasEnoughMana(BulletConfig.ManaCost))
+            {
+                ConsumeMana(BulletConfig.ManaCost);
+
+                // 獲取瞄準方向
+                //Vector3 aimDirection = GetAimDirection();
+
+                //// 發布施法事件
+                EventBus.Publish(new BulletWeaponSysEvent
+                {
+                    bulletConfig = BulletConfig
+                });
+
+                //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
+            }
+            else
+            {
+                Debug.Log("魔力不足！");
+                //PlaySound("ManaNone");
+            }
+        }
     }
 }

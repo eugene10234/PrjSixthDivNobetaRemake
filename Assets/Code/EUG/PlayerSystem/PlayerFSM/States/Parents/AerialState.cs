@@ -1,6 +1,7 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
-using System;
 using UnityEngine;
 // ========================================================================
 // AerialState - 空中狀態父類（更新版）
@@ -61,7 +62,10 @@ namespace Nobeta.EUG.FSM.States
                 stateMachine.ChangeState<DodgingState>();
             }
         }
-
+        public override void OnFireStartInput()
+        {
+            ctx.FireMagic();
+        }
         #endregion
 
         #region Helper Methods

@@ -161,7 +161,8 @@ namespace Nobeta.EUG.FSM.States
             //    Forward = context.Transform.forward
 
             //});
-            _eventBus.Publish(new WeaponFiredEvent2{});
+            //_eventBus.Publish(new WeaponFiredEvent2{});
+            ctx.FireMagic();
         }
         public override void OnDodgeInput()
         {

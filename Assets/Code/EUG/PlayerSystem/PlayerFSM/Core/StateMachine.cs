@@ -243,6 +243,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAimStart += HandleAimStartInput;
             _inputService.OnAimEnd += HandleAimEndInput;
             _inputService.OnFireStart += HandleFireStartInput;
+            _inputService.OnFireEnd += HandleFireEndInput;
             _inputService.OnAttack += HandleAttackStartInput;
             Debug.Log("已訂閱輸入事件");
         }
@@ -256,6 +257,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAimStart -= HandleAimStartInput;
             _inputService.OnAimEnd -= HandleAimEndInput;
             _inputService.OnFireStart -= HandleFireStartInput;
+            _inputService.OnFireEnd -= HandleFireEndInput;
             _inputService.OnAttack -= HandleAttackStartInput;
             Debug.Log("已取消訂閱輸入事件");
         }
@@ -268,6 +270,7 @@ namespace Nobeta.EUG.FSM.Core
         private void HandleAimStartInput() => stateMachine.CurrentState?.OnAimStartInput();
         private void HandleAimEndInput() => stateMachine.CurrentState?.OnAimEndInput();
         private void HandleFireStartInput() => stateMachine.CurrentState?.OnFireStartInput();
+        private void HandleFireEndInput() => stateMachine.CurrentState?.OnFireEndInput();
         private void HandleAttackStartInput() => stateMachine.CurrentState?.OnAttackInput();
     }
 

@@ -1,4 +1,5 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 // ========================================================================
@@ -44,6 +45,7 @@ namespace Nobeta.EUG.FSM.States
 
             //}
         }
+
         public virtual void DetectionHandler()
         {
 
@@ -86,6 +88,15 @@ namespace Nobeta.EUG.FSM.States
         {
             stateMachine.ChangeState<MeleeAttackState>();
         }
+        public override void OnFireStartInput()
+        {
+            ctx.FireMagic();
+        }
+        public override void OnFireEndInput()
+        {
+            ctx.FireMagic();
+        }
+
         #endregion
 
         #region Helper Methods
