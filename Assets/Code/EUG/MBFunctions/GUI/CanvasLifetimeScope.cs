@@ -8,5 +8,6 @@ public class CanvasLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterComponentInHierarchy<PlayerStatusUI>();
+        builder.RegisterComponentInHierarchy<MagicStatusUI>();
     }
 }

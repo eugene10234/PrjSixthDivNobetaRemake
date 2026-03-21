@@ -7,7 +7,7 @@ using UnityEngine;
 // ========================================================================
 namespace Nobeta.EUG.FSM.States
 {
-    public abstract class GroundedState : BaseState, IUpdatable, IFixedUpdatable
+    public abstract class GroundedState : BattleSetState, IUpdatable, IFixedUpdatable
     {
         protected float RunningTimer;
         protected const float RUNNING_DURATION = 1.4f;
@@ -27,8 +27,9 @@ namespace Nobeta.EUG.FSM.States
 
         }
 
-        public virtual void Update()
+        public override void Update()
         {
+            base.Update();
             DetectionHandler();
         }
 
@@ -88,14 +89,14 @@ namespace Nobeta.EUG.FSM.States
         {
             stateMachine.ChangeState<MeleeAttackState>();
         }
-        public override void OnFireStartInput()
-        {
-            ctx.FireMagic();
-        }
-        public override void OnFireEndInput()
-        {
-            ctx.FireMagic();
-        }
+        //public override void OnFireStartInput()
+        //{
+        //    ctx.FireMagic();
+        //}
+        //public override void OnFireEndInput()
+        //{
+        //    ctx.FireMagic();
+        //}
 
         #endregion
 

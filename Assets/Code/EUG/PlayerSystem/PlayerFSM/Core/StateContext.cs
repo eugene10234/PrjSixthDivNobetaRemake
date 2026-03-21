@@ -201,14 +201,15 @@ namespace Nobeta.EUG.FSM.Core
         }
         public void FireMagic()
         {
-
+            if (BulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(BulletConfig.ManaCost))
             {
                 ConsumeMana(BulletConfig.ManaCost);
 
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
-
+                if (BulletConfig.CoolTime>0f)
+                TimeService.TaskDelayLock(BulletConfig.CoolTime, (b) => BulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
                 EventBus.Publish(new BulletWeaponSysEvent
                 {

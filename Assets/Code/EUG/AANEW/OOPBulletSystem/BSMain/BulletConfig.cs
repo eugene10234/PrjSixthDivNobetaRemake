@@ -21,6 +21,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public float Speed { get; set; }
         public int Damage { get; set; }
         public int ManaCost { get; set; }
+        public float CoolTime { get; set; }
+        public bool CoolTimerLock { get; set; }
         public float Lifetime { get; set; }
         public float ColliderRadius { get; set; }
         public BulletType Type { get; set; }
@@ -31,6 +33,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Speed = 20f,
             Damage = 10,
             //ManaCost= 5,
+            CoolTime = 0.25f,
+            CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.1f,
             Type = BulletType.Normal
