@@ -1,10 +1,12 @@
-﻿using Nobeta.EUG.Events;
+﻿using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
-using System;
+using Nobeta.EUG.MBFunctions.PlayerUI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -28,24 +30,9 @@ namespace Nobeta.EUG.FSM
             _inputService = container.Resolve<IPlayerInputService>();
             _detectionService = container.Resolve<IDetectionService>();
             _eventBus = container.Resolve<IEventBus>();
-            _debugService = container.Resolve<DebugServiceMb>();           
+            _debugService = container.Resolve<DebugServiceMb>();
         }
-        //public PlayerControlPrensenter(
-        //    DebugServiceMb debugServiceMb,
-        //    StateMachine stateMachine,
-        //    StateContext context,
-        //    IPlayerInputService inputService,
-        //    IDetectionService groundDetection,
-        //    IEventBus eventBus)
-        //{
-        //    _debugService = debugServiceMb;
-        //    _stateMachine = stateMachine;
-        //    _context = context;
-        //    _inputService = inputService;
-        //    _detectionService = groundDetection;
-        //    _eventBus = eventBus;
 
-        //}
         public void Initialize()
         {
             Debug.Log("PlayerController 初始化中（事件驅動模式）");
@@ -63,18 +50,26 @@ namespace Nobeta.EUG.FSM
                 Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
                 return;
             }
-            _debugService.GUI.Add(DrawDebugInfo);
+            //_debugService.GUI.Add(DrawDebugInfo);
             // 訂閱輸入事件
             //Debug.LogWarning("mbPlayerControllerStart");
 
             // 設置初始狀態
             _stateMachine.SetInitialState<IdleState>();
 
-            Debug.Log("PlayerController 初始化完成（事件驅動模式）");
+            _eventBus.Subscribe<PlayerDamagedEvent>(OnTakeDamage);
+ 
+
+
+        Debug.Log("PlayerController 初始化完成（事件驅動模式）");
         }
+
+
+
         public void Dispose()
         {
             // 清理事件訂閱
+            _eventBus.Unsubscribe<PlayerDamagedEvent>(OnTakeDamage);
             _stateMachine.Dispose();
             //UnsubscribeFromInputEvents(_inputService);
         }
@@ -91,12 +86,27 @@ namespace Nobeta.EUG.FSM
 
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
+            SyncStatusToGUI();
         }
+
+        private void SyncStatusToGUI()
+        {
+            _eventBus.Publish(new PlayerStatusUpdateEvent
+            {
+                CurrentHealth = _context.CurrentHealth,
+                MaxHealth = _context.MaxHealth,
+                CurrentMana = _context.CurrentMana,
+                MaxMana = _context.MaxMana,
+                CurrentStamina = _context.CurrentStamina,
+                MaxStamina = _context.MaxStamina
+            });
+        }
+
         private void CheckGlobalTransitions()
         {
             // 檢查死亡
             if (_context.CurrentHealth <= 0 && !stateMachine.IsInState<DyingState>())
-            {
+            {                
                 stateMachine.ChangeState<DyingState>();
                 return;
             }
@@ -104,7 +114,10 @@ namespace Nobeta.EUG.FSM
             // 這裡可以添加其他全局轉換邏輯
         }
         #region Public API（公共接口）
-
+        private void OnTakeDamage(PlayerDamagedEvent evt)
+        {
+            TakeDamage(evt.Damage);
+        }
         /// <summary>
         /// 受到傷害
         /// </summary>
@@ -125,12 +138,7 @@ namespace Nobeta.EUG.FSM
                 }
             }
 
-            // 發布事件
-            _eventBus.Publish(new PlayerDamagedEvent
-            {
-                Damage = damage,
-                CurrentHealth = _context.CurrentHealth
-            });
+
         }
 
         /// <summary>
@@ -201,22 +209,22 @@ namespace Nobeta.EUG.FSM
 
             GUILayout.Space(10);
 
-            //GUILayout.Label("<b>Input:</b>");
-            //GUILayout.Label($"Move: {_context.InputService.MoveInput}");
-            //GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
-            //GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
+            GUILayout.Label("<b>Input:</b>");
+            GUILayout.Label($"Move: {_context.InputService.MoveInput}");
+            GUILayout.Label($"Jump Pressed: {_context.InputService.IsJumpPressed}");
+            GUILayout.Label($"Run Pressed: {_context.InputService.IsRunPressed}");
 
-            //GUILayout.Space(10);
+            GUILayout.Space(10);
 
-            //if (GUILayout.Button("Take Damage (20)"))
-            //{
-            //    TakeDamage(20);
-            //}
+            if (GUILayout.Button("Take Damage (20)"))
+            {
+                TakeDamage(20);
+            }
 
-            //if (GUILayout.Button("Respawn"))
-            //{
-            //    Respawn();
-            //}
+            if (GUILayout.Button("Respawn"))
+            {
+                Respawn();
+            }
 
         }
 

@@ -1,4 +1,5 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 // ========================================================================
@@ -6,7 +7,7 @@ using UnityEngine;
 // ========================================================================
 namespace Nobeta.EUG.FSM.States
 {
-    public abstract class GroundedState : BaseState, IUpdatable, IFixedUpdatable
+    public abstract class GroundedState : BattleSetState, IUpdatable, IFixedUpdatable
     {
         protected float RunningTimer;
         protected const float RUNNING_DURATION = 1.4f;
@@ -26,8 +27,9 @@ namespace Nobeta.EUG.FSM.States
 
         }
 
-        public virtual void Update()
+        public override void Update()
         {
+            base.Update();
             DetectionHandler();
         }
 
@@ -44,12 +46,14 @@ namespace Nobeta.EUG.FSM.States
 
             //}
         }
-        public virtual void DetectionHandler()
-        {
 
+        public override void DetectionHandler()
+        {
+            base.DetectionHandler();
             //Vector3 direction = GetMoveDirection();
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
+            if(ctx.ChargeRatio>0f)
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
 
             if (RunningTimer < 0.01)
@@ -82,10 +86,26 @@ namespace Nobeta.EUG.FSM.States
             stateMachine.ChangeState<AimingState>();
 
         }
+        public override void OnChantInput()
+        {
+            //Debug.LogWarning("OnAimStartInput");
+
+            stateMachine.ChangeState<ChantingState>();
+
+        }
         public override void OnAttackInput()
         {
             stateMachine.ChangeState<MeleeAttackState>();
         }
+        //public override void OnFireStartInput()
+        //{
+        //    ctx.FireMagic();
+        //}
+        //public override void OnFireEndInput()
+        //{
+        //    ctx.FireMagic();
+        //}
+
         #endregion
 
         #region Helper Methods

@@ -120,6 +120,7 @@ public class PlayerLifetimeScope : LifetimeScope
 
         // 戰鬥狀態
         builder.Register<AimingState>(Lifetime.Transient);
+        builder.Register<ChantingState>(Lifetime.Transient);
         builder.Register<MeleeAttackState>(Lifetime.Transient);
 
         // TODO: 添加更多狀態

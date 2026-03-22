@@ -18,7 +18,7 @@ namespace Nobeta.EUG.BulletSystem
         protected override void Configure(IContainerBuilder builder)
         {
             // 註冊 EventBus（如果還沒註冊）
-            builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
+            //builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
 
             // 註冊服務
             builder.Register<IPhysicsService, PhysicsService>(Lifetime.Singleton);
@@ -33,7 +33,7 @@ namespace Nobeta.EUG.BulletSystem
             builder.Register<Bullet>(Lifetime.Transient);
 
             builder.RegisterComponentInHierarchy<BulletSystemBridge>();
-            builder.RegisterComponentInHierarchy<WeaponSystem>();
+            builder.RegisterComponentInHierarchy<PlayerWeaponSystem>();
 
             Debug.Log("[BulletSystem] VContainer 註冊完成");
         }

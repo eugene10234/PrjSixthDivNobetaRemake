@@ -10,6 +10,13 @@ using Nobeta.EUG.Settings;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
+using Nobeta.EUG.BulletSystem.OOP;
+using Nobeta.EUG.Events;
+using System;
+using Nobeta.EUG.FSM.States;
+using NUnit.Framework;
+using System.Collections.Generic;
+
 
 namespace Nobeta.EUG.FSM.Core
 {
@@ -61,19 +68,23 @@ namespace Nobeta.EUG.FSM.Core
         public int MaxHealth { get; set; }
         public int CurrentMana { get; set; }
         public int MaxMana { get; set; }
-
+        public int CurrentStamina { get; set; }
+        public int MaxStamina { get; set; }
+        // 狀態標記
+        public Type CurrentSpeedType { get; set; }
         // 閃避相關
         public int DodgeCharges { get; set; }
         public float LastDodgeTime { get; set; }
 
         // 魔法相關
-        public float ChargeLevel { get; set; }
+        public BulletConfig CurrentBulletConfig { get; set; }
+        public float ChargeRatio { get; set; }
         public float ChargeStartTime { get; set; }
 
         // 戰鬥相關
         public int ComboCounter { get; set; }
         public float LastAttackTime { get; set; }
-
+        public Dictionary<BulletType,BulletConfig> _bulletsDiction;
         #endregion
 
         #region Constructor（構造函數 - VContainer 注入）
@@ -118,22 +129,31 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 100;
+            MaxHealth = 200;
             CurrentHealth = MaxHealth;
-            MaxMana = 100;
+            MaxMana = 300;
             CurrentMana = MaxMana;
-
+            MaxMana = 300;
+            CurrentStamina = MaxMana;
+            // 狀態標記
+            CurrentSpeedType = typeof(IdleState);
             // 閃避
             DodgeCharges = Config.maxDodgeCharges;
             LastDodgeTime = 0f;
 
             // 魔法
-            ChargeLevel = 0f;
+            CurrentBulletConfig = BulletConfig.Normal;
+            ChargeRatio = 0f;
             ChargeStartTime = 0f;
 
             // 戰鬥
             ComboCounter = 0;
             LastAttackTime = 0f;
+            _bulletsDiction = new Dictionary<BulletType, BulletConfig>(); 
+            _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
+            _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
+            _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
+            _bulletsDiction.Add(BulletType.Lightning, BulletConfig.LightningStrike);
         }
 
         #endregion
@@ -175,5 +195,49 @@ namespace Nobeta.EUG.FSM.Core
         public float CurrentSpeed => MovementService.CurrentHorizontalSpeed;
 
         #endregion
+        protected bool HasEnoughMana(int cost)
+        {
+            return CurrentMana >= cost;
+        }
+        protected void ConsumeMana(int cost)
+        {
+            CurrentMana = Mathf.Max(0, CurrentMana - cost);
+
+            //// 發布事件
+            //PublishEvent(new ManaConsumedEvent
+            //{
+            //    Amount = cost,
+            //    CurrentMana = context.CurrentMana
+            //});
+        }
+        public void FireMagic()
+        {
+            if (CurrentBulletConfig.CoolTimerLock) return;
+            if (HasEnoughMana(CurrentBulletConfig.ManaCost))
+            {
+                ConsumeMana(CurrentBulletConfig.ManaCost);
+
+                // 獲取瞄準方向
+                //Vector3 aimDirection = GetAimDirection();
+                if (CurrentBulletConfig.CoolTime>0f)
+                TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
+                //// 發布施法事件
+                EventBus.Publish(new WeaponFireEvent
+                {
+                    bulletConfig = CurrentBulletConfig
+                });
+
+                //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
+            }
+            else
+            {
+                Debug.Log("魔力不足！");
+                //PlaySound("ManaNone");
+            }
+        }
+        public void ChangeBullet(BulletType bulletType)
+        {
+            CurrentBulletConfig = _bulletsDiction[bulletType];
+        }
     }
 }

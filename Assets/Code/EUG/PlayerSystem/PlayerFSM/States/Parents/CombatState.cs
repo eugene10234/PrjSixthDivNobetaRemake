@@ -15,7 +15,7 @@ namespace Nobeta.EUG.FSM.States
     /// 戰鬥狀態父類
     /// 處理所有戰鬥狀態的共同邏輯
     /// </summary>
-    public abstract class CombatState : BaseState, IUpdatable
+    public abstract class CombatState : BattleSetState, IUpdatable
     {
         protected float stateTimer;
 
@@ -24,11 +24,15 @@ namespace Nobeta.EUG.FSM.States
         {
         }
 
-        public virtual void Update()
+        public override void Update()
         {
+            base.Update();
             UpdateTimer();
         }
-
+        public override void DetectionHandler()
+        {
+            base.DetectionHandler();
+        }
         protected virtual void UpdateTimer()
         {
             if (stateTimer > 0)
@@ -41,35 +45,10 @@ namespace Nobeta.EUG.FSM.States
                 }
             }
         }
-
         protected virtual void OnTimerExpired()
         {
             // 子類覆寫
         }
-
-        /// <summary>
-        /// 檢查魔力是否足夠
-        /// </summary>
-        protected bool HasEnoughMana(int cost)
-        {
-            return ctx.CurrentMana >= cost;
-        }
-
-        /// <summary>
-        /// 消耗魔力
-        /// </summary>
-        protected void ConsumeMana(int cost)
-        {
-            ctx.CurrentMana = Mathf.Max(0, ctx.CurrentMana - cost);
-
-            // 發布事件
-            //PublishEvent(new ManaConsumedEvent
-            //{
-            //    Amount = cost,
-            //    CurrentMana = context.CurrentMana
-            //});
-        }
-
         /// <summary>
         /// 獲取瞄準方向
         /// </summary>

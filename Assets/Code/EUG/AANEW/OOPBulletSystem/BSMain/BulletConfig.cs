@@ -20,6 +20,9 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public int Id { get; set; }
         public float Speed { get; set; }
         public int Damage { get; set; }
+        public int ManaCost { get; set; }
+        public float CoolTime { get; set; }
+        public bool CoolTimerLock { get; set; }
         public float Lifetime { get; set; }
         public float ColliderRadius { get; set; }
         public BulletType Type { get; set; }
@@ -29,15 +32,42 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             Speed = 20f,
             Damage = 10,
+            ManaCost= 0,
+            CoolTime = 0.5f,
+            CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.1f,
             Type = BulletType.Normal
         };
-
+        public static BulletConfig IceBall => new BulletConfig
+        {
+            Speed = 20f,
+            Damage = 5,
+            ManaCost = 2,
+            CoolTime = 0.15f,
+            CoolTimerLock = false,
+            Lifetime = 5f,
+            ColliderRadius = 0.1f,
+            Type = BulletType.Ice
+        };
         public static BulletConfig FireBall => new BulletConfig
         {
             Speed = 15f,
             Damage = 20,
+            ManaCost = 5,
+            CoolTime = 1f,
+            CoolTimerLock = false,
+            Lifetime = 4f,
+            ColliderRadius = 0.2f,
+            Type = BulletType.Fire
+        };
+        public static BulletConfig LightningStrike => new BulletConfig
+        {
+            Speed = 15f,
+            Damage = 20,
+            ManaCost = 5,
+            CoolTime = 1f,
+            CoolTimerLock = false,
             Lifetime = 4f,
             ColliderRadius = 0.2f,
             Type = BulletType.Fire
@@ -47,8 +77,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
     public enum BulletType
     {
         Normal,
-        Fire,
         Ice,
+        Fire,
         Lightning
     }
 

@@ -34,8 +34,8 @@ namespace Nobeta.Root
 
             builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton).AsSelf();
             builder.RegisterComponentInHierarchy<DebugServiceMb>();
-            Debug.Log("Root LifetimeScope 配置完成");
-
+            builder.RegisterComponentInHierarchy<EventBusProvider>();
+            Debug.Log("Root LifetimeScope 配置完成");           
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
+            ctx.CurrentSpeedType = typeof(RunningState);
             RunningTimer = RUNNING_DURATION;
             base.Enter();
             PlayAnimation("MovementState");

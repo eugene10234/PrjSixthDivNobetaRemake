@@ -1,9 +1,12 @@
 ﻿
+using System;
+using Nobeta.EUG.AANEW.MBbulletsystems;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
-using System;
 using UnityEngine;
+using VContainer;
 
 
 namespace Nobeta.EUG.FSM.States
@@ -23,7 +26,7 @@ namespace Nobeta.EUG.FSM.States
         private Vector2 _movement;
         DebugServiceMb _debugServiceMb;
         private float _turnAngle;
-
+        [Inject] IEventBus _eventBus;
         public AimingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
             : base(context, stateMachine)
         {
@@ -143,22 +146,50 @@ namespace Nobeta.EUG.FSM.States
         // 輸入事件處理
         public override void OnJumpInput()
         {
-            // 瞄準時不能跳躍
-            //Debug.LogWarning("OnJumpInput");
+            if (ctx.CanJump)
+            {
+                stateMachine.ChangeState<JumpingState>();
+            }
         }
-        public override void OnFireStartInput()
-        {
-            var offsetPosition = ctx.Transform.position;
-            offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
-            Debug.LogWarning("發射武器"+ ctx.Transform.position);
-            //context.EventBus.Publish(new WeaponFiredEvent
-            //{
-            //    BulletType = BulletType.Fire,
-            //    Position = offsetPosition,
-            //    Forward = context.Transform.forward
+        //public override void DetectionHandler()
+        //{ 
+        //        base.DetectionHandler();
+        //    //    if (ctx.InputService.IsJumpPressed)
+        //    //    {
+        //    //        //Debug.LogWarning("OnJumpInput");
+        //    //        return;
+        //    //}
+        //}
+        //public override void OnFireStartInput()
+        //{
+        //    //var offsetPosition = ctx.Transform.position;
+        //    //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+        //    //Debug.LogWarning("發射武器"+ ctx.Transform.position);
+        //    //ctx.EventBus.Publish(new WeaponFiredEvent
+        //    //{
+        //    //    BulletType = BulletType.Fire,
+        //    //    Position = offsetPosition,
+        //    //    Forward = context.Transform.forward
 
-            //});
-        }
+        //    //});
+        //    //_eventBus.Publish(new WeaponFiredEvent2{});
+        //    //ctx.FireMagic();
+        //}
+        //public override void OnFireEndInput()
+        //{
+        //    //var offsetPosition = ctx.Transform.position;
+        //    //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+        //    //Debug.LogWarning("發射武器"+ ctx.Transform.position);
+        //    //ctx.EventBus.Publish(new WeaponFiredEvent
+        //    //{
+        //    //    BulletType = BulletType.Fire,
+        //    //    Position = offsetPosition,
+        //    //    Forward = context.Transform.forward
+
+        //    //});
+        //    //_eventBus.Publish(new WeaponFiredEvent2{});
+        //    //ctx.FireMagic();
+        //}
         public override void OnDodgeInput()
         {
             if (ctx.CanDodge)

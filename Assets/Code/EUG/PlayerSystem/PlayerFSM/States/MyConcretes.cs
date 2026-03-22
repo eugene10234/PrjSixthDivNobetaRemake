@@ -2,6 +2,7 @@
 // Concrete States - 具體狀態實現（使用服務）
 // ============================================================================
 
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace Nobeta.EUG.FSM.States
             hitTimer = ctx.Config.hitStunDuration;
             ctx.MovementService.ResetVelocity();
 
-            PlayAnimation("Hit");
+            PlayAnimation("Head_Hit_R");
             PlaySound("Hit");
         }
 
@@ -60,8 +61,14 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             ctx.MovementService.ResetVelocity();
 
-            PlayAnimation("Die");
+            PlayAnimation("Dying");
             PlaySound("Die");
+            ctx.EventBus.Publish(new PlayerLiveStateEvent {IsLive = false });
+        }
+        public override void Exit()
+        {
+            base.Exit();
+            ctx.EventBus.Publish(new PlayerLiveStateEvent { IsLive = true });
         }
     }
 }

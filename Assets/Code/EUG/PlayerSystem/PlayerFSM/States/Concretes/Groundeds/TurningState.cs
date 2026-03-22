@@ -19,6 +19,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
+            ctx.CurrentSpeedType = typeof(IdleState);
             base.Enter();
             Vector3 targetDir = GetMoveDirection();
             // 2. 計算當前物體的前方

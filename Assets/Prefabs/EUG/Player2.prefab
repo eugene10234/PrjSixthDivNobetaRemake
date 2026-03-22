@@ -21110,7 +21110,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: -12.5, y: -4, z: -12.14}
+    m_Offset: {x: -12.5, y: -2.5, z: -12.14}
     m_MinLimit: -180
     m_MaxLimit: 180
     m_AimAxis: 4
@@ -22727,7 +22727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2c44bc8ce8fd745a9baf0b6c72a1b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   rig: {fileID: 5000192356191040541}
   rigTarget: {fileID: 3303958725537344634}
   headBone: {fileID: 2912657839594539862}

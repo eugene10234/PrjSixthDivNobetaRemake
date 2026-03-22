@@ -1,6 +1,7 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
-using System;
 using UnityEngine;
 // ========================================================================
 // AerialState - 空中狀態父類（更新版）
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace Nobeta.EUG.FSM.States
 {
 
-    public abstract class AerialState : BaseState, IUpdatable, IFixedUpdatable
+    public abstract class AerialState : BattleSetState, IUpdatable, IFixedUpdatable
     {
         private float _previousSpeed;
         private Vector3 _previousMoveDirection;
@@ -24,6 +25,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public virtual void Update()
         {
+            base.Update();
             // 檢查著地
             if (ctx.IsGrounded && ctx.MovementService.CurrentVelocity.y <= 0)
             {
@@ -61,7 +63,6 @@ namespace Nobeta.EUG.FSM.States
                 stateMachine.ChangeState<DodgingState>();
             }
         }
-
         #endregion
 
         #region Helper Methods

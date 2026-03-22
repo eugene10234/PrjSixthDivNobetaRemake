@@ -29,7 +29,9 @@ namespace Nobeta.EUG.Interfaces
         bool IsRunPressed { get; }
         bool IsAimPressed { get; }
         bool IsFirePressed { get; }
-       
+        bool IsChantPressed { get; }
+        int PressedNumSwitch { get; }
+
 
         /// <summary>
         /// 移動事件
@@ -68,6 +70,8 @@ namespace Nobeta.EUG.Interfaces
         event Action OnFireStart;
         event Action OnFireEnd;
         event Action OnAttack;
+        event Action OnChant;
+        event Action OnNumSwitch;
         event Action OnCusorSwitchStart;
         event Action OnCusorSwitchEnd;
     }

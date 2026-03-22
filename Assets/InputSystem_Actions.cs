@@ -156,6 +156,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Chant"",
+                    ""type"": ""Button"",
+                    ""id"": ""29c534a9-e689-4da2-a4f4-61eb63514940"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""2776c80d-3c14-4091-8c56-d04ced07a2b0"",
@@ -213,6 +222,42 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""CursorSwitch"",
                     ""type"": ""Button"",
                     ""id"": ""d0e3d767-0a33-4d9b-b1e2-42f02765efaf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MSNum1"",
+                    ""type"": ""Button"",
+                    ""id"": ""b1e1d79f-98d8-4f60-b34a-5a373d5b549d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MSNum2"",
+                    ""type"": ""Button"",
+                    ""id"": ""a0c53896-5804-4dbf-85ea-e82a8bec8bd1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MSNum3"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7824782-7e35-4587-baae-999ac9eb38f7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MSNum4"",
+                    ""type"": ""Button"",
+                    ""id"": ""5312abab-f017-4bab-8836-07b0d46136e7"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -415,6 +460,61 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""CursorSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc846f1b-4df9-4edd-a6e7-135cffd9ad49"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MSNum1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b181b9d-7c31-4ab4-be71-d68cbae9d24e"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MSNum2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4eb3090f-cf66-4811-93c9-441ece40bc9b"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MSNum3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b88361c-8cf4-4007-a6f3-a7a4c5bbbe7c"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MSNum4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfc5de9e-b374-4e10-b2e1-3818da30180d"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Chant"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1009,6 +1109,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+        m_Player_Chant = m_Player.FindAction("Chant", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_MSwitch = m_Player.FindAction("MSwitch", throwIfNotFound: true);
@@ -1016,6 +1117,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_ISwitch = m_Player.FindAction("ISwitch", throwIfNotFound: true);
         m_Player_IUse = m_Player.FindAction("IUse", throwIfNotFound: true);
         m_Player_CursorSwitch = m_Player.FindAction("CursorSwitch", throwIfNotFound: true);
+        m_Player_MSNum1 = m_Player.FindAction("MSNum1", throwIfNotFound: true);
+        m_Player_MSNum2 = m_Player.FindAction("MSNum2", throwIfNotFound: true);
+        m_Player_MSNum3 = m_Player.FindAction("MSNum3", throwIfNotFound: true);
+        m_Player_MSNum4 = m_Player.FindAction("MSNum4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1116,6 +1221,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_Aim;
     private readonly InputAction m_Player_Fire;
+    private readonly InputAction m_Player_Chant;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_MSwitch;
@@ -1123,6 +1229,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ISwitch;
     private readonly InputAction m_Player_IUse;
     private readonly InputAction m_Player_CursorSwitch;
+    private readonly InputAction m_Player_MSNum1;
+    private readonly InputAction m_Player_MSNum2;
+    private readonly InputAction m_Player_MSNum3;
+    private readonly InputAction m_Player_MSNum4;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1163,6 +1273,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Chant".
+        /// </summary>
+        public InputAction @Chant => m_Wrapper.m_Player_Chant;
+        /// <summary>
         /// Provides access to the underlying input action "Player/Attack".
         /// </summary>
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
@@ -1190,6 +1304,22 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/CursorSwitch".
         /// </summary>
         public InputAction @CursorSwitch => m_Wrapper.m_Player_CursorSwitch;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MSNum1".
+        /// </summary>
+        public InputAction @MSNum1 => m_Wrapper.m_Player_MSNum1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MSNum2".
+        /// </summary>
+        public InputAction @MSNum2 => m_Wrapper.m_Player_MSNum2;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MSNum3".
+        /// </summary>
+        public InputAction @MSNum3 => m_Wrapper.m_Player_MSNum3;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/MSNum4".
+        /// </summary>
+        public InputAction @MSNum4 => m_Wrapper.m_Player_MSNum4;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1237,6 +1367,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Chant.started += instance.OnChant;
+            @Chant.performed += instance.OnChant;
+            @Chant.canceled += instance.OnChant;
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
@@ -1258,6 +1391,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CursorSwitch.started += instance.OnCursorSwitch;
             @CursorSwitch.performed += instance.OnCursorSwitch;
             @CursorSwitch.canceled += instance.OnCursorSwitch;
+            @MSNum1.started += instance.OnMSNum1;
+            @MSNum1.performed += instance.OnMSNum1;
+            @MSNum1.canceled += instance.OnMSNum1;
+            @MSNum2.started += instance.OnMSNum2;
+            @MSNum2.performed += instance.OnMSNum2;
+            @MSNum2.canceled += instance.OnMSNum2;
+            @MSNum3.started += instance.OnMSNum3;
+            @MSNum3.performed += instance.OnMSNum3;
+            @MSNum3.canceled += instance.OnMSNum3;
+            @MSNum4.started += instance.OnMSNum4;
+            @MSNum4.performed += instance.OnMSNum4;
+            @MSNum4.canceled += instance.OnMSNum4;
         }
 
         /// <summary>
@@ -1290,6 +1435,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Chant.started -= instance.OnChant;
+            @Chant.performed -= instance.OnChant;
+            @Chant.canceled -= instance.OnChant;
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
@@ -1311,6 +1459,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @CursorSwitch.started -= instance.OnCursorSwitch;
             @CursorSwitch.performed -= instance.OnCursorSwitch;
             @CursorSwitch.canceled -= instance.OnCursorSwitch;
+            @MSNum1.started -= instance.OnMSNum1;
+            @MSNum1.performed -= instance.OnMSNum1;
+            @MSNum1.canceled -= instance.OnMSNum1;
+            @MSNum2.started -= instance.OnMSNum2;
+            @MSNum2.performed -= instance.OnMSNum2;
+            @MSNum2.canceled -= instance.OnMSNum2;
+            @MSNum3.started -= instance.OnMSNum3;
+            @MSNum3.performed -= instance.OnMSNum3;
+            @MSNum3.canceled -= instance.OnMSNum3;
+            @MSNum4.started -= instance.OnMSNum4;
+            @MSNum4.performed -= instance.OnMSNum4;
+            @MSNum4.canceled -= instance.OnMSNum4;
         }
 
         /// <summary>
@@ -1661,6 +1821,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFire(InputAction.CallbackContext context);
         /// <summary>
+        /// Method invoked when associated input action "Chant" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnChant(InputAction.CallbackContext context);
+        /// <summary>
         /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1709,6 +1876,34 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCursorSwitch(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MSNum1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMSNum1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MSNum2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMSNum2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MSNum3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMSNum3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MSNum4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMSNum4(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

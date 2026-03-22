@@ -55,7 +55,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 2100000, guid: bd9aa8d2c9497e241bd5c9afbcc7bbd9, type: 2}
+      value: {fileID: 2100000, guid: aa9fe4215116aeb43a2ee05670b59604, type: 2}
     attribute: 'm_Materials.Array.data[0]'
     path: Ghost_Mesh/Ghost
     classID: 137
@@ -87,7 +87,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 2100000, guid: bd9aa8d2c9497e241bd5c9afbcc7bbd9, type: 2}
+    - {fileID: 2100000, guid: aa9fe4215116aeb43a2ee05670b59604, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
