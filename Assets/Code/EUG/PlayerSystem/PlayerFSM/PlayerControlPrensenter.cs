@@ -32,22 +32,7 @@ namespace Nobeta.EUG.FSM
             _eventBus = container.Resolve<IEventBus>();
             _debugService = container.Resolve<DebugServiceMb>();
         }
-        //public PlayerControlPrensenter(
-        //    DebugServiceMb debugServiceMb,
-        //    StateMachine stateMachine,
-        //    StateContext context,
-        //    IPlayerInputService inputService,
-        //    IDetectionService groundDetection,
-        //    IEventBus eventBus)
-        //{
-        //    _debugService = debugServiceMb;
-        //    _stateMachine = stateMachine;
-        //    _context = context;
-        //    _inputService = inputService;
-        //    _detectionService = groundDetection;
-        //    _eventBus = eventBus;
 
-        //}
         public void Initialize()
         {
             Debug.Log("PlayerController 初始化中（事件驅動模式）");
@@ -72,11 +57,19 @@ namespace Nobeta.EUG.FSM
             // 設置初始狀態
             _stateMachine.SetInitialState<IdleState>();
 
-            Debug.Log("PlayerController 初始化完成（事件驅動模式）");
+            _eventBus.Subscribe<PlayerDamagedEvent>(OnTakeDamage);
+ 
+
+
+        Debug.Log("PlayerController 初始化完成（事件驅動模式）");
         }
+
+
+
         public void Dispose()
         {
             // 清理事件訂閱
+            _eventBus.Unsubscribe<PlayerDamagedEvent>(OnTakeDamage);
             _stateMachine.Dispose();
             //UnsubscribeFromInputEvents(_inputService);
         }
@@ -121,7 +114,10 @@ namespace Nobeta.EUG.FSM
             // 這裡可以添加其他全局轉換邏輯
         }
         #region Public API（公共接口）
-
+        private void OnTakeDamage(PlayerDamagedEvent evt)
+        {
+            TakeDamage(evt.Damage);
+        }
         /// <summary>
         /// 受到傷害
         /// </summary>
@@ -142,12 +138,7 @@ namespace Nobeta.EUG.FSM
                 }
             }
 
-            // 發布事件
-            _eventBus.Publish(new PlayerDamagedEvent
-            {
-                Damage = damage,
-                CurrentHealth = _context.CurrentHealth
-            });
+
         }
 
         /// <summary>

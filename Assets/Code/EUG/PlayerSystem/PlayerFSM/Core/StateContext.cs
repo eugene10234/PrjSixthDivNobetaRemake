@@ -129,7 +129,7 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 150;
+            MaxHealth = 200;
             CurrentHealth = MaxHealth;
             MaxMana = 300;
             CurrentMana = MaxMana;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UnityEngine;
 
 namespace Nobeta.EUG.Events
 {
@@ -10,5 +6,6 @@ namespace Nobeta.EUG.Events
     {
         public int Damage;
         public int CurrentHealth;
+        public Vector3 hitPosition;
     }
 }

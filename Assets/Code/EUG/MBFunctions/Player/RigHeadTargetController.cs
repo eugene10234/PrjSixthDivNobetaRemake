@@ -48,13 +48,13 @@ public class RigHeadTargetController : MonoBehaviour
     private bool isPlayerLive = true;
     private void OnEnable()
     {
-        _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerDying);
+        _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
     }
     private void OnDisable()
     {
-        _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerDying);
+        _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
     }
-    private void OnPlayerDying(PlayerLiveStateEvent evt)
+    private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
     {
         isPlayerLive = evt.IsLive;
     }
