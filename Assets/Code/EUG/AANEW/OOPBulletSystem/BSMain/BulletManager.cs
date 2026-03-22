@@ -1,5 +1,4 @@
 ﻿using Nobeta.EUG.Interfaces;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -215,6 +214,33 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
                 var bullet = SpawnBullet(config, origin, direction);
+                bullets.Add(bullet);
+            }
+
+            return bullets;
+        }
+        public List<Bullet> SpawnCircleShotgunPattern(
+            BulletConfig config,
+            Vector3 origin,
+            Vector3 forwardDirection,
+            int count,
+            float spreadAngle)// 擴散角度（例如 15 度）
+        {
+            var bullets = new List<Bullet>(count);
+
+            for (int i = 0; i < count; i++)
+            {
+                // 在單位圓內取一個隨機點，並乘以擴散強度
+                Vector2 Unitspread = (i == 0) ? Vector2.zero :Random.insideUnitCircle;//* spreadAngle
+                Unitspread.y = Mathf.Clamp(Unitspread.y, -1f, 0.5f);
+                Vector2 spread = Unitspread * spreadAngle;
+                // 透過 LookRotation 建立基礎朝向，再疊加偏移
+                Quaternion rotation = Quaternion.LookRotation(forwardDirection)
+                                      * Quaternion.Euler(spread.y, spread.x, 0);
+
+                Vector3 finalDirection = rotation * Vector3.forward;
+
+                var bullet = SpawnBullet(config, origin, finalDirection);
                 bullets.Add(bullet);
             }
 

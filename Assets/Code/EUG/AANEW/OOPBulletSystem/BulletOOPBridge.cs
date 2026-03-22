@@ -11,114 +11,65 @@ using VContainer.Unity;
     // ========================================================================
 namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 {
+    using Nobeta.EUG.BulletSystem.OOP;
+    using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+    using Nobeta.EUG.Interfaces;
+    using UnityEngine;
+    using VContainer;
 
-    /// <summary>
-    /// 子彈系統橋接層
-    /// 職責：連接 Pure C# 邏輯和 Unity
-    /// </summary>
     public class BulletSystemBridge : MonoBehaviour
     {
-        #region Inspector Fields
+        [Header("VFX 配置")]
+        [SerializeField] private BulletVFXConfig[] bulletVFXConfigs;
 
-        [Header("視覺預製體")]
-        [SerializeField] private GameObject normalBulletPrefab;
-        [SerializeField] private GameObject fireBallPrefab;
-        [SerializeField] private GameObject iceBallPrefab;
-        [SerializeField] private GameObject lightningBallPrefab;
-
-        [Header("除錯")]
-        [SerializeField] private bool showDebugUI = true;
-
-        #endregion
-
-        #region Private Fields
-
-        // Pure C# 管理器
         private BulletManager bulletManager;
-
-        // 視覺服務
         private BulletVisualService visualService;
-
-        // 事件總線
         private IEventBus eventBus;
 
-        #endregion
-
-        #region Dependency Injection
-
         [Inject]
-        public void Construct(
-            BulletManager bulletManager,
-            IEventBus eventBus)
+        public void Construct(BulletManager bulletManager, IEventBus eventBus)
         {
             this.bulletManager = bulletManager;
             this.eventBus = eventBus;
         }
 
-        #endregion
-
-        #region Unity Lifecycle
-
         private void Start()
         {
-            // 初始化視覺服務
-            GameObject[] prefabs = new[]
-            {
-                normalBulletPrefab,
-                fireBallPrefab,
-                iceBallPrefab,
-                lightningBallPrefab
-            };
-
+            // 創建視覺容器
             var container = new GameObject("BulletVisuals").transform;
             container.SetParent(transform);
 
-            visualService = new BulletVisualService(prefabs, container);
+            // 創建完整的 VFX 服務
+            visualService = new BulletVisualService(bulletVFXConfigs, container);
 
             // 訂閱事件
             eventBus.Subscribe<BulletSpawnedEvent>(OnBulletSpawned);
             eventBus.Subscribe<BulletHitEvent>(OnBulletHit);
             eventBus.Subscribe<BulletExpiredEvent>(OnBulletExpired);
-
-            Debug.Log("[BulletSystem] 初始化完成（Pure C# OOP）");
         }
 
         private void Update()
         {
-            // 更新 Pure C# 邏輯
+            // 更新邏輯
             bulletManager.Update(Time.deltaTime);
 
             // 同步視覺
             visualService.SyncVisualsToLogic(bulletManager.ActiveBullets);
         }
 
-        private void OnDestroy()
-        {
-            // 清理
-            bulletManager.ClearAll();
-
-            // 取消訂閱
-            eventBus.Unsubscribe<BulletSpawnedEvent>(OnBulletSpawned);
-            eventBus.Unsubscribe<BulletHitEvent>(OnBulletHit);
-            eventBus.Unsubscribe<BulletExpiredEvent>(OnBulletExpired);
-        }
-
-        #endregion
-
-        #region Event Handlers
-
         private void OnBulletSpawned(BulletSpawnedEvent evt)
         {
-            // 視覺服務會在 SyncVisualsToLogic 中處理
-            //visualService.SyncVisualsToLogic(bulletManager.ActiveBullets);
+            // AssignVisual 會自動播放槍口閃光
         }
 
         private void OnBulletHit(BulletHitEvent evt)
         {
-            // 回收視覺
-            visualService.RecycleVisual(evt.Bullet);
+            // 播放擊中特效
+            int type = (int)evt.Type;
+            visualService.PlayHitEffectAsync(type, evt.HitPosition, evt.HitNormal).Forget();
 
-            Debug.Log($"子彈擊中：傷害 {evt.Damage}");
+            // 回收視覺（包含拖尾延遲回收）
+            visualService.RecycleVisual(evt.Bullet);
         }
 
         private void OnBulletExpired(BulletExpiredEvent evt)
@@ -127,8 +78,12 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             visualService.RecycleVisual(evt.Bullet);
         }
 
-        #endregion
-
+        private void OnDestroy()
+        {
+            eventBus.Unsubscribe<BulletSpawnedEvent>(OnBulletSpawned);
+            eventBus.Unsubscribe<BulletHitEvent>(OnBulletHit);
+            eventBus.Unsubscribe<BulletExpiredEvent>(OnBulletExpired);
+        }
         #region Public API
 
         /// <summary>
@@ -150,52 +105,21 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         {
             return bulletManager.SpawnPattern(config, origin, count, angleStep);
         }
-
+        public List<Bullet> FireCircleShotgunPattern(
+            BulletConfig config,
+            Vector3 origin,
+            Vector3 forwardDirection,
+            int count,
+            float spreadAngle)
+        {
+            return bulletManager.SpawnCircleShotgunPattern(config, origin, forwardDirection, count, spreadAngle);
+        }
         /// <summary>
         /// 清除所有子彈
         /// </summary>
         public void ClearAll()
         {
             bulletManager.ClearAll();
-        }
-
-        #endregion
-
-        #region Debug UI
-
-        private void OnGUI()
-        {
-            //if (!showDebugUI) return;
-
-            //GUILayout.BeginArea(new Rect(10, 10, 300, 200));
-            //GUILayout.Box("=== Pure C# OOP Bullet System ===");
-
-            //GUILayout.Label($"<b>Active Bullets:</b> {bulletManager.ActiveBulletCount}");
-            //GUILayout.Label($"<b>FPS:</b> {1f / Time.deltaTime:F0}");
-
-            //GUILayout.Space(10);
-
-            //if (GUILayout.Button("Fire Normal"))
-            //{
-            //    Fire(BulletConfig.Normal, transform.position, transform.forward);
-            //}
-
-            //if (GUILayout.Button("Fire FireBall"))
-            //{
-            //    Fire(BulletConfig.FireBall, transform.position, transform.forward);
-            //}
-
-            //if (GUILayout.Button("Fire Pattern (16)"))
-            //{
-            //    FirePattern(BulletConfig.Normal, transform.position, 16, 22.5f);
-            //}
-
-            //if (GUILayout.Button("Clear All"))
-            //{
-            //    ClearAll();
-            //}
-
-            //GUILayout.EndArea();
         }
 
         #endregion

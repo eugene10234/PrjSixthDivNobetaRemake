@@ -15,6 +15,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
+            ctx.CurrentSpeedType = typeof(IdleState);
             base.Enter();
             //PlayAnimation("IdleState",0.1f);
             PlayAnimation("MovementState", 0.15f);

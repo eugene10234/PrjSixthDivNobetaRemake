@@ -47,12 +47,13 @@ namespace Nobeta.EUG.FSM.States
             //}
         }
 
-        public virtual void DetectionHandler()
+        public override void DetectionHandler()
         {
-
+            base.DetectionHandler();
             //Vector3 direction = GetMoveDirection();
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
+            if(ctx.ChargeRatio>0f)
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
 
             if (RunningTimer < 0.01)
@@ -83,6 +84,13 @@ namespace Nobeta.EUG.FSM.States
             //Debug.LogWarning("OnAimStartInput");
 
             stateMachine.ChangeState<AimingState>();
+
+        }
+        public override void OnChantInput()
+        {
+            //Debug.LogWarning("OnAimStartInput");
+
+            stateMachine.ChangeState<ChantingState>();
 
         }
         public override void OnAttackInput()

@@ -70,6 +70,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Chant",
+                    "type": "Button",
+                    "id": "29c534a9-e689-4da2-a4f4-61eb63514940",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
@@ -127,6 +136,42 @@
                     "name": "CursorSwitch",
                     "type": "Button",
                     "id": "d0e3d767-0a33-4d9b-b1e2-42f02765efaf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MSNum1",
+                    "type": "Button",
+                    "id": "b1e1d79f-98d8-4f60-b34a-5a373d5b549d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MSNum2",
+                    "type": "Button",
+                    "id": "a0c53896-5804-4dbf-85ea-e82a8bec8bd1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MSNum3",
+                    "type": "Button",
+                    "id": "a7824782-7e35-4587-baae-999ac9eb38f7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MSNum4",
+                    "type": "Button",
+                    "id": "5312abab-f017-4bab-8836-07b0d46136e7",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -329,6 +374,61 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "CursorSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc846f1b-4df9-4edd-a6e7-135cffd9ad49",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MSNum1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4b181b9d-7c31-4ab4-be71-d68cbae9d24e",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MSNum2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4eb3090f-cf66-4811-93c9-441ece40bc9b",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MSNum3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b88361c-8cf4-4007-a6f3-a7a4c5bbbe7c",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MSNum4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bfc5de9e-b374-4e10-b2e1-3818da30180d",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Chant",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

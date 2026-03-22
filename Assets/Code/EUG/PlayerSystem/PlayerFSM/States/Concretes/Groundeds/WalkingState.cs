@@ -23,7 +23,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
-            //ctx.DebugService.GUI.Add(DrawDebugInfo);
+            ctx.CurrentSpeedType = typeof(WalkingState);
 
             base.Enter();
             PlayAnimation("MovementState",0.1f);

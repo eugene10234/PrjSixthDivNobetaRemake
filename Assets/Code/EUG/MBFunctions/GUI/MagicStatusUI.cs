@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Code.EUG.MBFunctions.GUI;
+using Cysharp.Threading.Tasks;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using System.Threading;
@@ -16,28 +17,31 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private Image MageCDBuffer;
         [Inject]private readonly IEventBus _eventBus;
         private CancellationTokenSource _cts;
+        private StatusBarController _mgCDBufCtrl;
 
         private void OnEnable()
         {
 
             _cts = new CancellationTokenSource();
+            _mgCDBufCtrl = new StatusBarController(MageCDBuffer);
             // 訂閱事件
-            _eventBus.Subscribe<BulletWeaponSysEvent>(OnMagicFire);
+            _eventBus.Subscribe<WeaponFireEvent>(OnMagicFire);
         }
 
         private void OnDisable()
         {
             _cts?.Cancel();
             _cts?.Dispose();
-            // 取消訂閱，防止記憶體洩漏
-            _eventBus.Unsubscribe<BulletWeaponSysEvent>(OnMagicFire);
+            _mgCDBufCtrl.Dispose();
+            // 取消訂閱
+            _eventBus.Unsubscribe<WeaponFireEvent>(OnMagicFire);
         }
         private CancellationTokenSource MagicCoolTimeTokenSoure;
 
-        private void OnMagicFire(BulletWeaponSysEvent evt)
-        {
-
-            UpdateBarBufferWithDelay(MageCDBuffer, evt.bulletConfig.CoolTime , MagicCoolTimeTokenSoure);
+        private void OnMagicFire(WeaponFireEvent evt)
+        { 
+            _mgCDBufCtrl.FillAmount = 0f;
+            _mgCDBufCtrl.LerpUpdate(1f,evt.bulletConfig.CoolTime);
 
         }
         private void UpdateBarBufferWithDelay(Image bufferBar, float duration, CancellationTokenSource bufferTokenSoure)

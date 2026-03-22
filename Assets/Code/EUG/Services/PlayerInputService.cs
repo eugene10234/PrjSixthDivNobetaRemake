@@ -40,6 +40,8 @@ namespace Nobeta.EUG.Services
         public bool IsFirePressed { get; private set; }
         public bool IsAttackPressed { get; private set; }
         public bool IsCusorSwitchPressed { get; private set; }
+        public bool IsChantPressed { get; private set; }
+        public int PressedNumSwitch { get; private set; }
 
         // 提供事件訂閱
         public event Action OnMove;
@@ -54,7 +56,9 @@ namespace Nobeta.EUG.Services
         public event Action OnFireStart;
         public event Action OnFireEnd;
         public event Action OnAttack;
-        //鼠標切換事件（如果需要的話）
+        public event Action OnChant;
+        public event Action OnNumSwitch;
+        //鼠標切換事件（如果需要的話）OnChant
         public event Action OnCusorSwitchStart;
         public event Action OnCusorSwitchEnd;
         //=========================================================
@@ -133,6 +137,38 @@ namespace Nobeta.EUG.Services
         {
             IsAttackPressed = false;
         }
+        private void ChantPerformed(InputAction.CallbackContext _)
+        {
+            IsChantPressed = true;
+            OnChant?.Invoke();
+        }
+        private void ChantCanceled(InputAction.CallbackContext _)
+        {
+            IsChantPressed = false;
+        }
+        private void NumSwitch1Performed(InputAction.CallbackContext _)
+        {
+            Debug.Log("NumSwitch11111111111111111");
+            PressedNumSwitch = 1;
+            OnNumSwitch?.Invoke();
+        }
+        private void NumSwitch2Performed(InputAction.CallbackContext _)
+        {
+            Debug.Log("NumSwitch222222222");
+            PressedNumSwitch = 2;
+            OnNumSwitch?.Invoke();
+        }
+        private void NumSwitch3Performed(InputAction.CallbackContext _)
+        {
+            Debug.Log("NumSwitch33333333");
+            PressedNumSwitch = 3;
+            OnNumSwitch?.Invoke();
+        }
+        private void NumSwitch4Performed(InputAction.CallbackContext _)
+        {
+            PressedNumSwitch = 4;
+            OnNumSwitch?.Invoke();
+        }
         private void CusorSwitchPerformed(InputAction.CallbackContext _)
         {
             IsCusorSwitchPressed = true;
@@ -164,6 +200,12 @@ namespace Nobeta.EUG.Services
             _actions.Player.Fire.canceled += FireCanceled;
             _actions.Player.Attack.performed += AttackPerformed;
             _actions.Player.Attack.canceled += AttackCanceled;
+            _actions.Player.Chant.performed += ChantPerformed;
+            _actions.Player.Chant.canceled += ChantCanceled;
+            _actions.Player.MSNum1.performed += NumSwitch1Performed;
+            _actions.Player.MSNum2.performed += NumSwitch2Performed;
+            _actions.Player.MSNum3.performed += NumSwitch3Performed;
+            _actions.Player.MSNum4.performed += NumSwitch4Performed;
             _actions.Player.CursorSwitch.performed += CusorSwitchPerformed;
             _actions.Player.CursorSwitch.canceled += CusorSwitchCanceled;
 
@@ -183,6 +225,12 @@ namespace Nobeta.EUG.Services
             _actions.Player.Fire.canceled -= FireCanceled;
             _actions.Player.Attack.performed -= AttackPerformed;
             _actions.Player.Attack.canceled -= AttackCanceled;
+            _actions.Player.Chant.performed -= ChantPerformed;
+            _actions.Player.Chant.canceled -= ChantCanceled;
+            _actions.Player.MSNum1.performed -= NumSwitch1Performed;
+            _actions.Player.MSNum2.performed -= NumSwitch2Performed;
+            _actions.Player.MSNum3.performed -= NumSwitch3Performed;
+            _actions.Player.MSNum4.performed -= NumSwitch4Performed;
             _actions.Player.CursorSwitch.performed -= CusorSwitchPerformed;
             _actions.Player.CursorSwitch.canceled -= CusorSwitchCanceled;
         }

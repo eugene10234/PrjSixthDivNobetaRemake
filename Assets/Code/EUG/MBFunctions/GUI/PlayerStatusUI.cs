@@ -1,5 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Code.EUG.MBFunctions.GUI;
+using Cysharp.Threading.Tasks;
 using Nobeta.EUG.Interfaces;
+using System;
 using System.Threading;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
@@ -15,16 +17,23 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private Image healthBar;
         [SerializeField] private Image healthBuffer;
         [SerializeField] private Image manaBar;
+        [SerializeField] private Image manaBuffer;
         [SerializeField] private Image staminaBar;
         [Inject]private readonly IEventBus _eventBus;
         private CancellationTokenSource _cts;
         [Header("Settings")]
         [SerializeField] private float duration = 2.0f; // 動畫時長
-        private float Testduration = 1.0f; 
+        private StatusBarController _hpCtrl;
+        private StatusBarController _hpBufCtrl;
+        private StatusBarController _manaCtrl;
+        private StatusBarController _manaBufCtrl;
         private void OnEnable()
         {
-
             _cts = new CancellationTokenSource();
+            _hpCtrl = new StatusBarController(healthBar);
+            _hpBufCtrl = new StatusBarController(healthBuffer);
+            _manaCtrl = new StatusBarController(manaBar);
+            _manaBufCtrl = new StatusBarController(manaBuffer);
             // 訂閱事件
             _eventBus.Subscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
         }
@@ -33,23 +42,21 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         {
             _cts?.Cancel();
             _cts?.Dispose();
+            _hpCtrl.Dispose();
+            _hpBufCtrl.Dispose();
+            _manaCtrl.Dispose();
+            _manaBufCtrl.Dispose();
             // 取消訂閱，防止記憶體洩漏
             _eventBus.Unsubscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
         }
-        private CancellationTokenSource healthTokenSoure;
-        private CancellationTokenSource manaTokenSoure;
-        private CancellationTokenSource staminaTokenSoure;
+
+        //private CancellationTokenSource staminaTokenSoure;
         private void OnPlayerStatusChanged(PlayerStatusUpdateEvent evt)
         {
-            // 更新血條 (Fill Amount 範圍是 0 ~ 1)
-            //if (healthBar != null)
-            //    healthBar.fillAmount = evt.CurrentHealth / evt.MaxHealth;
-            //UpdateBarSmoothly(healthBar, evt.CurrentHealth / evt.MaxHealth).Forget();
-            UpdateBarBufferWithDelay(healthBar,healthBuffer, evt.CurrentHealth / evt.MaxHealth, healthTokenSoure);
+            UpdateBarBufferWithDelay(_hpCtrl, _hpBufCtrl, evt.CurrentHealth / evt.MaxHealth);
             // 更新魔力條
-            if (manaBar != null)
-                manaBar.fillAmount = evt.CurrentMana / evt.MaxMana;
 
+            UpdateBarBufferWithDelay(_manaCtrl, _manaBufCtrl, evt.CurrentMana / evt.MaxMana);
             // 更新耐力條
             if (staminaBar != null)
                 staminaBar.fillAmount = evt.CurrentStamina / evt.MaxStamina;
@@ -57,40 +64,42 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             // 提示：如果要讓動畫更平滑，建議配合 DOTween 使用
             // healthBar.DOFillAmount(evt.CurrentHealth / evt.MaxHealth, 0.2f);
         }
-        private void UpdateBarBufferWithDelay(Image Bar, Image Buffer, float targetRatio, CancellationTokenSource bufferTokenSoure)
-        {
-            if (!Bar || !Buffer ) return;
-            if (targetRatio > Bar.fillAmount)
+        private void UpdateBarBufferWithDelay(StatusBarController Bar, StatusBarController Buffer, float targetRatio)
+        {      
+            if (targetRatio > Bar.FillAmount)
             {
-                // 補血：兩者同步增加
-                Bar.fillAmount = targetRatio;
-                Buffer.fillAmount = targetRatio;
+                Buffer.FillAmount = targetRatio;
+                Bar.DelayUpdateTrigger(targetRatio).Forget();
                 return;
             }
-            healthBar.fillAmount = targetRatio;
-            DelayTriggerBufferSequence(Buffer, targetRatio, bufferTokenSoure).Forget();
+            Bar.FillAmount = targetRatio;
+            Buffer.DelayUpdateTrigger(targetRatio).Forget();
         }
         // 你的 TriggerBufferSequence (負責計時與發號施令)
-        private async UniTaskVoid DelayTriggerBufferSequence(Image BufferBar, float targetRatio, CancellationTokenSource bufferTokenSoure)
+        private async UniTaskVoid DelayTriggerBufferSequence(Image bufferBar, float targetRatio, CancellationTokenSource bufferTokenSoure)
         {
             var token = _cts.Token;
             try
             {
                 //等待緩衝時間
                 await UniTask.Delay(500, cancellationToken: token);
+                if (!bufferBar) return;
                 // 延遲結束，發起動畫
-                SmoothBufferUpdate(BufferBar, targetRatio, bufferTokenSoure).Forget();
+                SmoothBufferUpdate(bufferBar, targetRatio, bufferTokenSoure).Forget();
             }
             catch (System.OperationCanceledException) { /* 正常取消 */ }
         }
-        
-        private async UniTask SmoothBufferUpdate(Image bufferBar, float targetRatio, CancellationTokenSource bufferTokenSoure)
+        private CancellationTokenSource _hpBufferCts;
+
+        private async UniTaskVoid SmoothBufferUpdate(Image bufferBar, float targetRatio, CancellationTokenSource bufferTokenSoure)
         {
-            // 這裡維持你的邏輯：殺掉正在跑的舊動畫，但不影響 TriggerBufferSequence 的 Delay
-            bufferTokenSoure?.Cancel();
-            bufferTokenSoure?.Dispose();
-            bufferTokenSoure = new CancellationTokenSource();
-            var token = bufferTokenSoure.Token;
+            if (bufferBar == null) return;
+
+            // 1. 直接操作類別成員變數，確保「外部」也能取消這個動畫
+            _hpBufferCts?.Cancel();
+            _hpBufferCts?.Dispose();
+            _hpBufferCts = new CancellationTokenSource();
+            var token = _hpBufferCts.Token;
             float startFill = bufferBar.fillAmount;
             float elapsed = 0f;
             float duration = 0.5f;

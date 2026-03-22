@@ -12,6 +12,10 @@ using UnityEngine;
 using VContainer;
 using Nobeta.EUG.BulletSystem.OOP;
 using Nobeta.EUG.Events;
+using System;
+using Nobeta.EUG.FSM.States;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 
 namespace Nobeta.EUG.FSM.Core
@@ -66,20 +70,21 @@ namespace Nobeta.EUG.FSM.Core
         public int MaxMana { get; set; }
         public int CurrentStamina { get; set; }
         public int MaxStamina { get; set; }
-
+        // 狀態標記
+        public Type CurrentSpeedType { get; set; }
         // 閃避相關
         public int DodgeCharges { get; set; }
         public float LastDodgeTime { get; set; }
 
         // 魔法相關
-        public BulletConfig BulletConfig { get; set; }
-        public float ChargeLevel { get; set; }
+        public BulletConfig CurrentBulletConfig { get; set; }
+        public float ChargeRatio { get; set; }
         public float ChargeStartTime { get; set; }
 
         // 戰鬥相關
         public int ComboCounter { get; set; }
         public float LastAttackTime { get; set; }
-
+        public Dictionary<BulletType,BulletConfig> _bulletsDiction;
         #endregion
 
         #region Constructor（構造函數 - VContainer 注入）
@@ -130,19 +135,25 @@ namespace Nobeta.EUG.FSM.Core
             CurrentMana = MaxMana;
             MaxMana = 300;
             CurrentStamina = MaxMana;
-
+            // 狀態標記
+            CurrentSpeedType = typeof(IdleState);
             // 閃避
             DodgeCharges = Config.maxDodgeCharges;
             LastDodgeTime = 0f;
 
             // 魔法
-            BulletConfig = BulletConfig.Normal;
-            ChargeLevel = 0f;
+            CurrentBulletConfig = BulletConfig.Normal;
+            ChargeRatio = 0f;
             ChargeStartTime = 0f;
 
             // 戰鬥
             ComboCounter = 0;
             LastAttackTime = 0f;
+            _bulletsDiction = new Dictionary<BulletType, BulletConfig>(); 
+            _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
+            _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
+            _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
+            _bulletsDiction.Add(BulletType.Lightning, BulletConfig.LightningStrike);
         }
 
         #endregion
@@ -201,19 +212,19 @@ namespace Nobeta.EUG.FSM.Core
         }
         public void FireMagic()
         {
-            if (BulletConfig.CoolTimerLock) return;
-            if (HasEnoughMana(BulletConfig.ManaCost))
+            if (CurrentBulletConfig.CoolTimerLock) return;
+            if (HasEnoughMana(CurrentBulletConfig.ManaCost))
             {
-                ConsumeMana(BulletConfig.ManaCost);
+                ConsumeMana(CurrentBulletConfig.ManaCost);
 
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
-                if (BulletConfig.CoolTime>0f)
-                TimeService.TaskDelayLock(BulletConfig.CoolTime, (b) => BulletConfig.CoolTimerLock = b);
+                if (CurrentBulletConfig.CoolTime>0f)
+                TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
-                EventBus.Publish(new BulletWeaponSysEvent
+                EventBus.Publish(new WeaponFireEvent
                 {
-                    bulletConfig = BulletConfig
+                    bulletConfig = CurrentBulletConfig
                 });
 
                 //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
@@ -223,6 +234,10 @@ namespace Nobeta.EUG.FSM.Core
                 Debug.Log("魔力不足！");
                 //PlaySound("ManaNone");
             }
+        }
+        public void ChangeBullet(BulletType bulletType)
+        {
+            CurrentBulletConfig = _bulletsDiction[bulletType];
         }
     }
 }

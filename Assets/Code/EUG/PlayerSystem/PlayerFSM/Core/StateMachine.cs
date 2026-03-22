@@ -39,7 +39,7 @@ namespace Nobeta.EUG.FSM.Core
         public StateMachine(IObjectResolver container)
         {
             this.container = container;
-            _inputService = container.Resolve<IPlayerInputService>();            
+            _inputService = container.Resolve<IPlayerInputService>();
             SubscribeInputEvents();
             this.stateCache = new Dictionary<Type, BaseState>();
             this.stateHistory = new Queue<Type>();
@@ -75,7 +75,7 @@ namespace Nobeta.EUG.FSM.Core
         /// <summary>
         /// 改變狀態
         /// </summary>
-        private void ChangeState(Type stateType) 
+        private void ChangeState(Type stateType)
         {
             // 1. 避免重複切換
             if (CurrentState?.GetType() == stateType) return;
@@ -108,9 +108,9 @@ namespace Nobeta.EUG.FSM.Core
                 {
                     //var temp = stateHistory.ToArray();
                     //stateHistory.Clear();
-   
-                        stateHistory.Dequeue();
-                    
+
+                    stateHistory.Dequeue();
+
                 }
             }
 
@@ -245,6 +245,8 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnFireStart += HandleFireStartInput;
             _inputService.OnFireEnd += HandleFireEndInput;
             _inputService.OnAttack += HandleAttackStartInput;
+            _inputService.OnChant += HandleChantStartInput;
+            _inputService.OnNumSwitch += HandleNumSwitchInput;
             Debug.Log("已訂閱輸入事件");
         }
         private void UnsubscribeInputEvents()
@@ -259,6 +261,8 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnFireStart -= HandleFireStartInput;
             _inputService.OnFireEnd -= HandleFireEndInput;
             _inputService.OnAttack -= HandleAttackStartInput;
+            _inputService.OnChant -= HandleChantStartInput;
+            _inputService.OnNumSwitch -= HandleNumSwitchInput;
             Debug.Log("已取消訂閱輸入事件");
         }
         private StateMachine stateMachine => this;
@@ -272,6 +276,8 @@ namespace Nobeta.EUG.FSM.Core
         private void HandleFireStartInput() => stateMachine.CurrentState?.OnFireStartInput();
         private void HandleFireEndInput() => stateMachine.CurrentState?.OnFireEndInput();
         private void HandleAttackStartInput() => stateMachine.CurrentState?.OnAttackInput();
+        private void HandleChantStartInput() => stateMachine.CurrentState?.OnChantInput();
+        private void HandleNumSwitchInput() => stateMachine.CurrentState?.OnNumSwitchInput();
     }
 
     // ========================================================================

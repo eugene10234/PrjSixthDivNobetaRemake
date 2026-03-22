@@ -118,6 +118,14 @@ namespace Nobeta.EUG.FSM.Core
         {
             // 默認不處理，子類覆寫
         }
+        public virtual void OnChantInput()
+        {
+            // 默認不處理，子類覆寫
+        }
+        public virtual void OnNumSwitchInput()
+        {
+            // 默認不處理，子類覆寫
+        }
         #endregion
 
         #region Transition Control

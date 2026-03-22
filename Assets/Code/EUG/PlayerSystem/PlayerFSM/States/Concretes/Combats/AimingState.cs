@@ -146,24 +146,50 @@ namespace Nobeta.EUG.FSM.States
         // 輸入事件處理
         public override void OnJumpInput()
         {
-            // 瞄準時不能跳躍
-            //Debug.LogWarning("OnJumpInput");
+            if (ctx.CanJump)
+            {
+                stateMachine.ChangeState<JumpingState>();
+            }
         }
-        public override void OnFireStartInput()
-        {
-            //var offsetPosition = ctx.Transform.position;
-            //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
-            //Debug.LogWarning("發射武器"+ ctx.Transform.position);
-            //ctx.EventBus.Publish(new WeaponFiredEvent
-            //{
-            //    BulletType = BulletType.Fire,
-            //    Position = offsetPosition,
-            //    Forward = context.Transform.forward
+        //public override void DetectionHandler()
+        //{ 
+        //        base.DetectionHandler();
+        //    //    if (ctx.InputService.IsJumpPressed)
+        //    //    {
+        //    //        //Debug.LogWarning("OnJumpInput");
+        //    //        return;
+        //    //}
+        //}
+        //public override void OnFireStartInput()
+        //{
+        //    //var offsetPosition = ctx.Transform.position;
+        //    //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+        //    //Debug.LogWarning("發射武器"+ ctx.Transform.position);
+        //    //ctx.EventBus.Publish(new WeaponFiredEvent
+        //    //{
+        //    //    BulletType = BulletType.Fire,
+        //    //    Position = offsetPosition,
+        //    //    Forward = context.Transform.forward
 
-            //});
-            //_eventBus.Publish(new WeaponFiredEvent2{});
-            ctx.FireMagic();
-        }
+        //    //});
+        //    //_eventBus.Publish(new WeaponFiredEvent2{});
+        //    //ctx.FireMagic();
+        //}
+        //public override void OnFireEndInput()
+        //{
+        //    //var offsetPosition = ctx.Transform.position;
+        //    //offsetPosition+= ctx.CameraService.GetCameraForward() * 1.5f; // 在玩家前方生成子彈
+        //    //Debug.LogWarning("發射武器"+ ctx.Transform.position);
+        //    //ctx.EventBus.Publish(new WeaponFiredEvent
+        //    //{
+        //    //    BulletType = BulletType.Fire,
+        //    //    Position = offsetPosition,
+        //    //    Forward = context.Transform.forward
+
+        //    //});
+        //    //_eventBus.Publish(new WeaponFiredEvent2{});
+        //    //ctx.FireMagic();
+        //}
         public override void OnDodgeInput()
         {
             if (ctx.CanDodge)

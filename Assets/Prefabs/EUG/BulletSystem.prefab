@@ -62,11 +62,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce912d055a9313d448cce140c6e90eaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalBulletPrefab: {fileID: 1263930618665863065, guid: 25c9f850d491b004d8864405e55c9ea8, type: 3}
-  fireBallPrefab: {fileID: 2188671936760333052, guid: 244d29d58137eea4181c43a33044a7f3, type: 3}
-  iceBallPrefab: {fileID: 2188671936760333052, guid: 244d29d58137eea4181c43a33044a7f3, type: 3}
-  lightningBallPrefab: {fileID: 2188671936760333052, guid: 244d29d58137eea4181c43a33044a7f3, type: 3}
-  showDebugUI: 1
+  bulletVFXConfigs:
+  - bulletVisualPrefab: {fileID: 640159756336666435, guid: 7239517f4fc1543459ddedaff75ba6c5, type: 3}
+    muzzleFlashPrefab: {fileID: 2542173729321181244, guid: 20bab718bc5b8ec4dbd010485c9b3cf7, type: 3}
+    muzzleFlashLifetime: 1
+    trailPrefab: {fileID: 5268225865933781059, guid: d50600a5efff3aa4a880916be896e407, type: 3}
+    trailLifetime: 2
+    hitEffectPrefab: {fileID: 323125831052833628, guid: 08a84073813f60049906eafd5e66c940, type: 3}
+    hitEffectLifetime: 1
+  - bulletVisualPrefab: {fileID: 4351833271214004548, guid: 00c45f52e9d52384d8946e1857e3c1b7, type: 3}
+    muzzleFlashPrefab: {fileID: 3654932344121915637, guid: 6b81cc43cdf15ef4b8a2c74a05a0c5fa, type: 3}
+    muzzleFlashLifetime: 1
+    trailPrefab: {fileID: 861339195970709200, guid: 2f3adf8220ad0b6448f1f1d7ef67cd0b, type: 3}
+    trailLifetime: 2
+    hitEffectPrefab: {fileID: 2092155272871934795, guid: 9aca371e863e37142b776f8a9191544b, type: 3}
+    hitEffectLifetime: 1
+  - bulletVisualPrefab: {fileID: 2580380945974098950, guid: f635762555f307047a55c23bfaae3c9f, type: 3}
+    muzzleFlashPrefab: {fileID: 4958139051046021043, guid: 5dd5e52839ca974469f402d58d37bf9e, type: 3}
+    muzzleFlashLifetime: 1
+    trailPrefab: {fileID: 4708904582404874400, guid: 1ad80003cac7e8e4299d756f641a5ba0, type: 3}
+    trailLifetime: 2
+    hitEffectPrefab: {fileID: 2585137204373214539, guid: ebf2524539b465743bcdec6706871934, type: 3}
+    hitEffectLifetime: 1
 --- !u!114 &8291527152146335549
 MonoBehaviour:
   m_ObjectHideFlags: 0

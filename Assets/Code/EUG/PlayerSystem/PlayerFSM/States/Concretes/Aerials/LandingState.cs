@@ -56,7 +56,12 @@ namespace Nobeta.EUG.FSM.States
             }
 
         }
-
+        public override void OnFireStartInput()
+        {            
+        }
+        public override void OnFireEndInput()
+        {       
+        }
         public override bool CanTransitionTo(System.Type stateType)
         {
             // 落地硬直期間只能被打斷為受擊/死亡
