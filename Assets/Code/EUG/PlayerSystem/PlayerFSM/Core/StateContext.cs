@@ -84,7 +84,7 @@ namespace Nobeta.EUG.FSM.Core
         // 戰鬥相關
         public int ComboCounter { get; set; }
         public float LastAttackTime { get; set; }
-        public Dictionary<BulletType,BulletConfig> _bulletsDiction;
+        public Dictionary<BulletType, BulletConfig> _bulletsDiction;
         #endregion
 
         #region Constructor（構造函數 - VContainer 注入）
@@ -133,7 +133,7 @@ namespace Nobeta.EUG.FSM.Core
             CurrentHealth = MaxHealth;
             MaxMana = 300;
             CurrentMana = MaxMana;
-            MaxMana = 300;
+            MaxStamina = 300;
             CurrentStamina = MaxMana;
             // 狀態標記
             CurrentSpeedType = typeof(IdleState);
@@ -149,7 +149,7 @@ namespace Nobeta.EUG.FSM.Core
             // 戰鬥
             ComboCounter = 0;
             LastAttackTime = 0f;
-            _bulletsDiction = new Dictionary<BulletType, BulletConfig>(); 
+            _bulletsDiction = new Dictionary<BulletType, BulletConfig>();
             _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
             _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
             _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
@@ -210,6 +210,10 @@ namespace Nobeta.EUG.FSM.Core
             //    CurrentMana = context.CurrentMana
             //});
         }
+        public void ConsumeStamina(int cost)
+        {
+            CurrentStamina = Mathf.Max(0, CurrentStamina - cost);
+        }
         public void FireMagic()
         {
             if (CurrentBulletConfig.CoolTimerLock) return;
@@ -219,10 +223,10 @@ namespace Nobeta.EUG.FSM.Core
 
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
-                if (CurrentBulletConfig.CoolTime>0f)
-                TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
+                if (CurrentBulletConfig.CoolTime > 0f)
+                    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
-                EventBus.Publish(new WeaponFireEvent
+                EventBus.Publish(new PlayerWeaponFireEvent
                 {
                     bulletConfig = CurrentBulletConfig
                 });
@@ -239,5 +243,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             CurrentBulletConfig = _bulletsDiction[bulletType];
         }
+
+
     }
 }

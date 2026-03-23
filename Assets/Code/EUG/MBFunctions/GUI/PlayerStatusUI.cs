@@ -27,6 +27,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private StatusBarController _hpBufCtrl;
         private StatusBarController _manaCtrl;
         private StatusBarController _manaBufCtrl;
+        private StatusBarController _staminaCtrl;
+
         private void OnEnable()
         {
             _cts = new CancellationTokenSource();
@@ -34,6 +36,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _hpBufCtrl = new StatusBarController(healthBuffer);
             _manaCtrl = new StatusBarController(manaBar);
             _manaBufCtrl = new StatusBarController(manaBuffer);
+            _staminaCtrl = new StatusBarController(staminaBar);
             // 訂閱事件
             _eventBus.Subscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
         }
@@ -46,6 +49,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _hpBufCtrl.Dispose();
             _manaCtrl.Dispose();
             _manaBufCtrl.Dispose();
+            _staminaCtrl.Dispose();
             // 取消訂閱，防止記憶體洩漏
             _eventBus.Unsubscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
         }
@@ -60,7 +64,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             // 更新耐力條
             if (staminaBar != null)
                 staminaBar.fillAmount = evt.CurrentStamina / evt.MaxStamina;
-
+            //_staminaCtrl.FillType.LerpUpdate(evt.CurrentMana);
             // 提示：如果要讓動畫更平滑，建議配合 DOTween 使用
             // healthBar.DOFillAmount(evt.CurrentHealth / evt.MaxHealth, 0.2f);
         }

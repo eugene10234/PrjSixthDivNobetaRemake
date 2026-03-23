@@ -83,22 +83,22 @@ namespace Nobeta.EUG.FSM.States
             {
                 case 1:
                     ctx.ChangeBullet(BulletType.Normal);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypePT();
                     break;
                 case 2:
                     ctx.ChangeBullet(BulletType.Ice);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeAR();
                     break;
                 case 3:
                     ctx.ChangeBullet(BulletType.Fire);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSG();
                     break;
                 case 4:
                     ctx.ChangeBullet(BulletType.Lightning);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSR();
                     break;
                 default:

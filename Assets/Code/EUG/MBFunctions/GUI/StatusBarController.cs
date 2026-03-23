@@ -22,53 +22,72 @@ namespace Assets.Code.EUG.MBFunctions.GUI
         public StatusBarController(Image bufferBar)
         {
             _bufferBar = bufferBar;
+            StatusBarCtrlnitial();
+        }
+        private RectTransform _bufferRectScaler;
+        public StatusBarController(RectTransform bufferRect)
+        {
+            _bufferRectScaler = bufferRect;
+            //var a = _bufferScaler.localScale;
+            StatusBarCtrlnitial();
+        }
+        private void StatusBarCtrlnitial()
+        {
             _cts = new CancellationTokenSource();
-            FillType = new Property<float>(_bufferBar);
-            ColorType = new Property<Color>(_bufferBar);
+            FillType = new Property<float>();
+            ColorType = new Property<Color>();
+            RectType = new Property<Vector3>();
             PropertyInitial();
         }
+        // 使用泛型版本
+        public Property<float> FillType;
+        public Property<Color> ColorType;
+        public Property<Vector3> RectType;
 
-        public async UniTaskVoid DelayUpdateTrigger(float targetRatio, float duration = 0.5f)
+        public void PropertyInitial()
         {
-            try
-            {
-                await UniTask.Delay((int)(1000 * duration), cancellationToken: _cts.Token);
-                SmoothBufferUpdate(targetRatio, EaseOut).Forget();
-            }
-            catch (System.OperationCanceledException) { }
+            // Float 版本：傳入 Mathf.Lerp
+            FillType.Initial(
+                () => _bufferBar.fillAmount,
+                (val) => _bufferBar.fillAmount = val,
+                (a, b, t) => Mathf.Lerp(a, b, t)
+            );
+
+            // Color 版本：傳入 Color.Lerp
+            ColorType.Initial(
+                () => _bufferBar.color,
+                (val) => _bufferBar.color = val,
+                (a, b, t) => Color.Lerp(a, b, t)
+            );
+            // Vector3 版本：傳入 Vector3.Lerp
+            RectType.Initial(
+                () => _bufferRectScaler.localScale,
+                (val) => _bufferRectScaler.localScale = val,
+                (a, b, t) => Vector3.Lerp(a, b, t)
+            );
         }
 
-        Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
-        Func<float, float, float> LerpFunc = (d, e) => e / d;
-
-        public void LerpUpdate(float targetRatio, float duration = 0.5f)
+        public void PropertyDispose()
         {
-            SmoothBufferUpdate(targetRatio, LerpFunc, duration).Forget();
+            FillType?.Dispose();
+            ColorType?.Dispose();
         }
 
-        public async UniTaskVoid SmoothBufferUpdate(float targetRatio, Func<float, float, float> easingFunc, float duration = 0.5f)
+        public void Cleanup()
         {
-            if (_bufferBar == null) return;
-
+            _cts?.Cancel();
             _animCts?.Cancel();
-            _animCts?.Dispose();
-            _animCts = new CancellationTokenSource();
-            var token = _animCts.Token;
-            float startFill = _bufferBar.fillAmount;
-            float elapsed = 0f;
-            try
-            {
-                while (elapsed < duration)
-                {
-                    elapsed += Time.deltaTime;
-                    float t = easingFunc(duration, elapsed);
-                    _bufferBar.fillAmount = Mathf.Lerp(startFill, targetRatio, t);
-                    await UniTask.Yield(PlayerLoopTiming.Update, token);
-                }
-                _bufferBar.fillAmount = targetRatio;
-            }
-            catch (System.OperationCanceledException) { }
         }
+
+        public void Dispose()
+        {
+            PropertyDispose();
+            _cts?.Cancel();
+            _animCts?.Cancel();
+            _cts?.Dispose();
+            _animCts?.Dispose();
+        }
+
 
         /// <summary>
         /// 泛型化的 Property 類別，可以處理任何類型的動畫
@@ -80,11 +99,13 @@ namespace Assets.Code.EUG.MBFunctions.GUI
             private Func<T> _getFunc;
             private Action<T> _setAct;
             private Func<T, T, float, T> _lerpFunc;
-
-            public Property(Image bufferBar)
-            {
-                _bufferBar = bufferBar;
+            public Property()
+            {                
             }
+            //public Property(Image bufferBar)
+            //{
+            //    _bufferBar = bufferBar;
+            //}
 
             /// <summary>
             /// 初始化屬性
@@ -147,46 +168,47 @@ namespace Assets.Code.EUG.MBFunctions.GUI
             }
         }
 
-        // 使用泛型版本
-        public Property<float> FillType;
-        public Property<Color> ColorType;
 
-        public void PropertyInitial()
+        public async UniTaskVoid DelayUpdateTrigger(float targetRatio, float duration = 0.5f)
         {
-            // Float 版本：傳入 Mathf.Lerp
-            FillType.Initial(
-                () => _bufferBar.fillAmount,
-                (val) => _bufferBar.fillAmount = val,
-                (a, b, t) => Mathf.Lerp(a, b, t)
-            );
-
-            // Color 版本：傳入 Color.Lerp
-            ColorType.Initial(
-                () => _bufferBar.color,
-                (val) => _bufferBar.color = val,
-                (a, b, t) => Color.Lerp(a, b, t)
-            );
+            try
+            {
+                await UniTask.Delay((int)(1000 * duration), cancellationToken: _cts.Token);
+                SmoothBufferUpdate(targetRatio, EaseOut).Forget();
+            }
+            catch (System.OperationCanceledException) { }
         }
 
-        public void PropertyDispose()
+        Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
+        Func<float, float, float> LerpFunc = (d, e) => e / d;
+
+        public void LerpUpdate(float targetRatio, float duration = 0.5f)
         {
-            FillType?.Dispose();
-            ColorType?.Dispose();
+            SmoothBufferUpdate(targetRatio, LerpFunc, duration).Forget();
         }
 
-        public void Cleanup()
+        public async UniTaskVoid SmoothBufferUpdate(float targetRatio, Func<float, float, float> easingFunc, float duration = 0.5f)
         {
-            _cts?.Cancel();
+            if (_bufferBar == null) return;
+
             _animCts?.Cancel();
-        }
-
-        public void Dispose()
-        {
-            PropertyDispose();
-            _cts?.Cancel();
-            _animCts?.Cancel();
-            _cts?.Dispose();
             _animCts?.Dispose();
+            _animCts = new CancellationTokenSource();
+            var token = _animCts.Token;
+            float startFill = _bufferBar.fillAmount;
+            float elapsed = 0f;
+            try
+            {
+                while (elapsed < duration)
+                {
+                    elapsed += Time.deltaTime;
+                    float t = easingFunc(duration, elapsed);
+                    _bufferBar.fillAmount = Mathf.Lerp(startFill, targetRatio, t);
+                    await UniTask.Yield(PlayerLoopTiming.Update, token);
+                }
+                _bufferBar.fillAmount = targetRatio;
+            }
+            catch (System.OperationCanceledException) { }
         }
     }
 }

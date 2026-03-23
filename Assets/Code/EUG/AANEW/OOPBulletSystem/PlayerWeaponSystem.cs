@@ -39,23 +39,23 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             //}
 
         }
-        private Action<WeaponFireEvent> _fireAction;
-        public Action<WeaponFireEvent>? InFireAction { get => _fireAction; set => _fireAction = value; }
+        private Action<PlayerWeaponFireEvent> _fireAction;
+        public Action<PlayerWeaponFireEvent>? InFireAction { get => _fireAction; set => _fireAction = value; }
         private void OnEnable()
         {
             // 訂閱事件 (假設你的 EventBus 是全域單例或透過 DI 注入)
             // 這裡的語法取決於你 EventBus 的具體實作
             Debug.LogWarning("WeaponSystem OnEnable");
             InFireAction = OnNormalFire;
-            _eventBus.Subscribe<WeaponFireEvent>(OnFire);
-            _eventBus.Subscribe<WeaponChangeEvent>(OnChange);
+            _eventBus.Subscribe<PlayerWeaponFireEvent>(OnFire);
+            _eventBus.Subscribe<PlayerWeaponChangeEvent>(OnChange);
         }
 
         private void OnDisable()
         {
             // 取消訂閱，防止記憶體洩漏
-            _eventBus.Unsubscribe<WeaponFireEvent>(OnFire);
-            _eventBus.Unsubscribe<WeaponChangeEvent>(OnChange);
+            _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnFire);
+            _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnChange);
         }
         private void OnDestroy()
         {
@@ -65,7 +65,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             //}
 
         }
-        private void OnFire(WeaponFireEvent evt)
+        private void OnFire(PlayerWeaponFireEvent evt)
         {
             switch (evt.bulletConfig.Type)
             {   
@@ -85,7 +85,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                     break;
             }
         }
-        private void OnChange(WeaponChangeEvent evt)
+        private void OnChange(PlayerWeaponChangeEvent evt)
         {
             //ChangeBulletFunc(evt.bulletConfig.Type);
         }
@@ -109,7 +109,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                     break;
             }
         }
-        private void OnNormalFire(WeaponFireEvent evt)
+        private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
             Vector3 targetPoint = GetPlayerTargetPoint();
             bulletSystem.Fire(
@@ -118,7 +118,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                 targetPoint - firePoint.position
             );
         }
-        private void OnIceFire(WeaponFireEvent evt)
+        private void OnIceFire(PlayerWeaponFireEvent evt)
         {
             Vector3 targetPoint = GetPlayerTargetPoint();
             bulletSystem.Fire(
@@ -127,7 +127,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                 targetPoint - firePoint.position
             );
         }
-        private void OnShotgunFire(WeaponFireEvent evt)
+        private void OnShotgunFire(PlayerWeaponFireEvent evt)
         {
             Vector3 targetPoint = GetPlayerTargetPoint();
             bulletSystem.FireCircleShotgunPattern(
@@ -155,14 +155,14 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
             return targetPoint;
         }
         //+ UnityEngine.Random.Range(-20f, 20f) * firePoint.up + UnityEngine.Random.Range(-20f, 20f) * firePoint.right
-        private void OnGUI()
-        {
-            if (true)
-            {
-                DrawDebugInfo();
-            }
+        //private void OnGUI()
+        //{
+        //    if (true)
+        //    {
+        //        DrawDebugInfo();
+        //    }
 
-        }
+        //}
         private void DrawDebugInfo()
         {
 
@@ -172,7 +172,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
             if (GUILayout.Button("Fire"))
             {
-                _eventBus.Publish(new WeaponFireEvent
+                _eventBus.Publish(new PlayerWeaponFireEvent
                 {
                     bulletConfig = BulletConfig.FireBall,
                 });

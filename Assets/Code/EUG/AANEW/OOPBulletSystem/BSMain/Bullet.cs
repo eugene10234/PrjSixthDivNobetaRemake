@@ -3,6 +3,7 @@ using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using VContainer;
 // ========================================================================
 // Bullet (Pure C# Class - 核心子彈類)
@@ -125,7 +126,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             var hit = physicsService.OverlapSphere(
                 Position,
                 ColliderRadius,
-                LayerMask.GetMask("Enemy")
+                LayerMask.GetMask("Enemy","Ground","Obstacle")
             );
             //if (hit.GameObject.CompareTag("Enemy"))
             //{

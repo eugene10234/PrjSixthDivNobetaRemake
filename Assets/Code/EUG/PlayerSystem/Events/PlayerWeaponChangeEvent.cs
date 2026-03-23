@@ -7,11 +7,7 @@ using Nobeta.EUG.BulletSystem.OOP;
 
 namespace Nobeta.EUG.Events
 {
-    public struct WeaponFireEvent
-    {
-        public BulletConfig bulletConfig;
-    }
-    public struct WeaponChangeEvent
+    public struct PlayerWeaponChangeEvent
     {
         public BulletConfig bulletConfig;
     }

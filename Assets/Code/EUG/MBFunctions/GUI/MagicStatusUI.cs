@@ -25,7 +25,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _cts = new CancellationTokenSource();
             _mgCDBufCtrl = new StatusBarController(MageCDBuffer);
             // 訂閱事件
-            _eventBus.Subscribe<WeaponFireEvent>(OnMagicFire);
+            _eventBus.Subscribe<PlayerWeaponFireEvent>(OnMagicFire);
         }
 
         private void OnDisable()
@@ -34,18 +34,19 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _cts?.Dispose();
             _mgCDBufCtrl.Dispose();
             // 取消訂閱
-            _eventBus.Unsubscribe<WeaponFireEvent>(OnMagicFire);
+            _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnMagicFire);
         }
         private CancellationTokenSource MagicCoolTimeTokenSoure;
 
-        private void OnMagicFire(WeaponFireEvent evt)
+        private void OnMagicFire(PlayerWeaponFireEvent evt)
         {
-            _mgCDBufCtrl.FillAmount = 0f;
-            _mgCDBufCtrl.FillType.LerpUpdate(1f, evt.bulletConfig.CoolTime);
             var tc = MageCDBuffer.color;
             tc.a = 0.5f;
             MageCDBuffer.color = tc;
             tc.a = 1f;
+            _mgCDBufCtrl.FillAmount = 0f;            
+
+            _mgCDBufCtrl.FillType.LerpUpdate(1f, evt.bulletConfig.CoolTime);
             _mgCDBufCtrl.ColorType.LerpUpdate(tc, evt.bulletConfig.CoolTime);
 
         }

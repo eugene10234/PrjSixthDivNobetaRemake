@@ -53,7 +53,7 @@ namespace Nobeta.EUG.FSM.States
             //Vector3 direction = GetMoveDirection();
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
-            if(ctx.ChargeRatio>0f)
+            if (ctx.ChargeRatio > 0f) { }
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
 
             if (RunningTimer < 0.01)
