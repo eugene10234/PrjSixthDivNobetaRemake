@@ -127,7 +127,16 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 ColliderRadius,
                 LayerMask.GetMask("Enemy")
             );
-
+            //if (hit.GameObject.CompareTag("Enemy"))
+            //{
+            //    //eventBus?.Publish(new BulletHitEnemyEvent
+            //    //{
+            //    //    Bullet = bullet,
+            //    //    Enemy = hitObj.gameObject,
+            //    //    Damage = bullet.Damage,
+            //    //    HitPosition = transform.position
+            //    //});
+            //}
             if (hit.HasHit)
             {
                 OnCollision(hit);

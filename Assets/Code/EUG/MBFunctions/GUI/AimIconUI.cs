@@ -42,13 +42,28 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         }
         private CancellationTokenSource MagicCoolTimeTokenSoure;
 
-        private void OnAimStart(WeaponFireEvent evt)
-        { 
+        private void OnIconAimStart()
+        {
+
+
+        }
+        private void OnIconAimEnd()
+        {
+
+
+        }
+        private void OnIconFireStart()
+        {
+
+
+        }
+        private void OnIconFireEnd()
+        {
 
 
         }
 
- 
-        
+
+
     }
 }

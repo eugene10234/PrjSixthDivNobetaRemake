@@ -129,7 +129,7 @@ namespace Nobeta.EUG.Services
         }
         public Vector3 SetTargerShoulderValue(Vector3 targetShoulder)
         {
-            targetShoulder.y = Mathf.Lerp(targetShoulder.y, _targetShoulderOffset, _targetFOV / DefaultFOV);
+            targetShoulder.y =_targetShoulderOffset;
 
             return targetShoulder;
 

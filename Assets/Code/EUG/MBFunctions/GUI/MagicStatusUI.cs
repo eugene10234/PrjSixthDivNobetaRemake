@@ -39,9 +39,14 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private CancellationTokenSource MagicCoolTimeTokenSoure;
 
         private void OnMagicFire(WeaponFireEvent evt)
-        { 
+        {
             _mgCDBufCtrl.FillAmount = 0f;
-            _mgCDBufCtrl.LerpUpdate(1f,evt.bulletConfig.CoolTime);
+            _mgCDBufCtrl.FillType.LerpUpdate(1f, evt.bulletConfig.CoolTime);
+            var tc = MageCDBuffer.color;
+            tc.a = 0.5f;
+            MageCDBuffer.color = tc;
+            tc.a = 1f;
+            _mgCDBufCtrl.ColorType.LerpUpdate(tc, evt.bulletConfig.CoolTime);
 
         }
         private void UpdateBarBufferWithDelay(Image bufferBar, float duration, CancellationTokenSource bufferTokenSoure)
