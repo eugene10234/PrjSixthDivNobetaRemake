@@ -123,12 +123,12 @@ namespace Assets.Code.EUG.MBFunctions.GUI
             Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
             Func<float, float, float> LerpFunc = (d, e) => e / d;
 
-            public void LerpUpdate(T target, float duration = 0.5f)
+            public void LerpUpdate(T target, float duration = 0.25f)
             {
                 SmoothBufferUpdate(target, LerpFunc, duration).Forget();
             }
 
-            public void EaseOutUpdate(T target, float duration = 0.5f)
+            public void EaseOutUpdate(T target, float duration = 0.25f)
             {
                 SmoothBufferUpdate(target, EaseOut, duration).Forget();
             }

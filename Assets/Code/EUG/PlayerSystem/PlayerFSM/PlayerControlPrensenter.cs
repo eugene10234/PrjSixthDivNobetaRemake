@@ -90,7 +90,7 @@ namespace Nobeta.EUG.FSM
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
             SyncStatusToGUI();
-            if (!StartUpLock) StatusTimeRecoveryAPI();
+            
         }
 
         private void SyncStatusToGUI()
@@ -114,6 +114,16 @@ namespace Nobeta.EUG.FSM
                 stateMachine.ChangeState<DyingState>();
                 return;
             }
+            if(!stateMachine.IsInState<DyingState>())
+            {
+                if (!StartUpLock) StatusTimeRecoveryAPI();
+            }
+            else
+            {
+                _context.CurrentHealth = 0;        
+                 _context.CurrentMana = 0;
+                _context.CurrentStamina = 0;
+            }
 
             // 這裡可以添加其他全局轉換邏輯
         }
@@ -122,15 +132,15 @@ namespace Nobeta.EUG.FSM
         private void StatusTimeRecoveryAPI()
         {
             _timeService.TaskDelayLock(StartUp_DURATION, (b) => StartUpLock = b);
-            RestoreMana(4);
+            RestoreMana(3);
             Heal(1);
             if (_context.CurrentSpeedType == typeof(RunningState))
             {
-                _context.ConsumeStamina(2);
+                _context.ConsumeStamina(16);
             }
             else
             {
-                //RestoreStamina(4);
+                RestoreStamina(24);
             }
 
         }

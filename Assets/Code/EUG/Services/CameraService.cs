@@ -21,8 +21,8 @@ namespace Nobeta.EUG.Services
         private Transform m_followPoint;
         private readonly IPlayerInputService _playerInputService;
         private readonly Camera mainCamera;
-        private float mHorizontalSensetivity = 1.5f;
-        private float mVerticalSensetivity = 1f;
+        private float mHorizontalSensetivity = 0.75f;
+        private float mVerticalSensetivity = 0.5f;
         private readonly static float DefaultFOV = 50f;
         private readonly static float DefaultCamDistance = 2f;
         private readonly static float DefaultShoulderHeight = -0.11f;
@@ -30,7 +30,7 @@ namespace Nobeta.EUG.Services
         private float _targetDistance = DefaultCamDistance;
         private float _targetShoulderOffset = DefaultShoulderHeight;
         private Vector3 _targetShoulder = new Vector3(0.5f, DefaultShoulderHeight, 0);
-        private float _smoothFOVSpeed = 0.2f;
+        private float _smoothFOVSpeed = 0.06f;
 
 
         public float GetHorizonOffset => horizonOffset;
@@ -158,7 +158,7 @@ namespace Nobeta.EUG.Services
         private void OnCameraAimStart()
         {
             //throw new NotImplementedException();
-            _targetFOV = 57.5f; // 縮小視野，模擬瞄準效果
+            _targetFOV = 52.5f; // 縮小視野，模擬瞄準效果
             _targetDistance = 0.9f; // 拉近相機距離，模擬瞄準效果
             _targetShoulderOffset = -0.38f;
         }

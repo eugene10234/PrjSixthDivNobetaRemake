@@ -121,6 +121,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         protected void TypeAR()
@@ -134,6 +135,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         protected void TypeSR()
@@ -141,6 +143,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         #endregion

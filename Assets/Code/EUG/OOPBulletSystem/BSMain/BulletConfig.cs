@@ -4,6 +4,8 @@
 // ============================================================================
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
@@ -22,55 +24,70 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public int Damage { get; set; }
         public int ManaCost { get; set; }
         public float CoolTime { get; set; }
-        public bool CoolTimerLock { get; set; }
+        //public bool CoolTimerLock { get; set; }
         public float Lifetime { get; set; }
         public float ColliderRadius { get; set; }
-        public BulletType Type { get; set; }
+        public BulletType Type { get; private set; }
+        public float NextFireTime { get; private set; }
+        public void TryFire(Action FireAction)
+        {
+            if (Time.time < NextFireTime) return;
+            FireAction?.Invoke();
+            NextFireTime = Time.time + CoolTime;
+        }
 
         // 預定義配置
         public static BulletConfig Normal => new BulletConfig
         {
             Speed = 20f,
-            Damage = 10,
-            ManaCost= 10,
+            Damage = 40,
+            ManaCost = 0,
             CoolTime = 0.5f,
-            CoolTimerLock = false,
+            //CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.1f,
-            Type = BulletType.Normal
+            Type = BulletType.Lightning,
+            NextFireTime = Time.time
+
         };
         public static BulletConfig IceBall => new BulletConfig
         {
             Speed = 20f,
-            Damage = 5,
-            ManaCost = 5,
+            Damage = 25,
+            ManaCost = 0,
             CoolTime = 0.15f,
-            CoolTimerLock = false,
+            //CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.1f,
-            Type = BulletType.Ice
+            Type = BulletType.Ice,
+            NextFireTime = Time.time
+
         };
         public static BulletConfig FireBall => new BulletConfig
         {
             Speed = 15f,
             Damage = 20,
-            ManaCost = 25,
+            ManaCost = 0,
             CoolTime = 1f,
-            CoolTimerLock = false,
+            //CoolTimerLock = false,
             Lifetime = 4f,
             ColliderRadius = 0.2f,
-            Type = BulletType.Fire
+            Type = BulletType.Fire,
+            NextFireTime = Time.time
+
         };
         public static BulletConfig LightningStrike => new BulletConfig
         {
             Speed = 15f,
             Damage = 20,
-            ManaCost = 5,
+            ManaCost = 0,
             CoolTime = 1f,
-            CoolTimerLock = false,
+            //CoolTimerLock = false,
             Lifetime = 4f,
             ColliderRadius = 0.2f,
-            Type = BulletType.Fire
+            Type = BulletType.Normal,
+            NextFireTime = Time.time
+
         };
     }
 

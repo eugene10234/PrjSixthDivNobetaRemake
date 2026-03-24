@@ -119,13 +119,13 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeColorIntensity: 1
-    - _EdgeWidth: 0.05
+    - _EdgeWidth: 0.064
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
-    - _NoiseScale: 40
+    - _NoiseScale: 50
     - _NormalScale: 1
     - _OcclusionStrength: 0.989
     - _Parallax: 0.005
@@ -143,7 +143,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0.29613832, g: 0.12213881, b: 0.7681514, a: 0}
+    - _EdgeColor: {r: 0.6868548, g: 0.94842297, b: 0.990566, a: 0}
     - _EmissionColor: {r: 2.4275596, g: 3.5352552, b: 4.7476263, a: 1}
     - _NoiseUVSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _Offest: {r: 0, g: 0, b: 0, a: 0}

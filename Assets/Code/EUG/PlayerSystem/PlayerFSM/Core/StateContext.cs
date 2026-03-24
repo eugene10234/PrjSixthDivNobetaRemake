@@ -129,7 +129,7 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 200;
+            MaxHealth = 125;
             CurrentHealth = MaxHealth;
             MaxMana = 300;
             CurrentMana = MaxMana;
@@ -216,21 +216,21 @@ namespace Nobeta.EUG.FSM.Core
         }
         public void FireMagic()
         {
-            if (CurrentBulletConfig.CoolTimerLock) return;
+            // if (CurrentBulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(CurrentBulletConfig.ManaCost))
             {
                 ConsumeMana(CurrentBulletConfig.ManaCost);
 
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
-                if (CurrentBulletConfig.CoolTime > 0f)
-                    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
+                //if (CurrentBulletConfig.CoolTime > 0f)
+                //    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
-                EventBus.Publish(new PlayerWeaponFireEvent
+                ///
+                CurrentBulletConfig.TryFire(() => EventBus.Publish(new PlayerWeaponFireEvent
                 {
                     bulletConfig = CurrentBulletConfig
-                });
-
+                }));
                 //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
             }
             else
@@ -239,6 +239,7 @@ namespace Nobeta.EUG.FSM.Core
                 //PlaySound("ManaNone");
             }
         }
+
         public void ChangeBullet(BulletType bulletType)
         {
             CurrentBulletConfig = _bulletsDiction[bulletType];
