@@ -46,7 +46,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             //CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.1f,
-            Type = BulletType.Lightning,
+            Type = BulletType.Normal,
             NextFireTime = Time.time
 
         };

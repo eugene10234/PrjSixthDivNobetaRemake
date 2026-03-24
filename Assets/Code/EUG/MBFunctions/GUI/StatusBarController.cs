@@ -119,7 +119,7 @@ namespace Assets.Code.EUG.MBFunctions.GUI
                 _setAct = setAct;
                 _lerpFunc = lerpFunc;
             }
-
+            Func<float, float, float> EaseIn = (d, e) => Mathf.Pow((e / d), 2);
             Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
             Func<float, float, float> LerpFunc = (d, e) => e / d;
 
@@ -132,7 +132,10 @@ namespace Assets.Code.EUG.MBFunctions.GUI
             {
                 SmoothBufferUpdate(target, EaseOut, duration).Forget();
             }
-
+            public void EaseInUpdate(T target, float duration = 0.25f)
+            {
+                SmoothBufferUpdate(target, EaseIn, duration).Forget();
+            }
             public async UniTaskVoid SmoothBufferUpdate(T target, Func<float, float, float> easingFunc, float duration = 0.5f)
             {
                 if (_getFunc == null) return;
