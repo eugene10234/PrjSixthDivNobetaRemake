@@ -25,7 +25,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private StatusBarController _iconEreaCtrl;
         private StatusBarController _iconColorCtrl;
         private StatusBarController _iconBackCtrl;
-        private float VisDuration = 0.35f;
+        private float VisDuration = 0.2f;
         private void OnEnable()
         {
             _cts = new CancellationTokenSource();
@@ -50,8 +50,11 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         }
         private bool IsAimPressed = false;
         private bool IsFirePressed = false;
+        private bool isPlayerLive = true;
+
         private void OnProgress()
         {
+            if (!isPlayerLive) return;
             if (!IsAimPressed && !IsFirePressed) { OnDisVis(); return; }
             if (IsAimPressed) { OnAimSet(); return; }
             OnFireSet();
@@ -125,12 +128,18 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         {
             //_eventBus.Subscribe<PlayerAimingStartEvent>(OnPlayerAimStart);
             //_eventBus.Subscribe<PlayerAimingEndEvent>(OnPlayerAimEnd);
+            _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         }
 
         private void UnsubscribeEvents()
         {
             //_eventBus.Unsubscribe<PlayerAimingStartEvent>(OnPlayerAimStart);
             //_eventBus.Unsubscribe<PlayerAimingEndEvent>(OnPlayerAimEnd);
+            _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
+        }
+        private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
+        {
+            isPlayerLive = evt.IsLive;
         }
     }
 }

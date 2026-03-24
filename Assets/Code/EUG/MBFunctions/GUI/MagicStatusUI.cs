@@ -41,13 +41,13 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void OnMagicFire(PlayerWeaponFireEvent evt)
         {
             var tc = MageCDBuffer.color;
-            tc.a = 0.5f;
+            tc.a = 0f;
             MageCDBuffer.color = tc;
             tc.a = 1f;
             _mgCDBufCtrl.FillAmount = 0f;            
 
             _mgCDBufCtrl.FillType.LerpUpdate(1f, evt.bulletConfig.CoolTime);
-            _mgCDBufCtrl.ColorType.LerpUpdate(tc, evt.bulletConfig.CoolTime);
+            _mgCDBufCtrl.ColorType.EaseInUpdate(tc, evt.bulletConfig.CoolTime);
 
         }
         private void UpdateBarBufferWithDelay(Image bufferBar, float duration, CancellationTokenSource bufferTokenSoure)
