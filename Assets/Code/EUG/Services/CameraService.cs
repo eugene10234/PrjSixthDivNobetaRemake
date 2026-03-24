@@ -1,8 +1,10 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using System;
+using Nobeta.EUG.Events;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.Interfaces;
-using System;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 // ========================================================================
@@ -20,6 +22,7 @@ namespace Nobeta.EUG.Services
         private CinemachineThirdPersonFollow _cinemachineThirdPersonFollow;
         private Transform m_followPoint;
         private readonly IPlayerInputService _playerInputService;
+        private readonly IEventBus _eventBus;
         private readonly Camera mainCamera;
         private float mHorizontalSensetivity = 0.75f;
         private float mVerticalSensetivity = 0.5f;
@@ -31,17 +34,19 @@ namespace Nobeta.EUG.Services
         private float _targetShoulderOffset = DefaultShoulderHeight;
         private Vector3 _targetShoulder = new Vector3(0.5f, DefaultShoulderHeight, 0);
         private float _smoothFOVSpeed = 0.06f;
-
+        private bool isPlayerLive = true;
 
         public float GetHorizonOffset => horizonOffset;
         public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
         public float CinCameraDistance { get => _cinemachineThirdPersonFollow.CameraDistance; set => _cinemachineThirdPersonFollow.CameraDistance= value; }
         [Inject]
-        public CameraService(IPlayerInputService playerInputService)
+        public CameraService(IPlayerInputService playerInputService ,IEventBus eventBus)
         {
             _playerInputService = playerInputService;
+            _eventBus = eventBus;
             mainCamera = Camera.main;
             AssignInputEvents();
+            _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         }
 
         public Vector3 GetCameraRelativeDirection(Vector2 input)
@@ -137,6 +142,7 @@ namespace Nobeta.EUG.Services
         public void Dispose()
         {
             UnAssignInputEvents();
+            _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         }
 
         private void AssignInputEvents()
@@ -172,6 +178,7 @@ namespace Nobeta.EUG.Services
 
         public void LateUpdate()
         {
+            if (!isPlayerLive) return;
             ExecuteCameraZoom();
             ExecuteCameraRotation();
         }
@@ -187,8 +194,11 @@ namespace Nobeta.EUG.Services
         }
         public void Update()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
-
+        private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
+        {
+            isPlayerLive = evt.IsLive;
+        }
     }
 }
