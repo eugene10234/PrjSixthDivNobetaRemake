@@ -25,7 +25,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private StatusBarController _iconEreaCtrl;
         private StatusBarController _iconColorCtrl;
         private StatusBarController _iconBackCtrl;
-        private float VisDuration = 0.35f;
+        private float VisDuration = 0.2f;
         private void OnEnable()
         {
             _cts = new CancellationTokenSource();
