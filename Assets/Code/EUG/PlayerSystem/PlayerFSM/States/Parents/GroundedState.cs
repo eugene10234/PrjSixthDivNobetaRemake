@@ -72,13 +72,13 @@ namespace Nobeta.EUG.FSM.States
             }
         }
 
-        public override void OnDodgeInput()
-        {
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
+        //public override void OnDodgeInput()
+        //{
+        //    if (ctx.CanDodge)
+        //    {
+        //        stateMachine.ChangeState<DodgingState>();
+        //    }
+        //}
         public override void OnAimStartInput()
         {
             //Debug.LogWarning("OnAimStartInput");

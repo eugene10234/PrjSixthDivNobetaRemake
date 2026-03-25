@@ -7,13 +7,12 @@ using UnityEngine;
 
 namespace Assets.Code.EUG.AANEW.Temp
 {
-    public static class DamageSystem
+    public static class EnemyDamageSystem
     {
-        // 這裡存的是介面！
         public static Dictionary<int, IDamageable> Targets = new Dictionary<int, IDamageable>();
-        public static bool TryGetTarget (Collider other, out IDamageable target)
+        public static bool TryGetTarget (GameObject gameObject, out IDamageable target)
         {   
-            return Targets.TryGetValue(other.gameObject.GetInstanceID(), out target);
+            return Targets.TryGetValue(gameObject.GetInstanceID(), out target);
         }
     }
 }

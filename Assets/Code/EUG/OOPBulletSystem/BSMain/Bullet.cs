@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 using VContainer;
 // ========================================================================
 // Bullet (Pure C# Class - 核心子彈類)
@@ -126,7 +127,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             var hit = physicsService.OverlapSphere(
                 Position,
                 ColliderRadius,
-                LayerMask.GetMask("Enemy","Ground","Obstacle")
+                LayerMask.GetMask("Enemy","Ground","Obstacle","Player")
             );
             //if (hit.GameObject.CompareTag("Enemy"))
             //{
@@ -162,6 +163,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
 
         private void OnCollision(CollisionHit hit)
         {
+
             // 發布碰撞事件
             eventBus.Publish(new BulletHitEvent
             {
@@ -172,7 +174,24 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 Damage = Damage,
                 Type = Type
             });
+            IDamageable target;
+            if (EnemyDamageSystem.TryGetTarget(hit.GameObject, out target))
+            {
+                target.TakeDamage(Damage, Position);
+                // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
+                // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
 
+            }
+            //if (hit.GameObject.CompareTag("Player"))
+            //{
+            //    //eventBus?.Publish(new BulletHitEnemyEvent
+            //    //{
+            //    //    Bullet = bullet,
+            //    //    Enemy = hitObj.gameObject,
+            //    //    Damage = bullet.Damage,
+            //    //    HitPosition = transform.position
+            //    //});
+            //}
             IsActive = false;
         }
 

@@ -191,13 +191,13 @@ namespace Nobeta.EUG.FSM.States
         //    //_eventBus.Publish(new WeaponFiredEvent2{});
         //    //ctx.FireMagic();
         //}
-        public override void OnDodgeInput()
-        {
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
+        //public override void OnDodgeInput()
+        //{
+        //    if (ctx.CanDodge)
+        //    {
+        //        stateMachine.ChangeState<DodgingState>(force:true);
+        //    }
+        //}
         public override void OnStopInput()
         {
             _speedType = typeof(IdleState);

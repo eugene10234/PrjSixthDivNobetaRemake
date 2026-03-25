@@ -24,14 +24,14 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
 
             if (hits.Length > 0)
             {
-                IDamageable target;
-                if (DamageSystem.TryGetTarget(hits[0], out target))
-                {
-                    target.TakeDamage(50, position);
-                    // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
-                    // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
-                
-            }               
+                //IDamageable target;
+                //if (DamageSystem.TryGetTarget(hits[0], out target))
+                //{
+                //    target.TakeDamage(50, position);
+                //    // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
+                //    // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
+
+                //}
                 return new CollisionHit
                 {
                     HasHit = true,

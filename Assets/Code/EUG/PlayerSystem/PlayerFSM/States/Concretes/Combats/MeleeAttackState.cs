@@ -102,7 +102,7 @@ namespace Nobeta.EUG.FSM.States
             }
         }
 
-        public override bool CanTransitionTo(System.Type stateType)
+        public override bool CanTransitionTo(Type stateType)
         {
             // 攻擊期間可以連擊
             if (stateType == typeof(MeleeAttackState))

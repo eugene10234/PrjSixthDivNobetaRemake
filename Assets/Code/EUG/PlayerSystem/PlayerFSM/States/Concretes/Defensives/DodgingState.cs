@@ -88,7 +88,7 @@ namespace Nobeta.EUG.FSM.States
             ctx.MovementService.ExecuteMovement();
         }
 
-        public override bool CanTransitionTo(System.Type stateType)
+        public override bool CanTransitionTo(Type stateType)
         {
             // 閃避期間無敵，只能轉到死亡
             if (stateType == typeof(DyingState))

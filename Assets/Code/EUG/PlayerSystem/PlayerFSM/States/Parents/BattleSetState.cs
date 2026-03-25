@@ -77,6 +77,14 @@ namespace Nobeta.EUG.FSM.States
 
         }
 
+        public override void OnDodgeInput()
+        {
+            // 空中閃避
+            if (ctx.CanDodge)
+            {
+                stateMachine.ChangeState<DodgingState>(force: true);
+            }
+        }
         private void SetBulletFunc(int msNum)
         {
             switch (msNum)
@@ -107,8 +115,11 @@ namespace Nobeta.EUG.FSM.States
             }
         }
         #endregion
-        private bool IsAutoFiring = false;
+
+        
         #region Helper Methods
+
+        private bool IsAutoFiring = false;
         /// <summary>
         /// 檢查魔力是否足夠
         /// </summary>

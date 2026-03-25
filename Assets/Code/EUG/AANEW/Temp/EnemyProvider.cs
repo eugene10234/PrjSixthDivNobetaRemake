@@ -14,12 +14,12 @@ namespace Assets.Code.EUG.AANEW.Temp
         void OnEnable()
         {
             _eventBus = EventBusProvider.GetEventBus();
-            DamageSystem.Targets[gameObject.GetInstanceID()] = this;
+            EnemyDamageSystem.Targets[gameObject.GetInstanceID()] = this;
             _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         }
         void OnDisable()
         {
-            DamageSystem.Targets.Remove(gameObject.GetInstanceID());
+            EnemyDamageSystem.Targets.Remove(gameObject.GetInstanceID());
             _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         }
 

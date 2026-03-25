@@ -10,7 +10,7 @@ namespace Nobeta.EUG.FSM.Core
     /// 狀態基類
     /// 提供狀態的基本結構和輸入事件處理
     /// </summary>
-    public   class BaseState : IState, IEnterable
+    public class BaseState : IState, IEnterable
     {
         protected float EnterTime;
         // 設定最小持續時間，0.02s 確保至少跨越 1-2 幀
@@ -41,7 +41,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             // 子類覆寫以實現退出邏輯
         }
-        public virtual bool CanExit()
+        public virtual bool CanTransitionTo(Type stateType)
         {
             bool aniCanTrans = !ctx.AnimationService.IsInTransition(0);
             bool timePassed = (Time.time - EnterTime) >= MinDuration;
@@ -101,7 +101,7 @@ namespace Nobeta.EUG.FSM.Core
         public virtual void OnAimEndInput()
         {
             // 默認不處理，子類覆寫
-        }        
+        }
 
         /// <summary>
         /// 處理攻擊輸入事件
@@ -133,10 +133,10 @@ namespace Nobeta.EUG.FSM.Core
         /// <summary>
         /// 檢查是否可以轉換到指定狀態
         /// </summary>
-        public virtual bool CanTransitionTo(Type stateType)
+        public bool InnerCanTransitionTo(Type stateType, bool force = false)
         {
             //return true; // 默認允許所有轉換
-            return CanExit();
+            return force || CanTransitionTo(stateType);
         }
 
         #endregion
@@ -150,7 +150,10 @@ namespace Nobeta.EUG.FSM.Core
         {
             ctx.AnimationService.PlayAnimation(animationName, crossFadeDuration);
         }
-
+        protected void ForcePlayAnimation(string animationName, float crossFadeDuration = 0.1f)
+        {
+            ctx.AnimationService.PlayAnimation(animationName, crossFadeDuration);
+        }
         /// <summary>
         /// 播放音效（委託給音頻服務）
         /// </summary>

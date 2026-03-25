@@ -55,14 +55,14 @@ namespace Nobeta.EUG.FSM.States
 
         #region Input Handlers
 
-        public override void OnDodgeInput()
-        {
-            // 空中閃避
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
+        //public override void OnDodgeInput()
+        //{
+        //    // 空中閃避
+        //    if (ctx.CanDodge)
+        //    {
+        //        stateMachine.ChangeState<DodgingState>(force:true);
+        //    }
+        //}
         #endregion
 
         #region Helper Methods
