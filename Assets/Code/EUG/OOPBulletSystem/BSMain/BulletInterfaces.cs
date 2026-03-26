@@ -14,6 +14,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
     public interface IPhysicsService
     {
         CollisionHit OverlapSphere(Vector3 position, float radius, int layerMask);
+        CollisionHit SphereCast(Vector3 position, float radius, Vector3 direction, float distance, int layerMask);
     }
 
     /// <summary>

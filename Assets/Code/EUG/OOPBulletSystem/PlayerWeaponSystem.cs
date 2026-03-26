@@ -79,7 +79,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                     OnShotgunFire(evt);
                     break;
                 case BulletType.Lightning:
-                    OnNormalFire(evt);
+                    OnSniperFire(evt);
                     break;
                 default:
                     break;
@@ -103,7 +103,7 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                     InFireAction = OnShotgunFire;
                     break;
                 case BulletType.Lightning:
-                    InFireAction = OnNormalFire;
+                    InFireAction = OnSniperFire;
                     break;
                 default:
                     break;
@@ -136,7 +136,15 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
                 targetPoint - firePoint.position, 10, 8f
             );
         }
-
+        private void OnSniperFire(PlayerWeaponFireEvent evt)
+        {
+            Vector3 targetPoint = GetPlayerTargetPoint();
+            bulletSystem.Fire(
+                BulletConfig.LightningStrike,
+                firePoint.position,
+                targetPoint - firePoint.position
+            );
+        }
         private Vector3 GetPlayerTargetPoint()
         {
             Vector3 targetPoint = Camera.main.transform.position + Camera.main.transform.forward * 75f;

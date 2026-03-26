@@ -84,6 +84,13 @@ MonoBehaviour:
     trailLifetime: 2
     hitEffectPrefab: {fileID: 2585137204373214539, guid: ebf2524539b465743bcdec6706871934, type: 3}
     hitEffectLifetime: 1
+  - bulletVisualPrefab: {fileID: 2550374052878321256, guid: c735f244aeab08b4e982a307f07bb269, type: 3}
+    muzzleFlashPrefab: {fileID: 6439093443533909743, guid: 6a82dc8c2f2ae5045a317c48289c8dbf, type: 3}
+    muzzleFlashLifetime: 1
+    trailPrefab: {fileID: 7295552712867091612, guid: a1ffcf1b93e3da24b9b334f74a9b9e28, type: 3}
+    trailLifetime: 4
+    hitEffectPrefab: {fileID: 8933189046970082843, guid: 38524cfa65738714696de3bfe37176e7, type: 3}
+    hitEffectLifetime: 1
 --- !u!114 &8291527152146335549
 MonoBehaviour:
   m_ObjectHideFlags: 0

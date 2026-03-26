@@ -14,10 +14,11 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
     public class MagicStatusUI : MonoBehaviour
     {
         [Header("UI References")]
-        [SerializeField] private Image OLDMageCDBuffer;
+        //[SerializeField] private Image OLDMageCDBuffer;
         [SerializeField] private MageIconHolder NormalIconHolder;
         [SerializeField] private MageIconHolder IceIconHolder;
         [SerializeField] private MageIconHolder FireIconHolder;
+        [SerializeField] private MageIconHolder LightningIconHolder;
         [Inject] private readonly IEventBus _eventBus;
         private CancellationTokenSource _cts;
         private StatusBarController _mgCDFilterCtrl;
@@ -80,7 +81,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             BulletTypeDiction[BulletType.Normal] = NormalIconHolder;
             BulletTypeDiction[BulletType.Ice] = IceIconHolder;
             BulletTypeDiction[BulletType.Fire] = FireIconHolder;
-            BulletTypeDiction[BulletType.Lightning] = FireIconHolder;
+            BulletTypeDiction[BulletType.Lightning] = LightningIconHolder;
         }
         //private CancellationTokenSource MagicCoolTimeTokenSoure;
         //private void UpdateBarBufferWithDelay(Image bufferBar, float duration, CancellationTokenSource bufferTokenSoure)

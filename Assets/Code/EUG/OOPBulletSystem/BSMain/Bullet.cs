@@ -29,7 +29,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public Vector3 Position { get; set; }
         public Quaternion Rotation { get; set; }
         public Vector3 Velocity { get; set; }
-
+        public Vector3 Direction { get; set; }
+        public float Speed { get; private set; }
         // 戰鬥屬性
         public int Damage { get; private set; }
         public BulletType Type { get; private set; }
@@ -70,6 +71,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Id = config.Id;
             Position = position;
             Velocity = direction.normalized * config.Speed;
+            Direction = direction.normalized;
+            Speed = config.Speed;
             Rotation = Quaternion.LookRotation(direction);
             Damage = config.Damage;
             Type = config.Type;
@@ -115,20 +118,53 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Position += Velocity * deltaTime;
 
             // 更新旋轉（朝向移動方向）
+            //DefaultRotateTo();
+            SinRotateTo();
+        }
+
+        private void DefaultRotateTo()
+        {
             if (Velocity != Vector3.zero)
             {
                 Rotation = Quaternion.LookRotation(Velocity);
+            }
+        }
+        float spinSpeed = 720f*1.5f;
+        float currentSpinAngle = 0f;
+        private void SinRotateTo()
+        {
+            if (Velocity != Vector3.zero)
+            {
+                // A. 計算基礎朝向 (指向飛行方向)
+                Quaternion lookRotation = Quaternion.LookRotation(Velocity);
+
+                // B. 更新累積的自轉角度
+                currentSpinAngle += spinSpeed * Time.deltaTime;
+
+                // C. 建立自轉四元數 (繞著自己的 Z 軸旋轉)
+                Quaternion spinRotation = Quaternion.AngleAxis(currentSpinAngle, Vector3.forward);
+
+                // D. 結合兩者：先對齊方向，再套用自轉
+                // 注意：順序很重要，lookRotation * spinRotation 代表在 lookRotation 的基礎上進行局部旋轉
+                Rotation = lookRotation * spinRotation;
             }
         }
 
         private void CheckCollision()
         {
             // 委託給物理服務檢測
-            var hit = physicsService.OverlapSphere(
+            //var hit = physicsService.OverlapSphere(
+            //    Position,
+            //    ColliderRadius,
+            //    LayerMask.GetMask("Enemy","Ground","Obstacle","Player")
+            //);
+            var hit = physicsService.SphereCast(
                 Position,
                 ColliderRadius,
-                LayerMask.GetMask("Enemy","Ground","Obstacle","Player")
-            );
+                Direction,
+                Speed*Time.deltaTime*1.1f,
+                LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")
+                );
             //if (hit.GameObject.CompareTag("Enemy"))
             //{
             //    //eventBus?.Publish(new BulletHitEnemyEvent

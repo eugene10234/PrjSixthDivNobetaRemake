@@ -39,26 +39,26 @@ namespace Nobeta.EUG.BulletSystem.OOP
         // 預定義配置
         public static BulletConfig Normal => new BulletConfig
         {
-            Speed = 20f,
+            Speed = 35f,
             Damage = 40,
             ManaCost = 0,
             CoolTime = 0.5f,
             //CoolTimerLock = false,
             Lifetime = 5f,
-            ColliderRadius = 0.1f,
+            ColliderRadius = 0.35f,
             Type = BulletType.Normal,
             NextFireTime = Time.time
 
         };
         public static BulletConfig IceBall => new BulletConfig
         {
-            Speed = 20f,
+            Speed = 45f,
             Damage = 25,
             ManaCost = 0,
             CoolTime = 0.15f,
             //CoolTimerLock = false,
             Lifetime = 5f,
-            ColliderRadius = 0.1f,
+            ColliderRadius = 0.15f,
             Type = BulletType.Ice,
             NextFireTime = Time.time
 
@@ -66,26 +66,26 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public static BulletConfig FireBall => new BulletConfig
         {
             Speed = 15f,
-            Damage = 20,
+            Damage = 30,
             ManaCost = 0,
             CoolTime = 1f,
             //CoolTimerLock = false,
             Lifetime = 4f,
-            ColliderRadius = 0.2f,
+            ColliderRadius = 0.3f,
             Type = BulletType.Fire,
             NextFireTime = Time.time
 
         };
         public static BulletConfig LightningStrike => new BulletConfig
         {
-            Speed = 15f,
-            Damage = 20,
-            ManaCost = 0,
-            CoolTime = 1f,
+            Speed = 120f,
+            Damage = 250,
+            ManaCost = 1,
+            CoolTime = 1.25f,
             //CoolTimerLock = false,
             Lifetime = 4f,
-            ColliderRadius = 0.2f,
-            Type = BulletType.Normal,
+            ColliderRadius = 0.1f,
+            Type = BulletType.Lightning,
             NextFireTime = Time.time
 
         };
