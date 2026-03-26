@@ -71,6 +71,7 @@ namespace Nobeta.EUG.Interfaces
         event Action OnFireEnd;
         event Action OnAttack;
         event Action OnChant;
+        event Action OnInteract;
         event Action OnNumSwitch;
         event Action OnCusorSwitchStart;
         event Action OnCusorSwitchEnd;

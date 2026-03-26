@@ -10,6 +10,7 @@ public class CanvasLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<PlayerStatusUI>();
         builder.RegisterComponentInHierarchy<MagicStatusUI>();
         builder.RegisterComponentInHierarchy<AimIconUI>();
-        
+        builder.RegisterComponentInHierarchy<InteractiveUI>();
+
     }
 }

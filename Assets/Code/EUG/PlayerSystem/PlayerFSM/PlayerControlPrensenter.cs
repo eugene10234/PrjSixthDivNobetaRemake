@@ -154,6 +154,7 @@ namespace Nobeta.EUG.FSM
         /// </summary>
         public void TakeDamage(int damage)
         {
+            if(stateMachine.IsInState<DodgingState>())return;
             _context.CurrentHealth -= damage;
 
             if (_context.CurrentHealth <= 0)

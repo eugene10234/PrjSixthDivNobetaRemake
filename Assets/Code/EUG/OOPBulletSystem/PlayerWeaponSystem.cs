@@ -148,7 +148,8 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         private Vector3 GetPlayerTargetPoint()
         {
             Vector3 targetPoint = Camera.main.transform.position + Camera.main.transform.forward * 75f;
-            if (cameraService.TryGetCameraSphereHit(0.2f, Mathf.Infinity, out RaycastHit hitInfo))
+            if (cameraService.TryGetCameraSphereHit(0.2f, Mathf.Infinity, out RaycastHit hitInfo,
+                LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")))
             {
                 // 1. 取得擊中點
                 targetPoint = hitInfo.point;

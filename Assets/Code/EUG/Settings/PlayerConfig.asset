@@ -19,8 +19,8 @@ MonoBehaviour:
   jumpHeight: 2
   gravity: -15
   coyoteTime: 0.2
-  dodgeDistance: 6
-  dodgeDuration: 0.7
+  dodgeDistance: 6.5
+  dodgeDuration: 0.6
   dodgeCooldown: 1
   maxDodgeCharges: 2
   maxChargeTime: 2
