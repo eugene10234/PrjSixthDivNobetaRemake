@@ -72,8 +72,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         {      
             if (targetRatio > Bar.FillAmount)
             {
-                Buffer.FillAmount = targetRatio;
-                Bar.DelayUpdateTrigger(targetRatio).Forget();
+                Bar.FillAmount = targetRatio;
+                Buffer.DelayUpdateTrigger(targetRatio).Forget();
                 return;
             }
             Bar.FillAmount = targetRatio;

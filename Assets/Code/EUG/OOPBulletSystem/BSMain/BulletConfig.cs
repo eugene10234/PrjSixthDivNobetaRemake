@@ -78,7 +78,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         };
         public static BulletConfig LightningStrike => new BulletConfig
         {
-            Speed = 120f,
+            Speed = 150f,
             Damage = 250,
             ManaCost = 1,
             CoolTime = 1.25f,
