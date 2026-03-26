@@ -7,7 +7,7 @@ using Nobeta.EUG.MBFunctions.Interacts;
 
 namespace Nobeta.EUG.MBFunctions.PlayerUI
 {
-    public struct InteractEreaEvent
+    public struct InteractEreaExitEvent
     {
         public bool Enter;
         public string Message;

@@ -36,7 +36,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
                 //    Damage = 99999,
                 //    hitPosition = transform.position
                 //});
-                _eventBus.Publish(new InteractEreaEvent
+                _eventBus.Publish(new InteractEreaEnterEvent
                 {
                     Enter = true,
                     Message = "[E]開啟OAQ",
@@ -50,7 +50,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
                 // 發布事件
-                _eventBus.Publish(new InteractEreaEvent
+                _eventBus.Publish(new InteractEreaExitEvent
                 {
                     Enter = false,
                     Message = ""
