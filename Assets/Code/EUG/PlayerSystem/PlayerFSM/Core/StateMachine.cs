@@ -3,6 +3,7 @@
 // ============================================================================
 
 using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace Nobeta.EUG.FSM.Core
         private void ChangeState(Type stateType, bool force = false)
         {
             // 1. 避免重複切換
-            if (CurrentState?.GetType() == stateType) return;
+            if (typeof(GroundedState).IsAssignableFrom(stateType) && CurrentState?.GetType() == stateType) return;
             if (stateType.IsAbstract) { ToInitialState(); return; }
 
             // 從容器解析狀態（VContainer 自動注入依賴）

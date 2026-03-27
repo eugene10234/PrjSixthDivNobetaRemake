@@ -94,7 +94,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         void ExecuteMovement();
         void SetGround();
         void RootMotionStart();
+        void RootMotionEnd();
         void RootMotionClear();
+        
     }
 
     

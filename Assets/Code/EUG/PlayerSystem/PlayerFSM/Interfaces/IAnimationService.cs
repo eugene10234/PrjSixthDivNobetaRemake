@@ -2,6 +2,7 @@
 // Animation Service - 動畫服務接口
 // ========================================================================
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Nobeta.EUG.FSM.Interfaces
@@ -31,6 +32,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// </summary>
         void SetTrigger(string parameterName);
         bool IsInTransition(int v);
+        Animator GetAnimator { get; }
+        AnimationClip GetClip(string name);
+        Dictionary<string, AnimationClip> GetClipCache { get; }
     }
 }
 

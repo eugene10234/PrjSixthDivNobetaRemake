@@ -30,16 +30,16 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Enter();
 
-            stateTimer = ctx.Config.castDuration;
+            //stateTimer = ctx.Config.castDuration;
 
-            // 執行施法
-            //CastSpell();
+            //// 執行施法
+            ////CastSpell();
 
-            PlayAnimation("Cast");
-            PlaySound("SpellCast");
+            //PlayAnimation("Cast");
+            //PlaySound("SpellCast");
 
-            // 停止移動
-            ctx.MovementService.ResetVelocity();
+            //// 停止移動
+            //ctx.MovementService.ResetVelocity();
         }
 
         protected override void OnTimerExpired()
@@ -95,7 +95,7 @@ namespace Nobeta.EUG.FSM.States
             if (stateType == typeof(HitState) || stateType == typeof(DyingState))
                 return true;
 
-            return stateTimer <= 0;
+            return StateTimer <= 0;
         }
     }
 }

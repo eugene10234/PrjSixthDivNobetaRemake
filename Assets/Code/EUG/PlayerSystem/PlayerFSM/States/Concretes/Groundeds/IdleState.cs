@@ -8,6 +8,7 @@ namespace Nobeta.EUG.FSM.States
 {
     public class IdleState : GroundedState
     {
+        private float Cross_Duration = 0.15f;
         public IdleState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
@@ -18,7 +19,21 @@ namespace Nobeta.EUG.FSM.States
             ctx.CurrentSpeedType = typeof(IdleState);
             base.Enter();
             //PlayAnimation("IdleState",0.1f);
-            PlayAnimation("MovementState", 0.15f);
+            BaseState prevState = stateMachine.PreviousState;
+            if (prevState != null)
+            {
+                if (prevState.GetType() == typeof(MeleeAttackState))
+                    if (ctx.InputService.MoveInput.magnitude > 0.1f)
+                    {
+                        Cross_Duration = 0.05f;
+                    }
+                    else
+                    {
+                        Cross_Duration = 0.2f;
+                    }
+                else Cross_Duration = 0.15f;
+            }
+            PlayAnimation("MovementState", Cross_Duration);
         }
         public override void Update()
         {
@@ -40,7 +55,7 @@ namespace Nobeta.EUG.FSM.States
         }
         private void AnimatorSetting()
         {
-            ctx.AnimationService.SetFloat("Speed",-5f);
+            ctx.AnimationService.SetFloat("Speed", -5f);
             //ctx.AnimationService.SetFloat("Rotation", _turnAngle / 32f);
 
         }

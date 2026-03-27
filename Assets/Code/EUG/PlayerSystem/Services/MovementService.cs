@@ -86,9 +86,9 @@ namespace Nobeta.EUG.FSM.Services
             _rootMotionProxy.OnMoveDelta = null;
         }
         private void HandleRootMotion(Vector3 deltaPos, Quaternion deltaRot)
-        {
+        {            
             // 在這裡執行你的戰鬥位移邏輯
-            controller.Move(deltaPos);
+            controller.Move(deltaPos*2);
             // 處理 Hip-rotation
             controller.transform.rotation *= deltaRot;
         }

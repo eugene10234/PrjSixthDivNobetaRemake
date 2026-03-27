@@ -1,6 +1,7 @@
 ﻿using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using static UnityEngine.UI.GridLayoutGroup;
@@ -13,13 +14,22 @@ namespace Nobeta.EUG.FSM.Services
     {
         private readonly Animator animator;
         private AnimatorStateInfo _LatetestStateInfo;
-
+        private Dictionary<string, AnimationClip> _clipCache = new Dictionary<string, AnimationClip>();
+        public Dictionary<string, AnimationClip> GetClipCache { get => _clipCache; }
+        public Animator GetAnimator {  get=> animator;  }
         //_stateHash = Animator.StringToHash("SpawnAnimation");
         [Inject]
         public AnimationService(Animator animator)
         {
             this.animator = animator;
+            Initial();
 
+        }
+        public AnimationClip GetClip(string name)
+        {
+            AnimationClip clip;
+            _clipCache.TryGetValue(name, out clip);
+            return clip;
         }
         public bool IsInTransition(int layerId) 
         {
@@ -28,7 +38,6 @@ namespace Nobeta.EUG.FSM.Services
         public void PlayAnimation(string animationName, float crossFadeDuration = 0.1f , bool force = false)
         {
             var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            
             if (animator == null)
             {
                 Debug.LogWarning("Animator is null!");
@@ -62,6 +71,16 @@ namespace Nobeta.EUG.FSM.Services
         {
             if (animator == null) return;
             animator.SetTrigger(parameterName);
+        }
+        
+
+        private void Initial()
+        {
+            var clips = animator.runtimeAnimatorController.animationClips;
+            foreach (var clip in clips)
+            {
+                _clipCache[clip.name] = clip;
+            }
         }
     }
 }
