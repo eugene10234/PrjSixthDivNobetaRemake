@@ -147,6 +147,7 @@ namespace Nobeta.EUG.FSM
         #region Public API（公共接口）
         private void OnTakeDamage(PlayerDamagedEvent evt)
         {
+            return;
             TakeDamage(evt.Damage);
         }
         /// <summary>

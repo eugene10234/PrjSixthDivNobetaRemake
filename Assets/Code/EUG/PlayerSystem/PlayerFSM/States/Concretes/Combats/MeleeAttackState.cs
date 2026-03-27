@@ -72,7 +72,7 @@ namespace Nobeta.EUG.FSM.States
             PlaySound("MeleeAttack");
 
             // 停止移動
-            ctx.MovementService.ResetVelocity();
+            //ctx.MovementService.ResetVelocity();
             _startStamp = Time.time;
             _tCount = Time.time - _startStamp;
             //ctx.EventBus.Publish(new InteractEreaEnterEvent
@@ -86,7 +86,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Update()
         {
             base.Update();
-            //ctx.MovementService.StopMovement(ctx.Config.acceleration*2f);
+            ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
             //_tCount = Time.time - _startStamp;
             //ctx.EventBus.Publish(new InteractEreaEnterEvent
             //{

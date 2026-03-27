@@ -129,7 +129,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
                 Rotation = Quaternion.LookRotation(Velocity);
             }
         }
-        float spinSpeed = 720f*1.5f;
+        float spinSpeed = 720f * 1.5f;
         float currentSpinAngle = 0f;
         private void SinRotateTo()
         {
@@ -153,18 +153,23 @@ namespace Nobeta.EUG.BulletSystem.OOP
         private void CheckCollision()
         {
             // 委託給物理服務檢測
-            //var hit = physicsService.OverlapSphere(
-            //    Position,
-            //    ColliderRadius,
-            //    LayerMask.GetMask("Enemy","Ground","Obstacle","Player")
-            //);
-            var hit = physicsService.SphereCast(
+            CollisionHit hit;
+            hit = physicsService.OverlapSphere(
                 Position,
                 ColliderRadius,
-                Direction,
-                Speed*Time.deltaTime*1.1f,
                 LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")
-                );
+            );
+            if (!hit.HasHit)
+            {
+                hit = physicsService.SphereCast(
+                    Position,
+                    ColliderRadius,
+                    Direction,
+                    Speed * Time.deltaTime * 1.1f,
+                    LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")
+                    );
+            }
+
             //if (hit.GameObject.CompareTag("Enemy"))
             //{
             //    //eventBus?.Publish(new BulletHitEnemyEvent
@@ -198,8 +203,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         }
 
         private void OnCollision(CollisionHit hit)
-        {
-
+        {                      
             // 發布碰撞事件
             eventBus.Publish(new BulletHitEvent
             {
@@ -213,7 +217,9 @@ namespace Nobeta.EUG.BulletSystem.OOP
             IDamageable target;
             if (EnemyDamageSystem.TryGetTarget(hit.GameObject, out target))
             {
+                //hit.GameObject.transform.position = HitAway(hit);
                 target.TakeDamage(Damage, Position);
+
                 // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
                 // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
 
@@ -229,6 +235,19 @@ namespace Nobeta.EUG.BulletSystem.OOP
             //    //});
             //}
             IsActive = false;
+        }
+
+        private static Vector3 HitAway(CollisionHit hit)
+        {
+            var targetPos = hit.GameObject.transform.position;
+            float originalY = targetPos.y; // 記錄原始 Y
+
+            Vector3 moveDirection = hit.Normal;
+            moveDirection.y = 0; // 確保推動方向沒有垂直分量
+
+            targetPos -= moveDirection;
+            targetPos.y = originalY; // 強制把 Y 設回原本的位置，防止任何誤差
+            return targetPos;
         }
 
         #endregion

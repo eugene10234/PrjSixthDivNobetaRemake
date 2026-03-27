@@ -1,12 +1,13 @@
 ﻿
-using System;
 using Nobeta.EUG.AANEW.MBbulletsystems;
 using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
+using System;
 using UnityEngine;
 using VContainer;
+using static UnityEngine.Debug;
 
 
 namespace Nobeta.EUG.FSM.States
@@ -27,10 +28,14 @@ namespace Nobeta.EUG.FSM.States
         DebugServiceMb _debugServiceMb;
         private float _turnAngle;
         [Inject] IEventBus _eventBus;
+        private float _idleTimeStamp;
+        private bool _isAimAnimate;
+
         public ChantingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
             : base(context, stateMachine)
         {
             _debugServiceMb = debugServiceMb;
+            _idleTimeStamp = Time.time;
         }
 
         public override void Enter()
@@ -38,7 +43,18 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
-            PlayAnimation("Chant", 0.1f);
+            if (ctx.InputService.IsAimPressed)
+            {
+                PlayAnimation("AimingWalk2", 0.1f);
+                _isAimAnimate = true;
+            }               
+            else
+            {
+                PlayAnimation("MovementState", 0.1f);
+                _isAimAnimate = false;
+            }
+                
+
 
             // 降低移動速度
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
@@ -69,7 +85,11 @@ namespace Nobeta.EUG.FSM.States
             //    //return;
             //}
             // 持續面向瞄準方向
-            Vector3 direction = GetMoveDirection();
+            Vector3 direction;
+            if (ctx.InputService.IsAimPressed)
+                direction = GetAimDirection();
+            else
+                direction = GetMoveDirection();
             ctx.MovementService.RotateTowards(direction, ctx.Config.rotationSpeed);
             
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
@@ -85,22 +105,22 @@ namespace Nobeta.EUG.FSM.States
             _movement = ctx.InputService.MoveInput;
             //Debug.LogWarning($"MoveInput: {_movement}:{DateTime.Now}");
             //if(!ctx.InputService.IsAimPressed) stateMachine.ChangeStateByParent<GroundedState>(_speedType);
-            if (_movement.magnitude > 0.1f)
+            if (_movement.sqrMagnitude > 0.01f)
             {
-               // Debug.LogWarning($"222222222222222222:{DateTime.Now}");
+
                 if (typeof(IdleState) == _speedType) _speedType = typeof(WalkingState);
                 Vector3 direction = ctx.CameraService.GetCameraRelativeDirection(_movement);
                 //Debug.LogWarning($"_targetSpeed==={_targetSpeed}:{DateTime.Now}");
                 // 使用較低的速度
                 ctx.MovementService.ApplyGroundMovement(
                     direction,
-                    _targetSpeed * 0.5f,  // 瞄準時速度減半
+                    _targetSpeed * 0.5f* SpeedStartFilter(),  // 瞄準時速度減半
                     ctx.Config.acceleration
                 );
             }
             else
             {
-
+                _idleTimeStamp = Time.time;
                 // 沒有輸入時停止移動
                 ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
             }
@@ -110,14 +130,62 @@ namespace Nobeta.EUG.FSM.States
             // 執行移動
             ctx.MovementService.ExecuteMovement();
         }
+        private float SpeedStartFilter()
+        {
+            if (Time.time-_idleTimeStamp <0.15f)
+            {
+                return 0.15f;
+            }
+            return 1f;
+        }
         private void AnimatorSetting()
         {
-            Vector2 dir = ctx.InputService.MoveInput;
-            ctx.AnimationService.SetFloat("xVelocity", dir.x);
-            ctx.AnimationService.SetFloat("zVelocity", dir.y);
+            if (ctx.InputService.IsAimPressed)
+            {
+                if(!_isAimAnimate)
+                {
+                    PlayAnimation("AimingWalk2", 0.1f);
+                    _isAimAnimate =true;
+                }
+                Vector2 dir = ctx.InputService.MoveInput;
+                ctx.AnimationService.SetFloat("xVelocity", dir.x);
+                ctx.AnimationService.SetFloat("zVelocity", dir.y);
+            }
+            else
+            {
+                if (_isAimAnimate)
+                {
+                    PlayAnimation("MovementState", 0.1f);
+                    _isAimAnimate =false;
+                }
+                var customAniSpeed = GetAniSpeed(ctx.CurrentSpeed);
+                ctx.AnimationService.SetFloat("Speed", customAniSpeed);
+                ctx.AnimationService.SetFloat("Rotation", _turnAngle / 32f);
+            }
+
+
+            //Vector2 dir = ctx.InputService.MoveInput;
+            //ctx.AnimationService.SetFloat("xVelocity", dir.x);
+            //ctx.AnimationService.SetFloat("zVelocity", dir.y);
 
             //bool playRunAnimation = isRunning & movementDirection.magnitude > 0;
             //animator.SetBool("isRunning", playRunAnimation);
+        }
+        private float GetAniSpeed(float speed)
+        {
+            // 確保輸入在 0 到 10 之間
+            float clampSpeed = Mathf.Clamp(speed, 0f,ctx.Config.runSpeed);
+
+            if (_movement.sqrMagnitude > 0.01f)
+            {
+                float t = clampSpeed / (ctx.Config.runSpeed *0.5f);
+
+                return Mathf.Lerp(0, 5, t);
+            }
+            else
+            {
+                return -4f;
+            }
         }
         // 輸入事件處理
         public override void OnJumpInput()
