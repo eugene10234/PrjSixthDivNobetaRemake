@@ -15,7 +15,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
     public class Chest : InteractProvider
     {
         [SerializeField] private Animator _animator;
-        public override string InteractableName => "寶箱";
+        public override string InteractableName => "Chest";
 
         public override float InteractionDuration => 0.1f;
 
@@ -31,7 +31,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
             EventBus.Publish(new InteractEreaEnterEvent
             {
                 InteractObj = this,
-                Message = $"[E]開啟{InteractableName}"
+                Message = $"[E]開啟寶箱"
             });
         }
 
