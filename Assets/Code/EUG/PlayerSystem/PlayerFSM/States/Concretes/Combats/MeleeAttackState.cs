@@ -26,6 +26,7 @@ namespace Nobeta.EUG.FSM.States
         private float _length;
         private float _startStamp;
         private Dictionary<string, AnimationClip> _clipCache;
+        private bool _isRunAttack;
         private AnimationClip _clip;
         private float _tCount;
         private bool _shouldContinueCombo;
@@ -60,7 +61,17 @@ namespace Nobeta.EUG.FSM.States
             {
                 ctx.ComboCounter = 0;
             }
-            _clip = ctx.AnimationService.GetClip($"Combo_Attack_03_0{ctx.ComboCounter + 1}");
+            if (prevState.GetType() == typeof(RunningState))
+            {
+                _isRunAttack = true;
+                _clip = ctx.AnimationService.GetClip($"Combo_Attack_01_01");
+            }
+            else
+            {
+                _isRunAttack = false;
+                _clip = ctx.AnimationService.GetClip($"Combo_Attack_03_0{ctx.ComboCounter + 1}");
+            }
+
             _length = _clip.length;
             SetTimer(_length);
 
@@ -72,7 +83,10 @@ namespace Nobeta.EUG.FSM.States
             if (ctx.ComboCounter == 2)
                 ctx.TimeService.DelayAction(PerformMeleeAttack, 0.22f).Forget();
 
-            PlayAnimation($"MeleeAttack_{ctx.ComboCounter + 1}", 0.1f);
+            if (_isRunAttack)
+                PlayAnimation($"RunAttack", 0.1f);
+            else
+                PlayAnimation($"MeleeAttack_{ctx.ComboCounter + 1}", 0.1f);
             PlaySound("MeleeAttack");
 
             // 停止移動
@@ -119,6 +133,7 @@ namespace Nobeta.EUG.FSM.States
         protected override void OnTimerHalfed()
         {
             PerformMeleeEnd();
+            if (_isRunAttack) return;
             if (_shouldContinueCombo)
             {
                 stateMachine.ChangeState<MeleeAttackState>();
@@ -167,7 +182,8 @@ namespace Nobeta.EUG.FSM.States
         }
 
         private void PerformMeleeEnd()
-        {    if (_hitEnable)
+        {
+            if (_hitEnable)
             {
                 _hitEnable = false;
                 PublishEvent(new MeleeEndEvent { });
