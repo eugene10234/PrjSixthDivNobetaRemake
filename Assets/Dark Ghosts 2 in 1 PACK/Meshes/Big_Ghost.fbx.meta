@@ -1,12 +1,5 @@
 fileFormatVersion: 2
 guid: ec9bccd809f16d842b4a961a11f40f79
-AssetOrigin:
-  serializedVersion: 1
-  productId: 361760
-  packageName: Dark Ghosts 2 in 1 PACK
-  packageVersion: 1.0
-  assetPath: Assets/Dark Ghosts 2 in 1 PACK/Meshes/Big_Ghost.fbx
-  uploadId: 863048
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -23,6 +16,8 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -327,64 +322,6 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 350
-    - serializedVersion: 16
-      name: Reaction
-      takeName: attack
-      internalID: 5331907131950886462
-      firstFrame: 323
-      lastFrame: 324
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 349
-    - serializedVersion: 16
-      name: Default
-      takeName: idle_up_down
-      internalID: 1092840795633015748
-      firstFrame: 1
-      lastFrame: 18
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 59
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -452,7 +389,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
@@ -460,3 +397,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 361760
+  packageName: Dark Ghosts 2 in 1 PACK
+  packageVersion: 1.0
+  assetPath: Assets/Dark Ghosts 2 in 1 PACK/Meshes/Big_Ghost.fbx
+  uploadId: 863048

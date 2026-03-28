@@ -12,7 +12,7 @@ namespace Nobeta.EUG.FSM.States
         //private float landingTimer;
         private bool landingTimerLock;
         //public void LandingTimerLocker(bool a) => landingTimerLock = a;
-        private const float LANDING_DURATION = 0.15f;
+        private const float LANDING_DURATION = 0.1f;
         private Vector3 _currentVelocity;
 
         public LandingState(StateContext context, StateMachine stateMachine)
@@ -62,7 +62,7 @@ namespace Nobeta.EUG.FSM.States
         public override void OnFireEndInput()
         {       
         }
-        public override bool CanTransitionTo(System.Type stateType)
+        public override bool CanTransitionTo(Type stateType)
         {
             // 落地硬直期間只能被打斷為受擊/死亡
             if (stateType == typeof(HitState) || stateType == typeof(DyingState))

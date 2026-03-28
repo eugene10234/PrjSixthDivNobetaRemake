@@ -57,6 +57,7 @@ namespace Nobeta.EUG.Services
         public event Action OnFireEnd;
         public event Action OnAttack;
         public event Action OnChant;
+        public event Action OnInteract;
         public event Action OnNumSwitch;
         //鼠標切換事件（如果需要的話）OnChant
         public event Action OnCusorSwitchStart;
@@ -146,6 +147,16 @@ namespace Nobeta.EUG.Services
         {
             IsChantPressed = false;
         }
+        private void InteractPerformed(InputAction.CallbackContext _)
+        {
+            //IsInteractPressed = true;
+            OnInteract?.Invoke();
+            //float progress = context.duration / holdTime;
+        }
+        //private void InteractCanceled(InputAction.CallbackContext _)
+        //{
+        //    //IsInteractPressed = false;
+        //}
         private void NumSwitch1Performed(InputAction.CallbackContext _)
         {
             Debug.Log("NumSwitch11111111111111111");
@@ -202,6 +213,7 @@ namespace Nobeta.EUG.Services
             _actions.Player.Attack.canceled += AttackCanceled;
             _actions.Player.Chant.performed += ChantPerformed;
             _actions.Player.Chant.canceled += ChantCanceled;
+            _actions.Player.Interact.performed += InteractPerformed;
             _actions.Player.MSNum1.performed += NumSwitch1Performed;
             _actions.Player.MSNum2.performed += NumSwitch2Performed;
             _actions.Player.MSNum3.performed += NumSwitch3Performed;
@@ -227,6 +239,7 @@ namespace Nobeta.EUG.Services
             _actions.Player.Attack.canceled -= AttackCanceled;
             _actions.Player.Chant.performed -= ChantPerformed;
             _actions.Player.Chant.canceled -= ChantCanceled;
+            _actions.Player.Interact.performed -= InteractPerformed;
             _actions.Player.MSNum1.performed -= NumSwitch1Performed;
             _actions.Player.MSNum2.performed -= NumSwitch2Performed;
             _actions.Player.MSNum3.performed -= NumSwitch3Performed;

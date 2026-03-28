@@ -2,6 +2,7 @@
 using System;
 using Nobeta.EUG.AANEW.MBbulletsystems;
 using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
@@ -44,7 +45,7 @@ namespace Nobeta.EUG.FSM.States
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
 
             // 發布事件（通知攝影機切換）
-            //PublishEvent(new PlayerAimingStartedEvent());
+            PublishEvent(new PlayerAimingStartEvent());
             //_debugServiceMb.AddGiz(() =>
             //{
             //    Gizmos.color = Color.red; // 甚至可以順便設顏色
@@ -73,7 +74,7 @@ namespace Nobeta.EUG.FSM.States
             base.Exit();
 
             // 發布事件
-            //PublishEvent(new PlayerAimingEndedEvent());
+            PublishEvent(new PlayerAimingEndEvent());
         }
 
             
@@ -190,13 +191,13 @@ namespace Nobeta.EUG.FSM.States
         //    //_eventBus.Publish(new WeaponFiredEvent2{});
         //    //ctx.FireMagic();
         //}
-        public override void OnDodgeInput()
-        {
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
+        //public override void OnDodgeInput()
+        //{
+        //    if (ctx.CanDodge)
+        //    {
+        //        stateMachine.ChangeState<DodgingState>(force:true);
+        //    }
+        //}
         public override void OnStopInput()
         {
             _speedType = typeof(IdleState);

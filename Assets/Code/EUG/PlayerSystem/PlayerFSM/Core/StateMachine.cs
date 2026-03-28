@@ -3,6 +3,7 @@
 // ============================================================================
 
 using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -72,13 +73,17 @@ namespace Nobeta.EUG.FSM.Core
         {
             ChangeState(typeof(T));
         }
+        public void ChangeState<T>(bool force) where T : BaseState
+        {
+            ChangeState(typeof(T), force);
+        }
         /// <summary>
         /// 改變狀態
         /// </summary>
-        private void ChangeState(Type stateType)
+        private void ChangeState(Type stateType, bool force = false)
         {
             // 1. 避免重複切換
-            if (CurrentState?.GetType() == stateType) return;
+            if (typeof(GroundedState).IsAssignableFrom(stateType) && CurrentState?.GetType() == stateType) return;
             if (stateType.IsAbstract) { ToInitialState(); return; }
 
             // 從容器解析狀態（VContainer 自動注入依賴）
@@ -91,7 +96,7 @@ namespace Nobeta.EUG.FSM.Core
             }
 
             // 檢查是否可以轉換
-            if (currentState != null && !currentState.CanTransitionTo(stateType))
+            if (currentState != null && !currentState.InnerCanTransitionTo(stateType,force))
             {
                 Debug.LogWarning($"無法從 {currentState.StateName} 轉換到 {newState.StateName}");
                 return;

@@ -24,6 +24,7 @@ namespace Nobeta.EUG.FSM.States
 
             // 恢復閃避次數
             ctx.DodgeCharges = ctx.Config.maxDodgeCharges;
+            ctx.AirJumpCharges = ctx.Config.maxAirJumpCharges;
 
         }
 
@@ -53,7 +54,7 @@ namespace Nobeta.EUG.FSM.States
             //Vector3 direction = GetMoveDirection();
 
             //if (!(direction.magnitude > 0.1f)) stateMachine.ChangeState<IdleState>();
-            if(ctx.ChargeRatio>0f)
+            if (ctx.ChargeRatio > 0f) { }
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
 
             if (RunningTimer < 0.01)
@@ -72,13 +73,13 @@ namespace Nobeta.EUG.FSM.States
             }
         }
 
-        public override void OnDodgeInput()
-        {
-            if (ctx.CanDodge)
-            {
-                stateMachine.ChangeState<DodgingState>();
-            }
-        }
+        //public override void OnDodgeInput()
+        //{
+        //    if (ctx.CanDodge)
+        //    {
+        //        stateMachine.ChangeState<DodgingState>();
+        //    }
+        //}
         public override void OnAimStartInput()
         {
             //Debug.LogWarning("OnAimStartInput");

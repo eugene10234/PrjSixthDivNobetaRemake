@@ -86,9 +86,9 @@ namespace Nobeta.EUG.FSM.Services
             _rootMotionProxy.OnMoveDelta = null;
         }
         private void HandleRootMotion(Vector3 deltaPos, Quaternion deltaRot)
-        {
+        {            
             // 在這裡執行你的戰鬥位移邏輯
-            controller.Move(deltaPos);
+            controller.Move(deltaPos*2);
             // 處理 Hip-rotation
             controller.transform.rotation *= deltaRot;
         }
@@ -178,7 +178,14 @@ namespace Nobeta.EUG.FSM.Services
             // 根據跳躍高度計算初速度
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-
+        public void ReduceGravity(float reduceAmount)
+        {
+            velocity.y *= reduceAmount;
+        }
+        public void CancelGravity()
+        {
+            velocity.y = 0f;
+        }
         #endregion
 
         #region Dodge Movement

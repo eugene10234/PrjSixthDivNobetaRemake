@@ -26,6 +26,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Update()
         {
             RunningTimer -= Time.deltaTime;
+            //ctx.ConsumeStamina(3);
             base.Update();
             AnimatorSetting();
         }

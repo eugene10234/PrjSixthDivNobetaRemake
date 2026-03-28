@@ -43,7 +43,8 @@ namespace Nobeta.EUG.FSM.Interfaces
         /// </summary>
         /// <param name="gravity">重力加速度</param>
         void ApplyGravity(float gravity);
-
+        void CancelGravity();
+        void ReduceGravity(float reduceAmount);
         /// <summary>
         /// 應用跳躍
         /// </summary>
@@ -94,7 +95,9 @@ namespace Nobeta.EUG.FSM.Interfaces
         void ExecuteMovement();
         void SetGround();
         void RootMotionStart();
+        void RootMotionEnd();
         void RootMotionClear();
+        
     }
 
     

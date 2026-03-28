@@ -9,12 +9,14 @@ namespace Nobeta.EUG.FSM.States
 {
     public class DodgingState : BaseState, IUpdatable, IFixedUpdatable
     {
+        protected float stateStartStamp;
         private float dodgeTimer;
         private Vector3 dodgeDirection;
         private bool dodgeDirCheck;
         public DodgingState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
+            stateStartStamp =Time.time;
         }
 
         public override void Enter()
@@ -27,7 +29,7 @@ namespace Nobeta.EUG.FSM.States
             if (input.magnitude > 0.1f)
             {
                 dodgeDirection = ctx.CameraService.GetCameraRelativeDirection(input);
-                PlayAnimation("Dodge_F");
+                PlayAnimation("Dodge_F", 0.1f);
             }
             else
             {
@@ -37,12 +39,9 @@ namespace Nobeta.EUG.FSM.States
             }
 
             // 應用閃避移動 閃避期間維持速度
-            ctx.MovementService.ApplyDodge(
-                dodgeDirection,
-                ctx.Config.dodgeDistance,
-                ctx.Config.dodgeDuration
-            );
-   
+            //ApplyDodge();
+            ctx.TimeService.DelayAction(ApplyDodge, 0.15f).Forget();
+            ctx.MovementService.ReduceGravity(0.4f);
             PlaySound("Dodge");
             // 消耗閃避次數
             ctx.DodgeCharges--;
@@ -51,6 +50,16 @@ namespace Nobeta.EUG.FSM.States
             dodgeTimer = ctx.Config.dodgeDuration;
 
 
+        }
+
+        private void ApplyDodge()
+        {
+            
+            ctx.MovementService.ApplyDodge(
+                dodgeDirection,
+                ctx.Config.dodgeDistance,
+                ctx.Config.dodgeDuration
+            );
         }
 
         public void Update()
@@ -88,7 +97,7 @@ namespace Nobeta.EUG.FSM.States
             ctx.MovementService.ExecuteMovement();
         }
 
-        public override bool CanTransitionTo(System.Type stateType)
+        public override bool CanTransitionTo(Type stateType)
         {
             // 閃避期間無敵，只能轉到死亡
             if (stateType == typeof(DyingState))

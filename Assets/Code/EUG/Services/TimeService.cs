@@ -5,6 +5,7 @@ using Nobeta.EUG.Interfaces;
 using System;
 using System.Threading;
 using UnityEngine;
+using static UnityEngine.Application;
 // ========================================================================
 // TimeService - 時間服務
 // ========================================================================
@@ -60,6 +61,18 @@ namespace Nobeta.EUG.Services
             finally
             {
                 lockCallback?.Invoke(false);
+            }
+        }
+        public async UniTaskVoid DelayAction(Action DelayedAction, float duration, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await UniTask.Delay((int)(1000 * duration), cancellationToken: cancellationToken);                
+            }
+            catch (System.OperationCanceledException) { }
+            finally
+            {
+                DelayedAction?.Invoke();
             }
         }
     }

@@ -7,6 +7,7 @@ using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
+using Nobeta.EUG.Services;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -18,6 +19,7 @@ namespace Nobeta.EUG.FSM
 
         private readonly StateMachine _stateMachine;
         private readonly StateContext _context;
+        private readonly ITimeService _timeService;
         private readonly IPlayerInputService _inputService;
         private readonly IDetectionService _detectionService;
         private readonly IEventBus _eventBus;
@@ -27,6 +29,7 @@ namespace Nobeta.EUG.FSM
         {
             _stateMachine = container.Resolve<StateMachine>();
             _context = container.Resolve<StateContext>();
+            _timeService = container.Resolve<ITimeService>();
             _inputService = container.Resolve<IPlayerInputService>();
             _detectionService = container.Resolve<IDetectionService>();
             _eventBus = container.Resolve<IEventBus>();
@@ -50,18 +53,18 @@ namespace Nobeta.EUG.FSM
                 Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
                 return;
             }
-            //_debugService.GUI.Add(DrawDebugInfo);
-            // 訂閱輸入事件
+            _debugService.GUI.Add(DrawDebugInfo);
+            //訂閱輸入事件
             //Debug.LogWarning("mbPlayerControllerStart");
 
             // 設置初始狀態
             _stateMachine.SetInitialState<IdleState>();
 
             _eventBus.Subscribe<PlayerDamagedEvent>(OnTakeDamage);
- 
+            StartUpLock = false;
 
 
-        Debug.Log("PlayerController 初始化完成（事件驅動模式）");
+            Debug.Log("PlayerController 初始化完成（事件驅動模式）");
         }
 
 
@@ -87,6 +90,7 @@ namespace Nobeta.EUG.FSM
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
             SyncStatusToGUI();
+            
         }
 
         private void SyncStatusToGUI()
@@ -106,16 +110,44 @@ namespace Nobeta.EUG.FSM
         {
             // 檢查死亡
             if (_context.CurrentHealth <= 0 && !stateMachine.IsInState<DyingState>())
-            {                
+            {
                 stateMachine.ChangeState<DyingState>();
                 return;
+            }
+            if(!stateMachine.IsInState<DyingState>())
+            {
+                if (!StartUpLock) StatusTimeRecoveryAPI();
+            }
+            else
+            {
+                _context.CurrentHealth = 0;        
+                 _context.CurrentMana = 0;
+                _context.CurrentStamina = 0;
             }
 
             // 這裡可以添加其他全局轉換邏輯
         }
+        private bool StartUpLock = false;
+        private const float StartUp_DURATION = 0.5f;
+        private void StatusTimeRecoveryAPI()
+        {
+            _timeService.TaskDelayLock(StartUp_DURATION, (b) => StartUpLock = b);
+            RestoreMana(3);
+            Heal(1);
+            if (_context.CurrentSpeedType == typeof(RunningState))
+            {
+                _context.ConsumeStamina(16);
+            }
+            else
+            {
+                RestoreStamina(24);
+            }
+
+        }
         #region Public API（公共接口）
         private void OnTakeDamage(PlayerDamagedEvent evt)
         {
+            return;
             TakeDamage(evt.Damage);
         }
         /// <summary>
@@ -123,6 +155,7 @@ namespace Nobeta.EUG.FSM
         /// </summary>
         public void TakeDamage(int damage)
         {
+            if(stateMachine.IsInState<DodgingState>())return;
             _context.CurrentHealth -= damage;
 
             if (_context.CurrentHealth <= 0)
@@ -162,7 +195,13 @@ namespace Nobeta.EUG.FSM
                 _context.MaxMana
             );
         }
-
+        public void RestoreStamina(int amount)
+        {
+            _context.CurrentStamina = Mathf.Min(
+                _context.CurrentStamina + amount,
+                _context.MaxStamina - 1
+            );
+        }
         /// <summary>
         /// 重生
         /// </summary>

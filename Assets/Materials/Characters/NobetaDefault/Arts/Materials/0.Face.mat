@@ -130,7 +130,7 @@ Material:
     - _ReceiveShadows: 1
     - _Revision: 2
     - _SelfShadow: 1
-    - _ShadowLum: 0.93
+    - _ShadowLum: 0.74
     - _Shininess: 0.1
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0

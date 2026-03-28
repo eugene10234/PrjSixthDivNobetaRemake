@@ -77,28 +77,36 @@ namespace Nobeta.EUG.FSM.States
 
         }
 
+        public override void OnDodgeInput()
+        {
+            // 空中閃避
+            if (ctx.CanDodge)
+            {
+                stateMachine.ChangeState<DodgingState>(force: true);
+            }
+        }
         private void SetBulletFunc(int msNum)
         {
             switch (msNum)
             {
                 case 1:
                     ctx.ChangeBullet(BulletType.Normal);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypePT();
                     break;
                 case 2:
                     ctx.ChangeBullet(BulletType.Ice);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeAR();
                     break;
                 case 3:
                     ctx.ChangeBullet(BulletType.Fire);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSG();
                     break;
                 case 4:
                     ctx.ChangeBullet(BulletType.Lightning);
-                    ctx.EventBus.Publish(new WeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
+                    ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSR();
                     break;
                 default:
@@ -107,8 +115,11 @@ namespace Nobeta.EUG.FSM.States
             }
         }
         #endregion
-        private bool IsAutoFiring = false;
+
+        
         #region Helper Methods
+
+        private bool IsAutoFiring = false;
         /// <summary>
         /// 檢查魔力是否足夠
         /// </summary>
@@ -121,6 +132,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         protected void TypeAR()
@@ -134,6 +146,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         protected void TypeSR()
@@ -141,6 +154,7 @@ namespace Nobeta.EUG.FSM.States
             IsAutoFiring = false;
             _isTriggeringAttack = false;
             InOnFireStart = null;
+            InOnFireEnd = null;
             InOnFireEnd = ctx.FireMagic;
         }
         #endregion

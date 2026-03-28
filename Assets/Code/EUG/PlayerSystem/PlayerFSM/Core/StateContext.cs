@@ -75,6 +75,8 @@ namespace Nobeta.EUG.FSM.Core
         // 閃避相關
         public int DodgeCharges { get; set; }
         public float LastDodgeTime { get; set; }
+        public int AirJumpCharges { get;  set; }
+        public float LastAirJumpTime { get;  set; }
 
         // 魔法相關
         public BulletConfig CurrentBulletConfig { get; set; }
@@ -84,7 +86,7 @@ namespace Nobeta.EUG.FSM.Core
         // 戰鬥相關
         public int ComboCounter { get; set; }
         public float LastAttackTime { get; set; }
-        public Dictionary<BulletType,BulletConfig> _bulletsDiction;
+        public Dictionary<BulletType, BulletConfig> _bulletsDiction;
         #endregion
 
         #region Constructor（構造函數 - VContainer 注入）
@@ -129,18 +131,19 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 200;
+            MaxHealth = 125;
             CurrentHealth = MaxHealth;
             MaxMana = 300;
             CurrentMana = MaxMana;
-            MaxMana = 300;
+            MaxStamina = 300;
             CurrentStamina = MaxMana;
             // 狀態標記
             CurrentSpeedType = typeof(IdleState);
             // 閃避
             DodgeCharges = Config.maxDodgeCharges;
             LastDodgeTime = 0f;
-
+            AirJumpCharges = 1;
+            LastAirJumpTime =0f;
             // 魔法
             CurrentBulletConfig = BulletConfig.Normal;
             ChargeRatio = 0f;
@@ -149,7 +152,7 @@ namespace Nobeta.EUG.FSM.Core
             // 戰鬥
             ComboCounter = 0;
             LastAttackTime = 0f;
-            _bulletsDiction = new Dictionary<BulletType, BulletConfig>(); 
+            _bulletsDiction = new Dictionary<BulletType, BulletConfig>();
             _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
             _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
             _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
@@ -176,7 +179,14 @@ namespace Nobeta.EUG.FSM.Core
                 return IsGrounded || timeSinceGrounded < Config.coyoteTime;
             }
         }
-
+        public bool CanAirJump
+        {
+            get
+            {
+                return AirJumpCharges > 0 &&
+                        Time.time - LastAirJumpTime > 0.1f;
+            }
+        }
         /// <summary>
         /// 是否可以閃避
         /// </summary>
@@ -210,23 +220,27 @@ namespace Nobeta.EUG.FSM.Core
             //    CurrentMana = context.CurrentMana
             //});
         }
+        public void ConsumeStamina(int cost)
+        {
+            CurrentStamina = Mathf.Max(0, CurrentStamina - cost);
+        }
         public void FireMagic()
         {
-            if (CurrentBulletConfig.CoolTimerLock) return;
+            // if (CurrentBulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(CurrentBulletConfig.ManaCost))
             {
                 ConsumeMana(CurrentBulletConfig.ManaCost);
 
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
-                if (CurrentBulletConfig.CoolTime>0f)
-                TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
+                //if (CurrentBulletConfig.CoolTime > 0f)
+                //    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
-                EventBus.Publish(new WeaponFireEvent
+                ///
+                CurrentBulletConfig.TryFire(() => EventBus.Publish(new PlayerWeaponFireEvent
                 {
                     bulletConfig = CurrentBulletConfig
-                });
-
+                }));
                 //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
             }
             else
@@ -235,9 +249,12 @@ namespace Nobeta.EUG.FSM.Core
                 //PlaySound("ManaNone");
             }
         }
+
         public void ChangeBullet(BulletType bulletType)
         {
             CurrentBulletConfig = _bulletsDiction[bulletType];
         }
+
+
     }
 }

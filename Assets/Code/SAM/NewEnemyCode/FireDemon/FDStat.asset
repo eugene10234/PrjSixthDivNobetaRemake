@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d204b4ef6fc3184ba9af8a5a6e3ee9a, type: 3}
+  m_Name: FDStat
+  m_EditorClassIdentifier: 
+  MaxHP: 1000
+  AttackPower: 30
+  Speed: 3
+  SpacingSpeed: 1
+  AggroRange: 20
+  ChaseRange: 20
+  AttackRange: 3
+  AttackSpeed: 0.5

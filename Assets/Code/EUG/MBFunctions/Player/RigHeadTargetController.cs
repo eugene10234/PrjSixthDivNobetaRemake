@@ -140,15 +140,15 @@ public class RigHeadTargetController : MonoBehaviour
     }
 
     // 為了方便你在編輯器看 Target 是否正確，加個 Gizmos
-    private void OnDrawGizmos()
-    {
-        if (rigTarget != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(rigTarget.position, 0.1f);
-            Gizmos.DrawLine(headBone.position, rigTarget.position);
-        }
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    if (rigTarget != null)
+    //    {
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawWireSphere(rigTarget.position, 0.1f);
+    //        Gizmos.DrawLine(headBone.position, rigTarget.position);
+    //    }
+    //}
     /// <summary>
     /// 根據 Yaw 角度計算對應的平滑數值
     /// </summary>
