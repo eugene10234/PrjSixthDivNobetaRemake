@@ -2101,6 +2101,10 @@ PrefabInstance:
       value: 0.7538147
       objectReference: {fileID: 0}
     - target: {fileID: 8607354276054258812, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.94921875
+      objectReference: {fileID: 0}
+    - target: {fileID: 8607354276054258812, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 1.0500183
       objectReference: {fileID: 0}
@@ -2458,17 +2462,17 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1250135376}
   - {fileID: 202259717}
   - {fileID: 3799879938052570547}
   - {fileID: 9104880096043977751}
   - {fileID: 3463544359058580433}
+  - {fileID: 1932030863}
   - {fileID: 1101131451}
   - {fileID: 1887685828}
   - {fileID: 4469270397987916088}
   - {fileID: 2133758877}
   - {fileID: 1630497736}
   - {fileID: 1233959312}
-  - {fileID: 1250135376}
   - {fileID: 1056116463}
-  - {fileID: 1932030863}
   - {fileID: 402296504}
