@@ -16,10 +16,12 @@ namespace Nobeta.EUG.MBFunctions.Interacts
     {
         private IEventBus _eventBus;
         private bool _canInteract;
+        private Collider _collider;
         protected IEventBus EventBus { get => _eventBus; }
+        protected Collider Collider { get => _collider; }
 
         protected LayerMask layerMask;
-        protected Collider Collider;
+        
         public abstract string InteractableName { get; }
         public abstract float InteractionDuration { get; }
         public abstract bool ReInteractable { get; }
@@ -45,7 +47,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         {
             if ((layerMask | 1 << other.gameObject.layer) != 0)
             {
-                Collider = other;
+                _collider = other;
                 // 發布事件
                 if (_canInteract)
                     OnEnter();
