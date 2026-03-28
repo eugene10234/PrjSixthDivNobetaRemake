@@ -15,10 +15,11 @@ namespace Nobeta.EUG.MBFunctions.Interacts
     public abstract class InteractProvider : MonoBehaviour, IInteractable
     {
         private IEventBus _eventBus;
-        private bool _canInteract;        
+        private bool _canInteract;
         protected IEventBus EventBus { get => _eventBus; }
 
-        protected LayerMask layerMask ;
+        protected LayerMask layerMask;
+        protected Collider Collider;
         public abstract string InteractableName { get; }
         public abstract float InteractionDuration { get; }
         public abstract bool ReInteractable { get; }
@@ -44,6 +45,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         {
             if ((layerMask | 1 << other.gameObject.layer) != 0)
             {
+                Collider = other;
                 // 發布事件
                 if (_canInteract)
                     OnEnter();
