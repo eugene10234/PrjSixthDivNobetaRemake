@@ -24,6 +24,7 @@ namespace Nobeta.EUG.FSM.States
 
             // 恢復閃避次數
             ctx.DodgeCharges = ctx.Config.maxDodgeCharges;
+            ctx.AirJumpCharges = ctx.Config.maxAirJumpCharges;
 
         }
 

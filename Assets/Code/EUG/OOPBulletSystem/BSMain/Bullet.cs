@@ -157,7 +157,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             hit = physicsService.OverlapSphere(
                 Position,
                 ColliderRadius,
-                LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")
+                LayerMask.GetMask("Enemy", "Ground", "Obstacle")//, "Player"
             );
             if (!hit.HasHit)
             {
@@ -166,7 +166,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
                     ColliderRadius,
                     Direction,
                     Speed * Time.deltaTime * 1.1f,
-                    LayerMask.GetMask("Enemy", "Ground", "Obstacle", "Player")
+                    LayerMask.GetMask("Enemy", "Ground", "Obstacle")//, "Player"
                     );
             }
 

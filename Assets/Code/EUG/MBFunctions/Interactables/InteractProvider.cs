@@ -18,7 +18,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         private bool _canInteract;        
         protected IEventBus EventBus { get => _eventBus; }
 
-        protected LayerMask layerMask = LayerMask.GetMask("Player");
+        protected LayerMask layerMask ;
         public abstract string InteractableName { get; }
         public abstract float InteractionDuration { get; }
         public abstract bool ReInteractable { get; }
@@ -27,6 +27,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         private void Awake()
         {
             _eventBus = EventBusProvider.GetEventBus();
+            layerMask = LayerMask.GetMask("Player");
             _canInteract = true;
         }
         protected virtual void InnerOnInteract()

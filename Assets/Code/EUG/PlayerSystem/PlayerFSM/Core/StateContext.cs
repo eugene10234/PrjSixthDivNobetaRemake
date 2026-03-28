@@ -75,6 +75,8 @@ namespace Nobeta.EUG.FSM.Core
         // 閃避相關
         public int DodgeCharges { get; set; }
         public float LastDodgeTime { get; set; }
+        public int AirJumpCharges { get;  set; }
+        public float LastAirJumpTime { get;  set; }
 
         // 魔法相關
         public BulletConfig CurrentBulletConfig { get; set; }
@@ -140,7 +142,8 @@ namespace Nobeta.EUG.FSM.Core
             // 閃避
             DodgeCharges = Config.maxDodgeCharges;
             LastDodgeTime = 0f;
-
+            AirJumpCharges = 1;
+            LastAirJumpTime =0f;
             // 魔法
             CurrentBulletConfig = BulletConfig.Normal;
             ChargeRatio = 0f;
@@ -176,7 +179,14 @@ namespace Nobeta.EUG.FSM.Core
                 return IsGrounded || timeSinceGrounded < Config.coyoteTime;
             }
         }
-
+        public bool CanAirJump
+        {
+            get
+            {
+                return AirJumpCharges > 0 &&
+                        Time.time - LastAirJumpTime > 0.1f;
+            }
+        }
         /// <summary>
         /// 是否可以閃避
         /// </summary>

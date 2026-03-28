@@ -22,7 +22,8 @@ MonoBehaviour:
   dodgeDistance: 6.5
   dodgeDuration: 0.6
   dodgeCooldown: 1
-  maxDodgeCharges: 2
+  maxDodgeCharges: 1
+  maxAirJumpCharges: 1
   maxChargeTime: 2
   castDuration: 0.5
   meleeAttackDuration: 0.6

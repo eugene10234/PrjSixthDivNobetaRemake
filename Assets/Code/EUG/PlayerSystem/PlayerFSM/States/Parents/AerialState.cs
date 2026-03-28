@@ -60,7 +60,13 @@ namespace Nobeta.EUG.FSM.States
         }
 
         #region Input Handlers
-
+        public override void OnJumpInput()
+        {
+            if (ctx.CanAirJump)
+            {
+                stateMachine.ChangeState<JumpingState>(force: true);
+            }
+        }
         //public override void OnDodgeInput()
         //{
         //    // 空中閃避

@@ -1,4 +1,5 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using Nobeta.EUG.Events;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
@@ -30,6 +31,7 @@ namespace Nobeta.EUG.FSM.States
         private bool _shouldContinueCombo;
         private Vector3 _TbufmoveDirection;
         private Vector3 _prevMoveDirection;
+        private bool _hitEnable;
 
         public MeleeAttackState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
@@ -43,7 +45,7 @@ namespace Nobeta.EUG.FSM.States
             {
                 _prevMoveDirection = _TbufmoveDirection;
             }
-            else _prevMoveDirection =Vector3.zero;
+            else _prevMoveDirection = Vector3.zero;
             _TbufmoveDirection = Vector3.zero;
             base.Enter();
             _shouldContinueCombo = false;
@@ -52,7 +54,7 @@ namespace Nobeta.EUG.FSM.States
             // 檢查連擊
             if (Time.time - lastAttackTime < COMBO_WINDOW)
             {
-                ctx.ComboCounter = (ctx.ComboCounter + 1) % 3; // 最多4連擊
+                ctx.ComboCounter = (ctx.ComboCounter + 1) % 3; // 最多3連擊
             }
             else
             {
@@ -67,6 +69,8 @@ namespace Nobeta.EUG.FSM.States
 
             // 執行攻擊
             PerformMeleeAttack();
+            if (ctx.ComboCounter == 2)
+                ctx.TimeService.DelayAction(PerformMeleeAttack, 0.22f).Forget();
 
             PlayAnimation($"MeleeAttack_{ctx.ComboCounter + 1}", 0.1f);
             PlaySound("MeleeAttack");
@@ -100,7 +104,7 @@ namespace Nobeta.EUG.FSM.States
                 _prevMoveDirection,
                 ctx.Config.rotationSpeed
             );
-            
+
         }
         public override void Exit()
         {
@@ -114,6 +118,7 @@ namespace Nobeta.EUG.FSM.States
         }
         protected override void OnTimerHalfed()
         {
+            PerformMeleeEnd();
             if (_shouldContinueCombo)
             {
                 stateMachine.ChangeState<MeleeAttackState>();
@@ -144,22 +149,31 @@ namespace Nobeta.EUG.FSM.States
 
         private void PerformMeleeAttack()
         {
+            _hitEnable = true;
             // 計算傷害（連擊增加傷害）
-            //int baseDamage = 10;
-            //int damage = baseDamage + (ctx.ComboCounter * 5);
+            int baseDamage = 150;
+            int damage = baseDamage + (ctx.ComboCounter * 100);
 
-            //// 發布攻擊事件
-            ////PublishEvent(new MeleeAttackEvent
-            ////{
-            ////    Damage = damage,
-            ////    ComboCount = ctx.ComboCounter + 1,
-            ////    AttackPosition = ctx.Transform.position,
-            ////    AttackDirection = ctx.Transform.forward
-            ////});
+            // 發布攻擊事件
+            PublishEvent(new MeleeAttackEvent
+            {
+                Damage = damage,
+                ComboCount = ctx.ComboCounter + 1,
+                AttackPosition = ctx.Transform.position,
+                AttackDirection = ctx.Transform.forward
+            });
 
             //Debug.Log($"執行近戰攻擊！連擊數: {ctx.ComboCounter + 1}, 傷害: {damage}");
         }
 
+        private void PerformMeleeEnd()
+        {    if (_hitEnable)
+            {
+                _hitEnable = false;
+                PublishEvent(new MeleeEndEvent { });
+            }
+
+        }
         public override void OnAttackInput()
         {
             // 在攻擊動畫後半段可以連擊
