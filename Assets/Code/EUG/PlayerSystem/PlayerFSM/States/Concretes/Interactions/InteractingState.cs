@@ -1,4 +1,5 @@
 ﻿using Nobeta.EUG.FSM.Core;
+using Nobeta.EUG.Interfaces;
 using System;
 using System.Net;
 using Unity.Mathematics;

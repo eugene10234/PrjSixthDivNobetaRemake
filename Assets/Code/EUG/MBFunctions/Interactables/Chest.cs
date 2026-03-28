@@ -12,60 +12,37 @@ using VContainer;
 
 namespace Nobeta.EUG.MBFunctions.Interacts
 {
-    public class Chest : MonoBehaviour
+    public class Chest : InteractProvider
     {
-        private IEventBus _eventBus;
         [SerializeField] private Animator _animator;
-        private bool _canInteact;
+        public override string InteractableName => "寶箱";
 
-        private void Awake()
-        {
-            _eventBus = EventBusProvider.GetEventBus();
-            _canInteact = true;
-        }
-        public void OnInteract()
+        public override float InteractionDuration => 0.1f;
+
+        public override bool ReInteractable => false;
+
+        public override void OnInteract()
         {
             _animator.Play("OpenStart");
-            _canInteact = false;
-            OnExit();
         }
-        
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                // 發布事件
-                if (_canInteact)
-                    OnEnter();
-                else
-                    OnExit();
-            }
-        }
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                // 發布事件
-                OnExit();
-            }
-        }
-        private void OnEnter()
-        {
-            _eventBus.Publish(new InteractEreaEnterEvent
-            {
-                Enter = true,
-                Message = "[E]開啟OAQ",
-                chest = this
 
+        protected override void OnEnter()
+        {
+            EventBus.Publish(new InteractEreaEnterEvent
+            {
+                Message = $"[E]開啟{InteractableName}",
+                InteractObj = this
             });
         }
-        private void OnExit()
+
+        protected override void OnExit()
         {
-            _eventBus.Publish(new InteractEreaExitEvent
+            EventBus.Publish(new InteractEreaExitEvent
             {
-                Enter = false,
-                Message = ""
+                Message = "",
+                InteractObj = this
             });
         }
     }
+
 }

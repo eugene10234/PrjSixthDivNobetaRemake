@@ -11,16 +11,6 @@ using VContainer.Unity;
 namespace Nobeta.EUG.FSM.States
 {
     /// <summary>
-    /// 可互動物體接口
-    /// </summary>
-    public interface IInteractable
-    {
-        string InteractableName { get; }
-        float InteractionDuration { get; }
-        void OnInteract();
-    }
-
-    /// <summary>
     /// 道具數據
     /// </summary>
     [System.Serializable]

@@ -178,7 +178,14 @@ namespace Nobeta.EUG.FSM.Services
             // 根據跳躍高度計算初速度
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-
+        public void ReduceGravity(float reduceAmount)
+        {
+            velocity.y *= reduceAmount;
+        }
+        public void CancelGravity()
+        {
+            velocity.y = 0f;
+        }
         #endregion
 
         #region Dodge Movement

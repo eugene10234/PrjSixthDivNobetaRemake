@@ -30,7 +30,7 @@ namespace Nobeta.EUG.Interfaces
         /// <summary>
         /// 是否暫停
         /// </summary>
-        bool IsPaused { get; }
+        bool IsPaused { get; }    
 
         /// <summary>
         /// 暫停遊戲
@@ -43,6 +43,7 @@ namespace Nobeta.EUG.Interfaces
         void Resume();
         // 傳入傳回 bool 的委託，以及一個取消令牌（防止切換場景時報錯）
         UniTask TaskDelayLock(float seconds, Action<bool> lockCallback, CancellationToken cancellationToken = default);
+        UniTaskVoid DelayAction(Action DelayedAction, float duration, CancellationToken cancellationToken = default);
     }
 }
 

@@ -22,7 +22,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [Inject] private readonly IEventBus _eventBus;
         [Inject] private readonly IPlayerInputService _playerInputService;
         private CancellationTokenSource _cts;
-        private Chest _currentOBJ;
+        private IInteractable _currentOBJ;
 
         private void OnEnable()
         {
@@ -49,8 +49,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void OnEreaEnter(InteractEreaEnterEvent evt)
         {
             _Text.text = evt.Message;
-            TextBar.SetActive(evt.Enter);
-            _currentOBJ = evt.chest;
+            TextBar.SetActive(true);
+            _currentOBJ = evt.InteractObj;
             //if (evt.Enter)
             //{
 
@@ -59,8 +59,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void OnEreaExit(InteractEreaExitEvent evt)
         {
             _Text.text = evt.Message;
-            TextBar.SetActive(evt.Enter);
-            _currentOBJ = evt.chest;
+            TextBar.SetActive(false);
+            _currentOBJ = evt.InteractObj;
             //if (evt.Enter)
             //{
 

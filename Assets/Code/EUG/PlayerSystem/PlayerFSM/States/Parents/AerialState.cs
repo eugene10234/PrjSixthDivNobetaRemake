@@ -11,11 +11,13 @@ namespace Nobeta.EUG.FSM.States
 
     public abstract class AerialState : BattleSetState, IUpdatable, IFixedUpdatable
     {
+        protected float stateStartStamp;
         private float _previousSpeed;
         private Vector3 _previousMoveDirection;
         protected AerialState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
+            stateStartStamp =Time.time;
         }
         public override void Enter()
         {
@@ -23,14 +25,18 @@ namespace Nobeta.EUG.FSM.States
             _previousSpeed = ctx.CurrentSpeed;
             _previousMoveDirection = GetMoveDirection();
         }
-        public virtual void Update()
+        public override void Update()
         {
             base.Update();
             // 檢查著地
-            if (ctx.IsGrounded && ctx.MovementService.CurrentVelocity.y <= 0)
+            if ((Time.time-stateStartStamp)>0.3f)
             {
-                stateMachine.ChangeState<LandingState>();
+                if (ctx.IsGrounded && ctx.MovementService.CurrentVelocity.y <= 0)
+                {
+                    stateMachine.ChangeState<LandingState>();
+                }
             }
+
         }
 
         public virtual void FixedUpdate()
