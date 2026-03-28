@@ -10,7 +10,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
 {
     public struct InteractEreaEnterEvent
     {
-        public string Message;
         public IInteractable InteractObj;
+        public string Message;        
     }
 }

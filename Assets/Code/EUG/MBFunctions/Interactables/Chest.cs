@@ -30,8 +30,8 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         {
             EventBus.Publish(new InteractEreaEnterEvent
             {
-                Message = $"[E]開啟{InteractableName}",
-                InteractObj = this
+                InteractObj = this,
+                Message = $"[E]開啟{InteractableName}"
             });
         }
 
@@ -39,8 +39,8 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         {
             EventBus.Publish(new InteractEreaExitEvent
             {
-                Message = "",
-                InteractObj = this
+                InteractObj = this,
+                Message = ""                
             });
         }
     }
