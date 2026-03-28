@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2886480509720539879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3286027409981795334}
+  - component: {fileID: 3480381458168786075}
+  - component: {fileID: 7989597185749338313}
+  m_Layer: 0
+  m_Name: EnemyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3286027409981795334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2886480509720539879}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3480381458168786075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2886480509720539879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248e723c9d20ca24ea938a9451dc7aa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  _gridConfig: {fileID: 11400000, guid: 66513df6f85916c4cb300665658018a3, type: 2}
+  _bgspawner: {fileID: 1776898309060102398, guid: 3d26528421dd6f04c902f3916a51909c, type: 3}
+  _firedemonScopePrefab: {fileID: 4080656656379865788, guid: 316ce7c1f4a61804baed614e466df6c1, type: 3}
+  _fdspawner: {fileID: 739893335030952976, guid: 77bb715715d214942940a8224eca19cd, type: 3}
+  _giantbeastghostScopePrefab: {fileID: 5842851389678742437, guid: e1c8ab0ca4a8e8c48a50fff951fb2cf1, type: 3}
+  _gbgspawner: {fileID: 4745627259530645664, guid: 0c3cbe2ad0f896a429baae58eccdd237, type: 3}
+  _mageGhostScopePrefab: {fileID: 7409183661793916896, guid: 556d01a3a4e430b48a4758601feb39af, type: 3}
+  _mgSpawner: {fileID: 3098951574946981224, guid: 590f77ec46473bc47b3ecc1ea85f56fb, type: 3}
+--- !u!114 &7989597185749338313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2886480509720539879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 633dfba282584d0408dc086521295352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.2

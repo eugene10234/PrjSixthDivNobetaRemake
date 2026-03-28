@@ -308,17 +308,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eaaab78d290642049bacccbeee85b7a9, type: 3}
---- !u!114 &488158039 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1529523667012316858, guid: 3d26528421dd6f04c902f3916a51909c, type: 3}
-  m_PrefabInstance: {fileID: 4469270397987916088}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01e99785fdb32e947ad8b4d829770b71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &978084330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2041637362951590513, guid: 497dc07cc46f94f47a337caca402164d, type: 3}
@@ -1051,7 +1040,7 @@ MonoBehaviour:
   gridConfig: {fileID: 11400000, guid: 66513df6f85916c4cb300665658018a3, type: 2}
   bigGhostScopePrefab: {fileID: 3575136381737923530, guid: a08d9a265a7f7224580e9fc3734e8af3, type: 3}
   bgs: {fileID: 11400000, guid: 17e95aa1e7e39894f99750413253ac64, type: 2}
-  spawner: {fileID: 488158039}
+  spawner: {fileID: 0}
 --- !u!114 &1887685830
 MonoBehaviour:
   m_ObjectHideFlags: 0
