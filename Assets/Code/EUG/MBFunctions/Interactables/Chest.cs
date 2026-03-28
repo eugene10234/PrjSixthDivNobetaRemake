@@ -8,7 +8,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
-// using TMPro; // 如果你有用到文字
+//Collider Needed!!!!!!!!!!!!!!!!!!
 
 namespace Nobeta.EUG.MBFunctions.Interacts
 {
