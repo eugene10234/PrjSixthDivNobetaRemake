@@ -21,7 +21,8 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         protected Collider Collider { get => _collider; }
 
         protected LayerMask layerMask;
-        
+        protected bool CanAttack;
+        protected bool IsWeaponInteracted;
         public abstract string InteractableName { get; }
         public abstract float InteractionDuration { get; }
         public abstract bool ReInteractable { get; }
@@ -30,11 +31,13 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         private void Awake()
         {
             _eventBus = EventBusProvider.GetEventBus();
-            layerMask = LayerMask.GetMask("Player");
+            layerMask = LayerMask.GetMask("Player");            
             _canInteract = true;
+            IsWeaponInteracted = false;
         }
         protected virtual void InnerOnInteract()
         {
+            if (!_canInteract) return;
             OnInteract();
             if (!ReInteractable)
             {
@@ -43,8 +46,17 @@ namespace Nobeta.EUG.MBFunctions.Interacts
             }
         }
         public abstract void OnInteract();
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
+            if (CanAttack)
+            {
+                if (other.gameObject.layer == LayerMask.NameToLayer("Weapon"))
+                {
+                    IsWeaponInteracted = true;
+                    InnerOnInteract();
+                }
+            }
+
             if ((layerMask | 1 << other.gameObject.layer) != 0)
             {
                 _collider = other;
@@ -55,7 +67,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
                     OnExit();
             }
         }
-        private void OnTriggerExit(Collider other)
+        protected virtual void OnTriggerExit(Collider other)
         {
             if ((layerMask | 1 << other.gameObject.layer) != 0)
             {

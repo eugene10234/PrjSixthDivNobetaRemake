@@ -21,9 +21,16 @@ namespace Nobeta.EUG.MBFunctions.Interacts
 
         public override bool ReInteractable => false;
 
+        private void OnEnable()
+        {
+            CanAttack = true;
+        }
         public override void OnInteract()
         {
-            _animator.Play("OpenStart");
+            if (IsWeaponInteracted)
+                _animator.Play("OpenStart",0, 0.5f);
+            else
+                _animator.Play("OpenStart");
         }
 
         protected override void OnEnter()
@@ -40,7 +47,7 @@ namespace Nobeta.EUG.MBFunctions.Interacts
             EventBus.Publish(new InteractEreaExitEvent
             {
                 InteractObj = this,
-                Message = ""                
+                Message = ""
             });
         }
     }
