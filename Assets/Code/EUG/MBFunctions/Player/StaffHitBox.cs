@@ -53,13 +53,14 @@ public class StaffHitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer==LayerMask.NameToLayer("Enemy"))
+        Debug.Log("撞到了！目標名字是: " + other.name + " 它的 Layer 是: " + LayerMask.LayerToName(other.gameObject.layer));
+        if (other.gameObject.layer==LayerMask.NameToLayer("Enemy"))
         {
             // 發布事件
             IDamageable target;
             if (EnemyDamageSystem.TryGetTarget(other.gameObject, out target))
             {
-                target.TakeDamage(_damageHolder, _charPos);
+                target.TakeDamage(99999, _charPos);
                 // AudioClip clip = Resources.Load<AudioClip>($"Audio/SFX/{sfxName}");
                 // AudioSource.PlayClipAtPoint(clip, Vector3.zero, volume);Assets/MasterMagicFX/ParticlesVer3/Cosmos/CosmoShoot2/Prefabs/Par_CosmoShootMuzzle.prefab
 
