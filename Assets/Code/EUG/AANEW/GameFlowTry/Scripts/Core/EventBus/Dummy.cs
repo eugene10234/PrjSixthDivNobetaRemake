@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Code.EUG.ObjectPool
+namespace Assets.Code.EUG.AANEW.GameFlowTry
 {
-    internal class Class1
+    internal class Dummy
     {
     }
 }
