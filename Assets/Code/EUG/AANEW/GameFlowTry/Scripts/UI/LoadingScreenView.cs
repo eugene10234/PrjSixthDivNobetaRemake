@@ -11,7 +11,8 @@ namespace Nobeta.EUG.GameFlowTry.UI
     public class LoadingScreenView : MonoBehaviour
     {
         [SerializeField] private GameObject _root;
-        [SerializeField] private Slider _progressBar;
+        //[SerializeField] private Slider _progressBar;
+        [SerializeField] private Image _progressBar;
         [SerializeField] private TextMeshProUGUI _progressText;
 
         private void Awake() => _root.SetActive(false);
@@ -21,7 +22,8 @@ namespace Nobeta.EUG.GameFlowTry.UI
 
         public void SetProgress(float value)
         {
-            if (_progressBar != null) _progressBar.value = value;
+            //if (_progressBar != null) _progressBar.value = value;
+            if (_progressBar != null) _progressBar.fillAmount = value;
             if (_progressText != null) _progressText.text = $"Loading... {(int)(value * 100)}%";
         }
     }

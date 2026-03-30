@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/EUG/TryFlow/MenuScene.unity
-    guid: 56a0794960b83584fb469b4f394c3814
+    guid: 36582bd18caae284d8061e9440226397
   - enabled: 1
     path: Assets/Scenes/EUG/TryFlow/GameScene1.unity
     guid: efc344cb6eb7a9f4c84a460d73f451ee
