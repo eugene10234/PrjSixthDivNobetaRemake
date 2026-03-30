@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
+using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.UI;
-using Nobeta.EUG.Interfaces;
 using UnityEngine.SceneManagement;
 
 namespace Nobeta.EUG.GameFlowTry.Core.Scene
@@ -12,10 +12,10 @@ namespace Nobeta.EUG.GameFlowTry.Core.Scene
     /// </summary>
     public sealed class SceneLoader : ISceneLoader
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBus2 _eventBus;
         private readonly LoadingScreenView _loadingScreen;
 
-        public SceneLoader(IEventBus eventBus, LoadingScreenView loadingScreen)
+        public SceneLoader(IEventBus2 eventBus, LoadingScreenView loadingScreen)
         {
             _eventBus = eventBus;
             _loadingScreen = loadingScreen;

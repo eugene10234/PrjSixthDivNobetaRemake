@@ -1,27 +1,23 @@
 ﻿using Cysharp.Threading.Tasks;
 using Nobeta.EUG.GameFlowTry.Constants;
+using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.Core.Save;
 using Nobeta.EUG.GameFlowTry.Core.Scene;
-using Nobeta.EUG.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Nobeta.EUG.GameFlowTry.Game
 {
     public sealed class GameManager : IGameManager, IDisposable
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBus2 _eventBus;
         private readonly ISaveSystem _saveSystem;
         private readonly ISceneLoader _sceneLoader;
 
         public SpawnData PendingSpawn { get; private set; }
 
-        public GameManager(IEventBus eventBus, ISaveSystem saveSystem, ISceneLoader sceneLoader)
+        public GameManager(IEventBus2 eventBus, ISaveSystem saveSystem, ISceneLoader sceneLoader)
         {
             _eventBus = eventBus;
             _saveSystem = saveSystem;
@@ -31,14 +27,30 @@ namespace Nobeta.EUG.GameFlowTry.Game
             _eventBus.Subscribe<ContinueGameRequestedEvent>(OnContinueRequested);
             _eventBus.Subscribe<ReturnToMenuRequestedEvent>(OnReturnToMenuRequested);
             _eventBus.Subscribe<SaveGameRequestedEvent>(OnSaveGameRequested);
+            _eventBus.Subscribe<LoadSceneRequestedEvent>(OnLoadSceneRequested);
         }
 
-        private void OnNewGameRequested(NewGameRequestedEvent _) => StartNewGameAsync().Forget();
+        private void OnNewGameRequested(NewGameRequestedEvent _)
+        {
+             StartNewGameAsync().Forget();
+        }
         private void OnContinueRequested(ContinueGameRequestedEvent _) => ContinueGameAsync().Forget();
         private void OnReturnToMenuRequested(ReturnToMenuRequestedEvent _) => ReturnToMenuAsync().Forget();
         private void OnSaveGameRequested(SaveGameRequestedEvent e)
             => SaveGameAsync(e.SceneName, e.Position).Forget();
-
+        private void OnLoadSceneRequested(LoadSceneRequestedEvent e)
+        {
+            // PendingSpawn 設為目標場景的預設出生點
+            PendingSpawn = new SpawnData
+            {
+                SceneName = e.SceneName,
+                Position = e.SceneName == SceneNames.Game2
+                                    ? SpawnPoints.Game2Default
+                                    : SpawnPoints.Game1Default,
+                PlayIntroCutscene = false
+            };
+            _sceneLoader.LoadSceneAsync(e.SceneName).Forget();
+        }
         public async UniTask StartNewGameAsync()
         {
             _saveSystem.Delete();
@@ -48,6 +60,7 @@ namespace Nobeta.EUG.GameFlowTry.Game
                 Position = SpawnPoints.Game1Default,
                 PlayIntroCutscene = true
             };
+            Debug.Log($"準備載入場景: {SceneNames.Game1}");
             await _sceneLoader.LoadSceneAsync(SceneNames.Game1);
         }
 
@@ -86,6 +99,7 @@ namespace Nobeta.EUG.GameFlowTry.Game
             _eventBus.Unsubscribe<ContinueGameRequestedEvent>(OnContinueRequested);
             _eventBus.Unsubscribe<ReturnToMenuRequestedEvent>(OnReturnToMenuRequested);
             _eventBus.Unsubscribe<SaveGameRequestedEvent>(OnSaveGameRequested);
+            _eventBus.Unsubscribe<LoadSceneRequestedEvent>(OnLoadSceneRequested);
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
+using Nobeta.EUG.GameFlowTry.Constants;
+using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.Game;
 using Nobeta.EUG.GameFlowTry.UI;
-using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,7 +17,7 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
     /// </summary>
     public class GameController : IStartable, IDisposable
     {
-        private readonly IEventBus _eventBus;
+        private readonly IEventBus2 _eventBus;
         private readonly IGameManager _gameManager;
         private readonly PlayerController _player;
         private readonly GameHudView _hud;
@@ -28,7 +29,7 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         private bool _initCompleted;
 
         public GameController(
-            IEventBus eventBus, IGameManager gameManager,
+            IEventBus2 eventBus, IGameManager gameManager,
             PlayerController player, GameHudView hud, CutscenePlayer cutscene)
         {
             _eventBus = eventBus;
@@ -43,12 +44,20 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
             _cutscene.Inject(_eventBus);
             _hud.OnSaveClicked += OnSave;
             _hud.OnMenuClicked += OnMenu;
+            _hud.OnChangeSceneClicked += OnChangeScene;
             _eventBus.Subscribe<GameSavedEvent>(OnGameSaved);
 
             GameDebugProxy.Create(this);
             InitializeAsync().Forget();
         }
-
+        private void OnChangeScene()
+        {
+            string sceneName = SceneManager.GetActiveScene().name;
+            if (sceneName == SceneNames.Game1)
+                _eventBus.Publish(new LoadSceneRequestedEvent(SceneNames.Game2));
+            else
+                _eventBus.Publish(new LoadSceneRequestedEvent(SceneNames.Game1));
+        }
         private async UniTaskVoid InitializeAsync()
         {
             var spawn = _gameManager.PendingSpawn;
@@ -92,16 +101,21 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         // ── DrawDebugInfo ─────────────────────────────────────────────────
 
         /// <summary>由 GameDebugProxy 每幀呼叫。</summary>
-        public void DrawDebugInfo()
+        // Scene View 用 — 在 Update 呼叫
+        public void DrawDebugGizmos()
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var spawn = _gameManager.PendingSpawn;
-
-            // Scene View：Spawn → Player 連線（白色）
             if (spawn != null)
                 Debug.DrawLine(spawn.Position, _player.Position, Color.white);
+#endif
+        }
 
-            // ── OnGUI overlay ──────────────────────────────────────────
+        // Game View 用 — 在 OnGUI 呼叫
+        public void DrawDebugGUI()
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            var spawn = _gameManager.PendingSpawn;
             GUI.color = new Color(0f, 0f, 0f, 0.55f);
             GUI.DrawTexture(new Rect(10, 170, 320, 100), Texture2D.whiteTexture);
             GUI.color = Color.white;
@@ -112,22 +126,12 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
             var green = new GUIStyle(GUI.skin.label) { fontSize = 11, normal = { textColor = Color.green } };
 
             GUI.Label(new Rect(18, 174, 300, 22), "🎮 [GAME DEBUG]", bold);
-
-            GUI.Label(new Rect(18, 196, 300, 20),
-                $"Scene: {SceneManager.GetActiveScene().name}    Status: {_debugStatus}", normal);
-
+            GUI.Label(new Rect(18, 196, 300, 20), $"Scene: {SceneManager.GetActiveScene().name}  Status: {_debugStatus}", normal);
             GUI.Label(new Rect(18, 214, 300, 20),
-                spawn != null
-                    ? $"Spawn: {spawn.Position:F2}  Cutscene: {spawn.PlayIntroCutscene}"
-                    : "Spawn: null",
-                cyan);
-
+                spawn != null ? $"Spawn: {spawn.Position:F2}  Cutscene: {spawn.PlayIntroCutscene}" : "Spawn: null", cyan);
             GUI.Label(new Rect(18, 232, 300, 20),
-                $"Init: {(_initCompleted ? "✔ Done" : "⏳ Wait")}    LastSave: {_lastSaveInfo}",
-                green);
-
-            GUI.Label(new Rect(18, 250, 300, 20),
-                $"PlayerPos: {_player.Position:F2}", normal);
+                $"Init: {(_initCompleted ? "✔ Done" : "⏳ Wait")}  LastSave: {_lastSaveInfo}", green);
+            GUI.Label(new Rect(18, 250, 300, 20), $"PlayerPos: {_player.Position:F2}", normal);
 #endif
         }
 
@@ -135,6 +139,7 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         {
             _hud.OnSaveClicked -= OnSave;
             _hud.OnMenuClicked -= OnMenu;
+            _hud.OnChangeSceneClicked -= OnChangeScene;
             _eventBus.Unsubscribe<GameSavedEvent>(OnGameSaved);
         }
     }
@@ -152,7 +157,10 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
             proxy._controller = controller;
         }
 
-        private void OnGUI() => _controller?.DrawDebugInfo();
-        private void Update() => _controller?.DrawDebugInfo(); // DrawLine 需要在 Update
+        // ✅ Debug.DrawLine/Ray 只在 Update 呼叫
+        private void Update() => _controller?.DrawDebugGizmos();
+
+        // ✅ GUI.* 只在 OnGUI 呼叫
+        private void OnGUI() => _controller?.DrawDebugGUI();
     }
 }

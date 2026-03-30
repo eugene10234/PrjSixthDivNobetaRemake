@@ -51,4 +51,9 @@ namespace Nobeta.EUG.GameFlowTry.Core.GameEvents
         public readonly string CutsceneId;
         public CutsceneCompletedEvent(string id) => CutsceneId = id;
     }
+    public readonly struct LoadSceneRequestedEvent
+    {
+        public readonly string SceneName;
+        public LoadSceneRequestedEvent(string sceneName) => SceneName = sceneName;
+    }
 }
