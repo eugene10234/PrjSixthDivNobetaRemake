@@ -24,7 +24,7 @@ namespace Nobeta.EUG.GameFlowTry.UI
         {
             //if (_progressBar != null) _progressBar.value = value;
             if (_progressBar != null) _progressBar.fillAmount = value;
-            if (_progressText != null) _progressText.text = $"Loading... {(int)(value * 100)}%";
+            if (_progressText != null) _progressText.text = $"讀取中...{(int)(value * 100)}%";
         }
     }
 }
