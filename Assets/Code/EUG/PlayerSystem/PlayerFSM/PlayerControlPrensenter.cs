@@ -38,6 +38,7 @@ namespace Nobeta.EUG.FSM
 
         public void Initialize()
         {
+            Debug.LogWarning(Camera.main.name);
             Debug.Log("PlayerController 初始化中（事件驅動模式）");
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -53,7 +54,7 @@ namespace Nobeta.EUG.FSM
                 Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
                 return;
             }
-            _debugService.GUI.Add(DrawDebugInfo);
+            //_debugService.GUI.Add(DrawDebugInfo);
             //訂閱輸入事件
             //Debug.LogWarning("mbPlayerControllerStart");
 

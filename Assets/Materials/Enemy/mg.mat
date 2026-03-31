@@ -39,13 +39,13 @@ Material:
     m_Floats:
     - _AmbientBoost: 0.15
     - _Dissolve: 0
-    - _DissolveEdgeWidth: 0.0372
+    - _DissolveEdgeWidth: 0.03
     - _EmissionScale: 1
     - _RimIntensity: 1.5
     - _RimPower: 2
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _DissolveEdgeColor: {r: 0.80643713, g: 0.6, b: 1, a: 1}
+    - _DissolveEdgeColor: {r: 0.6, g: 0.70122033, b: 1, a: 1}
     - _EmissionColor: {r: 11.285308, g: 6.2641506, b: 16, a: 1}
     - _RimColor: {r: 0.6246055, g: 0.39999998, b: 1, a: 1}
   m_BuildTextureStacks: []

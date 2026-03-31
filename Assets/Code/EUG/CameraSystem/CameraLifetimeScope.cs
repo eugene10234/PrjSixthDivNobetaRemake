@@ -1,8 +1,9 @@
-﻿using Assets.Scripts.Root;
-using Nobeta.EUG.CameraSystem;
+﻿using Nobeta.EUG.CameraSystem;
 using Nobeta.EUG.FSM;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
+using Nobeta.EUG.GameFlowTry.Menu;
+using Nobeta.EUG.Services;
 using Unity.Cinemachine;
 using UnityEngine;
 using VContainer;
@@ -12,6 +13,7 @@ namespace Nobeta.Root
 {
     public class CameraLifetimeScope : LifetimeScope
     {
+        [SerializeField] private Camera _mainCamera;
         //protected override void Awake()
         //{
         //    // 驗證配置
@@ -34,6 +36,7 @@ namespace Nobeta.Root
         //}
         protected override void Configure(IContainerBuilder builder)
         {
+            //builder.Register<CameraService>(Lifetime.Scoped);
             builder.RegisterComponentInHierarchy<CinemachineThirdPersonAim>();
             builder.RegisterEntryPoint<ThridPerCamPrensenter>(Lifetime.Scoped).AsSelf();
         }

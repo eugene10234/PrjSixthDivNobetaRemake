@@ -51,6 +51,7 @@ namespace Nobeta.EUG.Services
 
         public Vector3 GetCameraRelativeDirection(Vector2 input)
         {
+            //_cinemachineCamera
             if (mainCamera == null) return new Vector3(input.x, 0, input.y);
 
             Vector3 forward = mainCamera.transform.forward;

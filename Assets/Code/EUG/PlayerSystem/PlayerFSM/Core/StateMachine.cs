@@ -2,12 +2,13 @@
 // StateMachine - 狀態機核心（VContainer 版本）
 // ============================================================================
 
-using Nobeta.EUG.FSM.Interfaces;
-using Nobeta.EUG.FSM.States;
-using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.FSM.Services;
+using Nobeta.EUG.FSM.States;
+using Nobeta.EUG.Interfaces;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
@@ -22,6 +23,7 @@ namespace Nobeta.EUG.FSM.Core
     public class StateMachine : IDisposable
     {
         private readonly IPlayerInputService _inputService;
+        private readonly IMovementService _movementService;
         private readonly IObjectResolver container;
         private readonly Dictionary<Type, BaseState> stateCache;
         private readonly Queue<Type> stateHistory;
@@ -41,6 +43,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             this.container = container;
             _inputService = container.Resolve<IPlayerInputService>();
+            _movementService = container.Resolve<IMovementService>();
             SubscribeInputEvents();
             this.stateCache = new Dictionary<Type, BaseState>();
             this.stateHistory = new Queue<Type>();
@@ -53,8 +56,7 @@ namespace Nobeta.EUG.FSM.Core
         /// </summary>
         public void SetInitialState<T>() where T : BaseState
         {
-            var movementService = container.Resolve<IMovementService>();
-            movementService.SetGround();
+            _movementService.SetGround();
             ActionToInitialState = ChangeState<T>;
             ToInitialState();
         }

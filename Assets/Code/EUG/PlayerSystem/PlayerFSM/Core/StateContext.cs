@@ -75,8 +75,8 @@ namespace Nobeta.EUG.FSM.Core
         // 閃避相關
         public int DodgeCharges { get; set; }
         public float LastDodgeTime { get; set; }
-        public int AirJumpCharges { get;  set; }
-        public float LastAirJumpTime { get;  set; }
+        public int AirJumpCharges { get; set; }
+        public float LastAirJumpTime { get; set; }
 
         // 魔法相關
         public BulletConfig CurrentBulletConfig { get; set; }
@@ -143,7 +143,7 @@ namespace Nobeta.EUG.FSM.Core
             DodgeCharges = Config.maxDodgeCharges;
             LastDodgeTime = 0f;
             AirJumpCharges = 1;
-            LastAirJumpTime =0f;
+            LastAirJumpTime = 0f;
             // 魔法
             CurrentBulletConfig = BulletConfig.Normal;
             ChargeRatio = 0f;
@@ -229,18 +229,20 @@ namespace Nobeta.EUG.FSM.Core
             // if (CurrentBulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(CurrentBulletConfig.ManaCost))
             {
-                ConsumeMana(CurrentBulletConfig.ManaCost);
-
                 // 獲取瞄準方向
                 //Vector3 aimDirection = GetAimDirection();
                 //if (CurrentBulletConfig.CoolTime > 0f)
                 //    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
                 ///
-                CurrentBulletConfig.TryFire(() => EventBus.Publish(new PlayerWeaponFireEvent
+                CurrentBulletConfig.TryFire(() =>
                 {
-                    bulletConfig = CurrentBulletConfig
-                }));
+                    EventBus.Publish(new PlayerWeaponFireEvent
+                    {
+                        bulletConfig = CurrentBulletConfig
+                    });
+                    ConsumeMana(CurrentBulletConfig.ManaCost);
+                });
                 //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
             }
             else

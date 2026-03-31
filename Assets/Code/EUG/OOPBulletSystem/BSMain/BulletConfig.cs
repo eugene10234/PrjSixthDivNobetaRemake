@@ -45,7 +45,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             CoolTime = 0.5f,
             //CoolTimerLock = false,
             Lifetime = 5f,
-            ColliderRadius = 0.35f,
+            ColliderRadius = 0.2f,
             Type = BulletType.Normal,
             NextFireTime = Time.time
 
@@ -78,7 +78,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         };
         public static BulletConfig LightningStrike => new BulletConfig
         {
-            Speed = 150f,
+            Speed = 80f,
             Damage = 250,
             ManaCost = 1,
             CoolTime = 1.25f,

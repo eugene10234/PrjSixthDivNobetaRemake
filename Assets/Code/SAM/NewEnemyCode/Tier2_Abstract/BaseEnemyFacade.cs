@@ -27,6 +27,7 @@ namespace Nobeta.Sam.Enemy
         {
             Data = data;
             StateMachine = stateMachine;
+            Data.InformDeath += Die;
         }
         public float MaxHP       => Data.MaxHP;
         public float CurrentHP   => Data.CurrentHP;
@@ -37,7 +38,6 @@ namespace Nobeta.Sam.Enemy
             if (Data.IsDead & !isDying)
             {
                 isDying = true;
-                Die();
                 return;
             }
             else if (!Data.isInVinsible)

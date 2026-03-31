@@ -96,7 +96,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTexture:
-        m_Texture: {fileID: 2800000, guid: 8d904b43aba682240a9c11188477e491, type: 3}
+        m_Texture: {fileID: 2800000, guid: 888b04edd83f57540bf3ce8e4732d07d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UVNoiseTexture:
