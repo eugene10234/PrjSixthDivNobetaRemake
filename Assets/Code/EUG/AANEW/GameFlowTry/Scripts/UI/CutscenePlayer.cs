@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 
 namespace Nobeta.EUG.GameFlowTry.UI
@@ -18,14 +19,14 @@ namespace Nobeta.EUG.GameFlowTry.UI
     {
         [SerializeField] private float _fakeDuration = 2.5f;
 
-        private IEventBus2 _eventBus;
+        private IEventBus _eventBus;
         private bool _isPlaying;
         private string _currentId = "";
         private float _elapsed;
 
         // ── Inject ──────────────────────────────────────────────────────
 
-        public void Inject(IEventBus2 eventBus) => _eventBus = eventBus;
+        public void Inject(IEventBus eventBus) => _eventBus = eventBus;
 
         // ── Public API ───────────────────────────────────────────────────
 

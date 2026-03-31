@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6977579478845901642}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: StaffPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12042,7 +12042,8 @@ GameObject:
   - component: {fileID: 569384654654312303}
   - component: {fileID: 4992459961533250328}
   - component: {fileID: 6990924611358960915}
-  m_Layer: 0
+  - component: {fileID: 367678810867436938}
+  m_Layer: 10
   m_Name: Nobeta Staff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12077,7 +12078,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -12102,6 +12103,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ea66b852bda8b4d9bdd6e964ce5ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &367678810867436938
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3880601847609537948}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 257
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3910659141406632246
 GameObject:
   m_ObjectHideFlags: 0
@@ -13340,7 +13368,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7795435171739228641}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 1.!Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13629,6 +13657,7 @@ GameObject:
   - component: {fileID: 5456034305438879326}
   - component: {fileID: 3668155366609417225}
   - component: {fileID: 8188093150104581698}
+  - component: {fileID: 3887095056443399451}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -13693,12 +13722,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Nobeta.Root.RootLifetimeScope
+    TypeName: Nobeta.EUG.GameFlowTry.DI.SceneLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
   playerConfig: {fileID: 11400000, guid: 2004f7de6ee16a241b8a2d278fd7d2fd, type: 2}
   characterController: {fileID: 3668155366609417225}
   animator: {fileID: 2592930963083092988}
+--- !u!114 &3887095056443399451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4835314985855552895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 235f627349a7e8249a3dcb0b32a5975f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4854474942146074807
 GameObject:
   m_ObjectHideFlags: 0
@@ -16479,7 +16520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6084579041358819944}
   - component: {fileID: 524543352238046058}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: U_Char
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20049,7 +20090,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8278406944104662445}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: 0.joint_Staff
   m_TagString: Untagged
   m_Icon: {fileID: 0}

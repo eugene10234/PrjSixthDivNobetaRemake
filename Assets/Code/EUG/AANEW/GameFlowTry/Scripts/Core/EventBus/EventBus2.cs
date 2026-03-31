@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Nobeta.EUG.GameFlowTry.Core.EventBus
 {
-    public sealed class EventBus2 : IEventBus2
+    public sealed class EventBus264646 : IEventBus264646464
     {
         private readonly Dictionary<Type, Delegate> _listeners = new();
 

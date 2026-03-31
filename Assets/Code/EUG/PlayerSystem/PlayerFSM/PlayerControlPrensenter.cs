@@ -38,6 +38,7 @@ namespace Nobeta.EUG.FSM
 
         public void Initialize()
         {
+            Debug.LogWarning(Camera.main.name);
             Debug.Log("PlayerController 初始化中（事件驅動模式）");
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

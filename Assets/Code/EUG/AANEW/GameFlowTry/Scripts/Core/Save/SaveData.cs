@@ -11,13 +11,20 @@ namespace Nobeta.EUG.GameFlowTry.Core.Save
     public class SaveData
     {
         public string SceneName;
+
+        // Position
         public float PosX, PosY, PosZ;
 
-        public Vector3 PlayerPosition => new(PosX, PosY, PosZ);
+        // Rotation（四元數，完整保留旋轉狀態）
+        public float RotX, RotY, RotZ, RotW;
 
-        public void SetPlayerPosition(Vector3 pos)
+        public Vector3 PlayerPosition => new(PosX, PosY, PosZ);
+        public Quaternion PlayerRotation => new(RotX, RotY, RotZ, RotW);
+
+        public void SetPlayerTransform(Vector3 pos, Quaternion rot)
         {
             PosX = pos.x; PosY = pos.y; PosZ = pos.z;
+            RotX = rot.x; RotY = rot.y; RotZ = rot.z; RotW = rot.w;
         }
     }
 }

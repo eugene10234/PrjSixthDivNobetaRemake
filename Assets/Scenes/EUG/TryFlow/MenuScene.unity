@@ -1702,7 +1702,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Nobeta.EUG.GameFlowTry.DI.ProjectLifetimeScope
+    TypeName: Nobeta.Root.RootLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
   _menuView: {fileID: 793711871}

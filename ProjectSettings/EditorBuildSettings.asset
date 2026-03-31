@@ -10,7 +10,7 @@ EditorBuildSettings:
     guid: 36582bd18caae284d8061e9440226397
   - enabled: 1
     path: Assets/Scenes/EUG/TryFlow/GameScene1.unity
-    guid: efc344cb6eb7a9f4c84a460d73f451ee
+    guid: 2e8b22daacdf36044b521f5af7b4cc4b
   - enabled: 1
     path: Assets/Scenes/EUG/TryFlow/GameScene2.unity
     guid: 17f6d57174fd8884e93907b70d1b6cb0

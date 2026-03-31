@@ -2,7 +2,7 @@
 using UnityEngine;
 using VContainer.Unity;
 
-namespace Assets.Scripts.Root
+namespace Assets.Scripts.RooteXPIRE
 {
     public class GameManager : IInitializable, IDisposable
     {

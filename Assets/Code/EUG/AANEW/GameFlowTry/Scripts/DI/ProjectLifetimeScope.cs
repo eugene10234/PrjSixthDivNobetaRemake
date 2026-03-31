@@ -4,6 +4,8 @@ using Nobeta.EUG.GameFlowTry.Core.Scene;
 using Nobeta.EUG.GameFlowTry.DI.Nobeta.EUG.GameFlowTry.DI;
 using Nobeta.EUG.GameFlowTry.Game;
 using Nobeta.EUG.GameFlowTry.UI;
+using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.Services;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -19,7 +21,8 @@ namespace Nobeta.EUG.GameFlowTry.DI
 
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<EventBus2>(Lifetime.Singleton).As<IEventBus2>();
+            builder.Register<EventBusConfig>(Lifetime.Scoped);
+            builder.Register<EventBus>(Lifetime.Singleton).As<IEventBus>();
             builder.Register<SaveSystem>(Lifetime.Singleton).As<ISaveSystem>();
             if (_loadingScreenView != null)
                 builder.RegisterComponent(_loadingScreenView);

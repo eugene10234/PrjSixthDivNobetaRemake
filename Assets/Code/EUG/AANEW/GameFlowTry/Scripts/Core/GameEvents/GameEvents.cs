@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Nobeta.EUG.GameFlowTry.Core.GameEvents
 {
@@ -11,14 +12,18 @@ namespace Nobeta.EUG.GameFlowTry.Core.GameEvents
     public readonly struct ReturnToMenuRequestedEvent { }
     public readonly struct GameSavedEvent { }
 
+    // ✅ Rotation 一併存入
     public readonly struct SaveGameRequestedEvent
     {
         public readonly string SceneName;
-        public readonly UnityEngine.Vector3 Position;
-        public SaveGameRequestedEvent(string sceneName, UnityEngine.Vector3 position)
+        public readonly Vector3 Position;
+        public readonly Quaternion Rotation; // ✅ 新增
+
+        public SaveGameRequestedEvent(string sceneName, Vector3 position, Quaternion rotation)
         {
             SceneName = sceneName;
             Position = position;
+            Rotation = rotation; // ✅
         }
     }
 

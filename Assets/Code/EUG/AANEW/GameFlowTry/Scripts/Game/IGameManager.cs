@@ -15,6 +15,6 @@ namespace Nobeta.EUG.GameFlowTry.Game
         UniTask StartNewGameAsync();
         UniTask ContinueGameAsync();
         UniTask ReturnToMenuAsync();
-        UniTask SaveGameAsync(string sceneName, Vector3 playerPosition);
+        UniTask SaveGameAsync(string sceneName, Vector3 position, Quaternion rotation);
     }
 }

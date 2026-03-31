@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: 
+    TypeName: Nobeta.EUG.GameFlowTry.DI.SceneLifetimeScope
   autoRun: 1
   autoInjectGameObjects: []
+  _mainCamera: {fileID: 0}

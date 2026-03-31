@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Nobeta.EUG.GameFlowTry.Core.EventBus
 {
-    public interface IEventBus2
+    public interface IEventBus264646464
     {
         void Subscribe<T>(Action<T> listener);
         void Unsubscribe<T>(Action<T> listener);

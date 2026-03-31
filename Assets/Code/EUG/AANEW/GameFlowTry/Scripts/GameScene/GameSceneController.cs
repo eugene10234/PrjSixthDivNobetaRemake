@@ -4,6 +4,7 @@ using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.Game;
 using Nobeta.EUG.GameFlowTry.UI;
+using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,11 +16,11 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
     /// GameScene 邏輯控制器（純 C# EntryPoint）。
     /// DrawDebugInfo() 顯示當前場景、SpawnData、存檔狀態 overlay。
     /// </summary>
-    public class GameController : IStartable, IDisposable
+    public class GameSceneController : IStartable, IDisposable
     {
-        private readonly IEventBus2 _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IGameManager _gameManager;
-        private readonly PlayerController _player;
+        private readonly PlayerTeleporter _player;
         private readonly GameHudView _hud;
         private readonly CutscenePlayer _cutscene;
 
@@ -28,15 +29,20 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         private string _lastSaveInfo = "—";
         private bool _initCompleted;
 
-        public GameController(
-            IEventBus2 eventBus, IGameManager gameManager,
-            PlayerController player, GameHudView hud, CutscenePlayer cutscene)
+        private readonly SceneSpawnPoint _sceneSpawnPoint; // ✅ 新增
+
+        public GameSceneController(
+            IEventBus eventBus, IGameManager gameManager,
+            PlayerTeleporter player, GameHudView hud,
+            CutscenePlayer cutscene,
+            SceneSpawnPoint sceneSpawnPoint) // ✅ 新增
         {
             _eventBus = eventBus;
             _gameManager = gameManager;
             _player = player;
             _hud = hud;
             _cutscene = cutscene;
+            _sceneSpawnPoint = sceneSpawnPoint; // ✅
         }
 
         public void Start()
@@ -64,13 +70,23 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
 
             if (spawn == null)
             {
-                _debugStatus = "⚠ PendingSpawn is null, using fallback";
-                _player.Teleport(Vector3.up);
+                _debugStatus = "⚠ PendingSpawn is null, using SceneSpawnPoint fallback";
+                _player.Teleport(_sceneSpawnPoint.Position, _sceneSpawnPoint.Rotation);
                 return;
             }
 
-            _player.Teleport(spawn.Position);
-            _debugStatus = $"Teleported → {spawn.Position:F2}";
+            if (spawn.UseSceneDefault)
+            {
+                // ✅ New Game 或切 Scene → 用 Scene 自己的出生點
+                _player.Teleport(_sceneSpawnPoint.Position, _sceneSpawnPoint.Rotation);
+                _debugStatus = $"Teleported (Scene Default) → {_sceneSpawnPoint.Position:F2}";
+            }
+            else
+            {
+                // ✅ Continue → 用存檔的 Transform
+                _player.Teleport(spawn.Position, spawn.Rotation);
+                _debugStatus = $"Teleported (Save) → {spawn.Position:F2}";
+            }
 
             if (spawn.PlayIntroCutscene)
             {
@@ -87,7 +103,13 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         {
             string sceneName = SceneManager.GetActiveScene().name;
             _lastSaveInfo = $"{sceneName} @ {_player.Position:F2}";
-            _eventBus.Publish(new SaveGameRequestedEvent(sceneName, _player.Position));
+
+            // ✅ 同時傳 Rotation
+            _eventBus.Publish(new SaveGameRequestedEvent(
+                sceneName,
+                _player.Position,
+                _player.Rotation   // ✅ 新增
+            ));
         }
 
         private void OnMenu() => _eventBus.Publish(new ReturnToMenuRequestedEvent());
@@ -148,9 +170,9 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
 
     internal class GameDebugProxy : MonoBehaviour
     {
-        private GameController _controller;
+        private GameSceneController _controller;
 
-        public static void Create(GameController controller)
+        public static void Create(GameSceneController controller)
         {
             var go = new GameObject("[DEBUG] GameDebugProxy");
             var proxy = go.AddComponent<GameDebugProxy>();

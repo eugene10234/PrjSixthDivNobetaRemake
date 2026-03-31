@@ -4,6 +4,7 @@ using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.Core.Save;
 using Nobeta.EUG.GameFlowTry.Core.Scene;
+using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
 
@@ -11,13 +12,13 @@ namespace Nobeta.EUG.GameFlowTry.Game
 {
     public sealed class GameManager : IGameManager, IDisposable
     {
-        private readonly IEventBus2 _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly ISaveSystem _saveSystem;
         private readonly ISceneLoader _sceneLoader;
 
         public SpawnData PendingSpawn { get; private set; }
 
-        public GameManager(IEventBus2 eventBus, ISaveSystem saveSystem, ISceneLoader sceneLoader)
+        public GameManager(IEventBus eventBus, ISaveSystem saveSystem, ISceneLoader sceneLoader)
         {
             _eventBus = eventBus;
             _saveSystem = saveSystem;
@@ -32,21 +33,19 @@ namespace Nobeta.EUG.GameFlowTry.Game
 
         private void OnNewGameRequested(NewGameRequestedEvent _)
         {
-             StartNewGameAsync().Forget();
+            StartNewGameAsync().Forget();
         }
         private void OnContinueRequested(ContinueGameRequestedEvent _) => ContinueGameAsync().Forget();
         private void OnReturnToMenuRequested(ReturnToMenuRequestedEvent _) => ReturnToMenuAsync().Forget();
         private void OnSaveGameRequested(SaveGameRequestedEvent e)
-            => SaveGameAsync(e.SceneName, e.Position).Forget();
+            => SaveGameAsync(e.SceneName, e.Position, e.Rotation).Forget();
+        // OnLoadSceneRequested（切換 Scene 按鈕）
         private void OnLoadSceneRequested(LoadSceneRequestedEvent e)
         {
-            // PendingSpawn 設為目標場景的預設出生點
             PendingSpawn = new SpawnData
             {
                 SceneName = e.SceneName,
-                Position = e.SceneName == SceneNames.Game2
-                                    ? SpawnPoints.Game2Default
-                                    : SpawnPoints.Game1Default,
+                UseSceneDefault = true,   // ✅ 切場景時也用 Scene 預設出生點
                 PlayIntroCutscene = false
             };
             _sceneLoader.LoadSceneAsync(e.SceneName).Forget();
@@ -54,16 +53,16 @@ namespace Nobeta.EUG.GameFlowTry.Game
         public async UniTask StartNewGameAsync()
         {
             _saveSystem.Delete();
+
             PendingSpawn = new SpawnData
             {
                 SceneName = SceneNames.Game1,
-                Position = SpawnPoints.Game1Default,
+                UseSceneDefault = true,   // ✅ Scene 自己提供出生點，GameManager 不寫死
                 PlayIntroCutscene = true
             };
-            Debug.Log($"準備載入場景: {SceneNames.Game1}");
+
             await _sceneLoader.LoadSceneAsync(SceneNames.Game1);
         }
-
         public async UniTask ContinueGameAsync()
         {
             var save = _saveSystem.Load();
@@ -72,9 +71,12 @@ namespace Nobeta.EUG.GameFlowTry.Game
             PendingSpawn = new SpawnData
             {
                 SceneName = save.SceneName,
+                UseSceneDefault = false,            // ✅ 使用存檔的 Transform
                 Position = save.PlayerPosition,
+                Rotation = save.PlayerRotation, // ✅
                 PlayIntroCutscene = false
             };
+
             await _sceneLoader.LoadSceneAsync(save.SceneName);
         }
 
@@ -84,10 +86,10 @@ namespace Nobeta.EUG.GameFlowTry.Game
             await _sceneLoader.LoadSceneAsync(SceneNames.Menu);
         }
 
-        public async UniTask SaveGameAsync(string sceneName, Vector3 playerPosition)
+        public async UniTask SaveGameAsync(string sceneName, Vector3 position, Quaternion rotation)
         {
             var data = new SaveData { SceneName = sceneName };
-            data.SetPlayerPosition(playerPosition);
+            data.SetPlayerTransform(position, rotation); // ✅
             _saveSystem.Save(data);
             _eventBus.Publish(new GameSavedEvent());
             await UniTask.CompletedTask;

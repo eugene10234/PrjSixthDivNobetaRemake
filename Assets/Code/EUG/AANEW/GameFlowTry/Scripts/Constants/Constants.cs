@@ -15,7 +15,7 @@ namespace Nobeta.EUG.GameFlowTry.Constants
 
     public static class SpawnPoints
     {
-        public static readonly UnityEngine.Vector3 Game1Default = new(0f, 1f, 0f);
-        public static readonly UnityEngine.Vector3 Game2Default = new(5f, 1f, 0f);
+        //public static readonly UnityEngine.Vector3 Game1Default = new(0f, 1f, 0f);
+        //public static readonly UnityEngine.Vector3 Game2Default = new(5f, 1f, 0f);
     }
 }

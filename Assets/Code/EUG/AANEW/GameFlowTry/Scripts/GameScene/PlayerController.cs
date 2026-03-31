@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -16,8 +17,6 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
         private Vector3 _spawnPoint;
         private Vector3 _velocity;
 
-        public Vector3 Position => transform.position;
-
         private void Update()
         {
             float h = Input.GetAxis("Horizontal");
@@ -28,15 +27,6 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
 
             DrawDebugInfo();
         }
-
-        public void Teleport(Vector3 position)
-        {
-            _spawnPoint = position;
-            _cc.enabled = false;
-            transform.position = position;
-            _cc.enabled = true;
-        }
-
         // ── DrawDebugInfo ─────────────────────────────────────────────────
 
         private void DrawDebugInfo()
@@ -75,5 +65,6 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
                 new GUIStyle(GUI.skin.label) { fontSize = 11, normal = { textColor = Color.yellow } });
 #endif
         }
+
     }
 }

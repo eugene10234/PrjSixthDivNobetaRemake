@@ -1,6 +1,7 @@
 ﻿using Nobeta.EUG.GameFlowTry.Core.EventBus;
 using Nobeta.EUG.GameFlowTry.Core.GameEvents;
 using Nobeta.EUG.GameFlowTry.Core.Save;
+using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -12,7 +13,7 @@ namespace Nobeta.EUG.GameFlowTry.Menu
     /// </summary>
     public class MenuController : IStartable
     {
-        private readonly IEventBus2 _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly ISaveSystem _saveSystem;
         private readonly MenuView _view;
 
@@ -20,7 +21,7 @@ namespace Nobeta.EUG.GameFlowTry.Menu
         private bool _hasSave;
         private string _lastAction = "none";
 
-        public MenuController(IEventBus2 eventBus, ISaveSystem saveSystem, MenuView view)
+        public MenuController(IEventBus eventBus, ISaveSystem saveSystem, MenuView view)
         {
             _eventBus = eventBus;
             _saveSystem = saveSystem;
