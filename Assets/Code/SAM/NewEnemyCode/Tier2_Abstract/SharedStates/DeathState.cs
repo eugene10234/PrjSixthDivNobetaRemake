@@ -15,7 +15,7 @@ namespace Nobeta.Sam.Enemy
         private readonly IMovementActor  _movement;
         private readonly IAnimationActor _animation;
         private readonly GameObject      _gameObject;
-        private const float DissolveDuration = 5f;
+        private const float DissolveDuration = 3f;
 
         [Inject]
         public DeathState(IMovementActor movement, IAnimationActor animation, GameObject gameObject)

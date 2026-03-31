@@ -119,7 +119,7 @@ MonoBehaviour:
   - {fileID: 7639044864527817343}
   MaxDistance: 1
   MinDistance: 0
-  NumberPerPoint: 2
+  NumberPerPoint: 0
   SpawnsPerFrame: 3
 --- !u!1 &7664254016790176322
 GameObject:

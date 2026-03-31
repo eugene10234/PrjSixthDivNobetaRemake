@@ -17,5 +17,6 @@ namespace Nobeta.Sam.Enemy
         public float ChaseRange;
         public float AttackRange;
         public float AttackSpeed;
+        public float DeathDuration = 3;
     }
 }

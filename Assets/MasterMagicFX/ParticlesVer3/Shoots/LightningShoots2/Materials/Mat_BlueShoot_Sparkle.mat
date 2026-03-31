@@ -94,7 +94,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampTexture:
-        m_Texture: {fileID: 2800000, guid: c1ca7514d08e7d6469c7692fc47c18a8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8d904b43aba682240a9c11188477e491, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _UVNoiseTexture:
@@ -136,12 +136,10 @@ Material:
     - _Cutoff: 0.5
     - _DEPTHFADE: 0
     - _DepthFade: 0.88
-    - _DepthFadeDistance: 100
     - _DepthFadeMax: 0.209
     - _DepthFadeMin: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 1
-    - _DstBlendAlpha: 1
     - _EDGEFADE: 1
     - _EdgeFade: 0.652
     - _EdgeFadeMax: 1
@@ -170,7 +168,6 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5
-    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _USEMASK: 0
     - _USEMASK2: 0

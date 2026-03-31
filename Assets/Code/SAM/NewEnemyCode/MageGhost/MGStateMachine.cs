@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using VContainer;
+using static UnityEditor.Rendering.ShadowCascadeGUI;
 
 namespace Nobeta.Sam.Enemy
 {
@@ -21,34 +22,45 @@ namespace Nobeta.Sam.Enemy
     /// </summary>
     public class MGStateMachine : BaseStateMachine
     {
-        private MageGhostData _data;
-        private IdleState           _idle;
-        private ChaseState          _chase;
+        private MageGhostData        _data;
+        private MGSleepState        _sleep;
+        private IdleState            _idle;
+        private StaggerState      _stagger;
         private MGAttackState      _attack;
-        private StaggerState        _stagger;
+        private MGSummonState      _summon;
+        private Barrier  _barrier;
+        
 
         [Inject]
         public void Construct(
-            MageGhostData data,
-            IdleState           idle,
-            ChaseState          chase,
+            MageGhostData        data,
+            IdleState            idle,
+            StaggerState      stagger,
+            MGSleepState        sleep,
             MGAttackState      attack,
-            StaggerState        stagger,
-            VictoryState        victory,
-            DeathState          death)
+            MGSummonState      summon,
+            VictoryState      victory,
+            DeathState          death,
+            Barrier           barrier)
         {
             _data    = data;
-            _idle    = idle;
-            _chase   = chase;
-            _attack  = attack;
+            _sleep = sleep;
+            _summon = summon;
             _stagger = stagger;
+            _idle    = idle;
+            _attack  = attack;
+            _barrier = barrier;
+            
 
             RegisterState(idle);
-            RegisterState(chase);
-            RegisterState(attack);
             RegisterState(stagger);
+            RegisterState(attack);
+            RegisterState(summon);
+            RegisterState(sleep);
             RegisterState(victory);
             RegisterState(death);
+
+          
 
             WireTransitions();
 
@@ -60,8 +72,10 @@ namespace Nobeta.Sam.Enemy
         public override void Start()
         {
             _idle.Mode = IdleState.IdleMode.Stop;
-            TransitionTo<IdleState>();
+            TransitionTo<MGSummonState>();
         }
+
+
 
         // ── IEnemyStateMachine ────────────────────────────────────────────────
 
@@ -82,11 +96,15 @@ namespace Nobeta.Sam.Enemy
         public override void OnHit(Vector3 hitPosition)
         {
             if (_data.IsDead) return;
+
             _stagger.Activate(hitPosition);
 
             // Scan for player on hit — if we don't have a target yet, find one now
             // (handled inside StaggerState.OnExit → OnStaggerFinished → back to chase)
             TransitionTo<StaggerState>();
+            // Scan for player on hit — if we don't have a target yet, find one now
+            // (handled inside StaggerState.OnExit → OnStaggerFinished → back to chase)
+
         }
 
         public override void OnDeath()
@@ -99,27 +117,39 @@ namespace Nobeta.Sam.Enemy
             TransitionTo<VictoryState>();
         }
 
+       
         // ── Transition wiring ─────────────────────────────────────────────────
 
         private void WireTransitions()
         {
-            // Chase → attack when close enough
-            _chase.OnInAttackRange += () => TransitionTo<MGAttackState>();
-
-            // Chase → idle/home when player escapes
-            _chase.OnOutOfChaseRange += () =>
+            //summon transition
+            _summon.OnSummonCompleted += () =>
             {
-                _idle.Mode = IdleState.IdleMode.GoHome;
+                _barrier.Show();
                 TransitionTo<IdleState>();
             };
+            _summon.OnAllSummonedDied += () =>
+            {
+                _barrier.Hide();
+                TransitionTo<MGSleepState>();
+            };
+
+            //sleep
+
+            _sleep.OnSleepFinished += () =>
+            {
+                _barrier.Show();
+                TransitionTo<MGSummonState>();
+            };
+
 
             // Attack → chase when player moves out of attack range
-            _attack.OnTargetOutOfRange += () => TransitionTo<ChaseState>();
+            _attack.OnTargetOutOfRange += () => TransitionTo<IdleState>();
 
-            // Stagger → chase when recovery finishes (re-engage)
+            //stagger
             _stagger.OnStaggerFinished += () =>
             {
-                if (_data.Target != null) TransitionTo<ChaseState>();
+                if (_data.Target != null) TransitionTo<MGSleepState>();
                 else
                 {
                     _idle.Mode = IdleState.IdleMode.GoHome;
@@ -131,7 +161,7 @@ namespace Nobeta.Sam.Enemy
             _idle.OnPlayerDetected += () =>
             {
                 // Player was spotted mid-return — jump straight into combat
-                if (_data.Target != null) TransitionTo<ChaseState>();
+                if (_data.Target != null) TransitionTo<MGAttackState>();
                 else
                 {
                     _idle.Mode = IdleState.IdleMode.Stop;

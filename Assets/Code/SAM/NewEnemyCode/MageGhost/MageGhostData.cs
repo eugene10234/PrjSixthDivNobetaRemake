@@ -1,5 +1,7 @@
 using VContainer;
 using Nobeta.Sam.Enemy;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Nobeta.Sam.Enemy
 {
@@ -15,5 +17,10 @@ namespace Nobeta.Sam.Enemy
     {
         [Inject]
         public MageGhostData(MageGhostStat stat) : base(stat) { }
+
+        public bool hasSummoned { get; set; }
+
+        public List<GameObject> minionSpawnLoc = new List<GameObject>();
+
     }
 }
