@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using VContainer;
-using static UnityEditor.Rendering.ShadowCascadeGUI;
 
 namespace Nobeta.Sam.Enemy
 {
@@ -22,35 +20,35 @@ namespace Nobeta.Sam.Enemy
     /// </summary>
     public class MGStateMachine : BaseStateMachine
     {
-        private MageGhostData        _data;
-        private MGSleepState        _sleep;
-        private IdleState            _idle;
-        private StaggerState      _stagger;
-        private MGAttackState      _attack;
-        private MGSummonState      _summon;
-        private Barrier  _barrier;
-        
+        private MageGhostData _data;
+        private MGSleepState _sleep;
+        private IdleState _idle;
+        private StaggerState _stagger;
+        private MGAttackState _attack;
+        private MGSummonState _summon;
+        private Barrier _barrier;
+
 
         [Inject]
         public void Construct(
-            MageGhostData        data,
-            IdleState            idle,
-            StaggerState      stagger,
-            MGSleepState        sleep,
-            MGAttackState      attack,
-            MGSummonState      summon,
-            VictoryState      victory,
-            DeathState          death,
-            Barrier           barrier)
+            MageGhostData data,
+            IdleState idle,
+            StaggerState stagger,
+            MGSleepState sleep,
+            MGAttackState attack,
+            MGSummonState summon,
+            VictoryState victory,
+            DeathState death,
+            Barrier barrier)
         {
-            _data    = data;
+            _data = data;
             _sleep = sleep;
             _summon = summon;
             _stagger = stagger;
-            _idle    = idle;
-            _attack  = attack;
+            _idle = idle;
+            _attack = attack;
             _barrier = barrier;
-            
+
 
             RegisterState(idle);
             RegisterState(stagger);
@@ -60,7 +58,7 @@ namespace Nobeta.Sam.Enemy
             RegisterState(victory);
             RegisterState(death);
 
-          
+
 
             WireTransitions();
 
@@ -82,14 +80,14 @@ namespace Nobeta.Sam.Enemy
         public override void OnCombatAlert(GameObject target)
         {
             _data.Target = target;
-            _idle.Mode   = IdleState.IdleMode.Stop; // reset in case we were going home
+            _idle.Mode = IdleState.IdleMode.Stop; // reset in case we were going home
             TransitionTo<ChaseState>();
         }
 
         public override void OnTargetLost()
         {
             _data.Target = null;
-            _idle.Mode   = IdleState.IdleMode.GoHome;
+            _idle.Mode = IdleState.IdleMode.GoHome;
             TransitionTo<IdleState>();
         }
 
@@ -117,7 +115,7 @@ namespace Nobeta.Sam.Enemy
             TransitionTo<VictoryState>();
         }
 
-       
+
         // ── Transition wiring ─────────────────────────────────────────────────
 
         private void WireTransitions()
