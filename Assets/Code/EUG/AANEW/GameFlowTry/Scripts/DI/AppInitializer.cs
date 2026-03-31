@@ -18,7 +18,6 @@ namespace Nobeta.EUG.GameFlowTry.DI
         /// </summary>
         public class AppInitializer : IStartable
         {
-            private 
             public AppInitializer(IGameManager gameManager)
             {
                 // 注入 IGameManager 即可，GameManager 建構子此時必定執行
