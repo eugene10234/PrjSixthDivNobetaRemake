@@ -50,17 +50,17 @@ namespace Nobeta.Sam.Enemy
 
         // ── Injected ──────────────────────────────────────────────────────────
 
-        private IPathFindingStrat _pfs;
+        //private IPathFindingStrat _pfs;
         private MageGhostStat _stat;
-        private NodeData _nodeData;
+        //private NodeData _nodeData;
 
         [Inject]
-        public void Construct(IPathFindingStrat pfs, MageGhostStat stat, NodeData nodeData)
+        public void Construct(MageGhostStat stat)
         {
-            _pfs = pfs;
+            //_pfs = pfs;
             _stat = stat;
-            _nodeData = nodeData;
-            Route = new List<Vector3>();
+            //_nodeData = nodeData;
+            //Route = new List<Vector3>();
         }
 
         // ── Unity lifecycle ───────────────────────────────────────────────────
@@ -134,7 +134,7 @@ namespace Nobeta.Sam.Enemy
 
         public void MoveToward(Vector3 target)
         {
-            Move(target);
+            //Move(target);
         }
 
         public void DeathMovement()
@@ -156,8 +156,6 @@ namespace Nobeta.Sam.Enemy
         // A direction must be (target - current position), not just target.xyz.
         public void LookAt(Vector3 target)
         {
-            if (_rb.linearVelocity.sqrMagnitude <= 0.1f) return;
-
             Vector3 lookDir;
             if (hasLOS)
             {
@@ -167,7 +165,7 @@ namespace Nobeta.Sam.Enemy
             else
             {
                 // Face the direction we are actually moving when navigating around obstacles
-                lookDir = _rb.linearVelocity;
+                lookDir = transform.forward;
             }
 
             lookDir.y = 0f;
@@ -193,38 +191,38 @@ namespace Nobeta.Sam.Enemy
 
         public void ReturnHome()
         {
-            if ((spawnLoc - transform.position).sqrMagnitude < 2f)
-            {
-                isHome = true;
-                return;
-            }
+            //if ((spawnLoc - transform.position).sqrMagnitude < 2f)
+            //{
+            //    isHome = true;
+            //    return;
+            //}
 
-            isHome = false;
+            //isHome = false;
 
-            Vector3 returnSpawnDirection = (spawnLoc - transform.position).normalized;
-            float distanceFromHome = Vector3.Distance(spawnLoc, transform.position);
-            float homingRange = 5f;
-            float returnWeight = 1f - distanceFromHome / homingRange;
+            //Vector3 returnSpawnDirection = (spawnLoc - transform.position).normalized;
+            //float distanceFromHome = Vector3.Distance(spawnLoc, transform.position);
+            //float homingRange = 5f;
+            //float returnWeight = 1f - distanceFromHome / homingRange;
 
-            Vector3 targetNode = Seek(spawnLoc);
-            Vector3 targetNodeDirection = (targetNode - transform.position).normalized;
-            Vector3 desiredDirection;
+            //Vector3 targetNode = Seek(spawnLoc);
+            //Vector3 targetNodeDirection = (targetNode - transform.position).normalized;
+            //Vector3 desiredDirection;
 
-            if (CheckIfStuck())
-            {
-                Route.Clear();
-                targetNode = Seek(spawnLoc);
-                targetNodeDirection = (targetNode - transform.position).normalized;
-                desiredDirection = Vector3.Lerp(targetNodeDirection,
-                                                   returnSpawnDirection,
-                                                   returnWeight).normalized;
-            }
-            else
-            {
-                desiredDirection = (targetNodeDirection + returnSpawnDirection).normalized;
-            }
+            //if (CheckIfStuck())
+            //{
+            //    Route.Clear();
+            //    targetNode = Seek(spawnLoc);
+            //    targetNodeDirection = (targetNode - transform.position).normalized;
+            //    desiredDirection = Vector3.Lerp(targetNodeDirection,
+            //                                       returnSpawnDirection,
+            //                                       returnWeight).normalized;
+            //}
+            //else
+            //{
+            //    desiredDirection = (targetNodeDirection + returnSpawnDirection).normalized;
+            //}
 
-            ApplyVelocity(desiredDirection);
+            //ApplyVelocity(desiredDirection);
         }
 
         public void Move(Vector3 targetPos)
@@ -299,40 +297,40 @@ namespace Nobeta.Sam.Enemy
 
         public void NodeUpdate()
         {
-            _nodeUpdateTimer -= Time.fixedDeltaTime;
-            if (_nodeUpdateTimer > 0f) return;
-            _nodeUpdateTimer = 0.5f;
+            //_nodeUpdateTimer -= Time.fixedDeltaTime;
+            //if (_nodeUpdateTimer > 0f) return;
+            //_nodeUpdateTimer = 0.5f;
 
-            if (_nodeData.AllNodes.Count == 0) return;
+            //if (_nodeData.AllNodes.Count == 0) return;
 
-            Node newNode = _nodeData.GetClosestValidNode(transform.position);
-            if (newNode == null || newNode == _currentNode) return;
+            //Node newNode = _nodeData.GetClosestValidNode(transform.position);
+            //if (newNode == null || newNode == _currentNode) return;
 
-            if (_currentNode != null) _currentNode.enemiesOccupied--;
-            newNode.enemiesOccupied++;
-            _currentNode = newNode;
+            //if (_currentNode != null) _currentNode.enemiesOccupied--;
+            //newNode.enemiesOccupied++;
+            //_currentNode = newNode;
         }
 
         // ── Pathfinding ───────────────────────────────────────────────────────
 
         private Vector3 Seek(Vector3 targetPos)
         {
-            _pathUpdateTimer += Time.fixedDeltaTime;
-            if (Route.Count == 0 || _pathUpdateTimer >= PATH_REFRESH_RATE)
-            {
-                _pathUpdateTimer = 0f;
-                Route = _pfs.CalculatePath(transform.position, targetPos)
-                                    ?? new List<Vector3>();
-                _currentPathIndex = 0;
-            }
+            //_pathUpdateTimer += Time.fixedDeltaTime;
+            //if (Route.Count == 0 || _pathUpdateTimer >= PATH_REFRESH_RATE)
+            //{
+            //    _pathUpdateTimer = 0f;
+            //    Route = _pfs.CalculatePath(transform.position, targetPos)
+            //                        ?? new List<Vector3>();
+            //    _currentPathIndex = 0;
+            //}
 
-            if (Route.Count > 0 && _currentPathIndex < Route.Count)
-            {
-                Vector3 targetNode = Route[_currentPathIndex];
-                if (Vector3.Distance(transform.position, targetNode) < 1f)
-                    _currentPathIndex++;
-                return targetNode;
-            }
+            //if (Route.Count > 0 && _currentPathIndex < Route.Count)
+            //{
+            //    Vector3 targetNode = Route[_currentPathIndex];
+            //    if (Vector3.Distance(transform.position, targetNode) < 1f)
+            //        _currentPathIndex++;
+            //    return targetNode;
+            //}
 
             return targetPos;
         }

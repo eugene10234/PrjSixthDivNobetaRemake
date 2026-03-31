@@ -1,3 +1,4 @@
+using Nobeta.Sam.Bullet;
 using Nobeta.Sam.Pathfinding;
 using UnityEngine;
 using VContainer;
@@ -50,8 +51,25 @@ namespace Nobeta.Sam.Enemy
         [SerializeField] private MGLifetimeScope _mageGhostScopePrefab;
         [SerializeField] private MageGhostSpawner _mgSpawner;
 
+        [Header("SmallGhost")]
+        [SerializeField] private SGLifetimeScope _sgScopePrefab;
+        [SerializeField] private SmallGhostSpawner _sgspawner;
+
+        [Header("EnemyBulletSystemRoot")]
+        [SerializeField] private EnemyBulletSystemRoot _enemyBulletSystemRoot;
+
         protected override void Configure(IContainerBuilder builder)
         {
+            Debug.Log($"_sgScopePrefab at configure time: {_sgScopePrefab}");
+
+            //BulletSystem
+
+            builder.Register<EnemyBulletSystem>(Lifetime.Singleton)
+                   .AsSelf();
+
+            builder.RegisterComponent(_enemyBulletSystemRoot)
+                   .AsSelf();
+            
             // ── Grid infrastructure ───────────────────────────────────────────
             // Registered here because all enemy types share one grid.
             // Child scopes (BGLifetimeScope, etc.) resolve these without
@@ -88,6 +106,11 @@ namespace Nobeta.Sam.Enemy
             builder.Register<MageGhostFactory>(Lifetime.Singleton)
                    .WithParameter(_mageGhostScopePrefab)
                    .As<IEnemyFactory<MageGhost>>();
+
+            builder.Register<SmallGhostFactory>(Lifetime.Singleton)
+                .WithParameter(_sgScopePrefab)
+                .As<IEnemyFactory<SmallGhost>>()
+                .AsSelf();
             // ── Spawner ───────────────────────────────────────────────────────
             // RegisterComponent because BigGhostSpawner is a MonoBehaviour.
             // AsImplementedInterfaces picks up IEnemySpawner or any other

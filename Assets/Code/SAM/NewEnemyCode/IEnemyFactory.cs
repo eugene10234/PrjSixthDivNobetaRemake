@@ -102,4 +102,30 @@ namespace Nobeta.Sam.Enemy
             return gbg;
         }
     }
+    public class SmallGhostFactory : IEnemyFactory<SmallGhost>
+    {
+        private EnemyManager _parentScope;
+        private SGLifetimeScope _prefabScope;
+        [Inject]
+        public SmallGhostFactory(EnemyManager parentScope, SGLifetimeScope prefabScope)
+        {
+            _parentScope = parentScope;
+            _prefabScope = prefabScope;
+        }
+        public SmallGhost Create(Vector3 position, Quaternion rotation)
+        {
+            var scopedInstance = _parentScope.CreateChildFromPrefab(_prefabScope);
+            try
+            {
+                var sg = scopedInstance.Container.Resolve<SmallGhost>();
+                sg.transform.SetPositionAndRotation(position, rotation);
+                return sg;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to resolve SmallGhost: {e}");
+                throw;
+            }
+        }
+    }
 }

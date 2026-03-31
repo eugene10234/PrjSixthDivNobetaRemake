@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ScanlineTex:
-        m_Texture: {fileID: 2800000, guid: 714f4664f55c45c46b53f75dcd662d4d, type: 3}
+        m_Texture: {fileID: 2800000, guid: ff0f93c8fd7caf24fb1790a295aa30ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -44,13 +44,13 @@ Material:
     - _IntersectWidth: 0.3
     - _InvertFresnel: 0
     - _PulseIntensity: 1
-    - _PulseSpeed: 1.5
+    - _PulseSpeed: 5
     - _ScanlineIntensity: 0.3
     - _ScanlineScale: 1
     - _ScanlineSpeed: 0.219
     - _Visibility: 1
     m_Colors:
-    - _Color: {r: 0.28207064, g: 0.07531932, b: 1.7741891, a: 1}
+    - _Color: {r: 0.35981712, g: 0.11238897, b: 2.1660419, a: 1}
     - _DissolveEdgeColor: {r: 29.72941, g: 0.75294185, b: 31.74902, a: 1}
     - _FadeAxis: {r: 0, g: 1, b: 0, a: 0}
     - _IntersectColor: {r: 0.31933072, g: 0.76053184, b: 0.9811321, a: 1}

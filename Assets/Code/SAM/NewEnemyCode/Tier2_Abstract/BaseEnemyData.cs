@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 namespace Nobeta.Sam.Enemy
@@ -44,6 +45,8 @@ namespace Nobeta.Sam.Enemy
 
         public readonly AsyncReactiveProperty<float> HealthPercent = new(1f);
 
+        public event Action InformDeath;
+
         public void TakeDamage(float amount)
         {
             if (IsDead) return;
@@ -53,6 +56,7 @@ namespace Nobeta.Sam.Enemy
             {
                 CurrentHP = 0;
                 IsDead = true;
+                InformDeath?.Invoke();
             }
             HealthPercent.Value = CurrentHP / MaxHP;
         }

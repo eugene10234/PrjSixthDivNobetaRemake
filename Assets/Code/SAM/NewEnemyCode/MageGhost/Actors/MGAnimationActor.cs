@@ -34,6 +34,25 @@ namespace Nobeta.Sam.Enemy
             _animator.SetTrigger("tHit");
         }
 
+        public void PlaySleep()
+        {
+            _animator.SetBool("isSleep", true);
+        }
+
+        public void PlayAwake()
+        {
+            _animator.SetBool("isSleep", false);
+        }
+
+        public void PlaySummon()
+        {
+            _animator.SetBool("isSummoning", true); 
+        }
+
+        public void AE_PlayFinsihSummon()
+        {
+            _animator.SetBool("isSummoning", false);
+        }
         public UniTask PlayAttack()
         {
             _animator.SetTrigger("tAttack");
