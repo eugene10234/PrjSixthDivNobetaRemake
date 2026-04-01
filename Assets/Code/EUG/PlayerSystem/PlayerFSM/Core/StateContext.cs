@@ -133,7 +133,7 @@ namespace Nobeta.EUG.FSM.Core
             // 健康和魔力
             MaxHealth = 125;
             CurrentHealth = MaxHealth;
-            MaxMana = 300;
+            MaxMana = 400;
             CurrentMana = MaxMana;
             MaxStamina = 400;
             CurrentStamina = MaxMana;

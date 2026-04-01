@@ -54,7 +54,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             Speed = 45f,
             Damage = 25,
-            ManaCost = 0,
+            ManaCost = 4,
             CoolTime = 0.15f,
             //CoolTimerLock = false,
             Lifetime = 5f,
@@ -67,7 +67,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             Speed = 15f,
             Damage = 30,
-            ManaCost = 0,
+            ManaCost = 40,
             CoolTime = 1f,
             //CoolTimerLock = false,
             Lifetime = 4f,
@@ -80,7 +80,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         {
             Speed = 80f,
             Damage = 250,
-            ManaCost = 1,
+            ManaCost = 50,
             CoolTime = 1.25f,
             //CoolTimerLock = false,
             Lifetime = 4f,
