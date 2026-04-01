@@ -1,8 +1,10 @@
 ﻿using Assets.Code.EUG.MBFunctions.GUI;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Nobeta.EUG.Interfaces;
 using System;
 using System.Threading;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +18,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [Header("UI References")]
         [SerializeField] private Image healthBar;
         [SerializeField] private Image healthBuffer;
+        [SerializeField] private Image healthWarning;
         [SerializeField] private Image manaBar;
         [SerializeField] private Image manaBuffer;
         [SerializeField] private Image staminaBar;
@@ -28,9 +31,10 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private StatusBarController _manaCtrl;
         private StatusBarController _manaBufCtrl;
         private StatusBarController _staminaCtrl;
-
+        private Color healthWarningPrototype;
         private void OnEnable()
         {
+            healthWarningPrototype = healthWarning.color;
             _cts = new CancellationTokenSource();
             _hpCtrl = new StatusBarController(healthBar);
             _hpBufCtrl = new StatusBarController(healthBuffer);
@@ -67,7 +71,33 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _staminaCtrl.FillType.LerpUpdate(evt.CurrentStamina / evt.MaxStamina,0.15f);
             // 提示：如果要讓動畫更平滑，建議配合 DOTween 使用
             // healthBar.DOFillAmount(evt.CurrentHealth / evt.MaxHealth, 0.2f);
+            hpWarning(evt.CurrentHealth / evt.MaxHealth);
         }
+
+        private void hpWarning(float hpratio)
+        {
+            
+            // 在血量變更的邏輯裡
+            if (hpratio <= 0.35f)
+            {
+                // 檢查是否已經在閃爍，避免重複播放
+                if (!DOTween.IsTweening("HPFlash"))
+                {
+                    healthWarningPrototype.a = 0.75f;
+                    healthWarning.DOColor(healthWarningPrototype, 0.25f) // 速度極快
+                        .SetEase(Ease.Linear)
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .SetId("HPFlash");
+                }
+            }
+            else
+            {
+                healthWarningPrototype.a = 0.2f;
+                DOTween.Kill("HPFlash");
+                healthWarning.color = healthWarningPrototype;
+            }
+        }
+
         private void UpdateBarBufferWithDelay(StatusBarController Bar, StatusBarController Buffer, float targetRatio)
         {      
             if (targetRatio > Bar.FillAmount)
