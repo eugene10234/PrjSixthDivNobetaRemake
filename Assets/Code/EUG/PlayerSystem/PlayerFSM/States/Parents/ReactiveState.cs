@@ -42,11 +42,10 @@ namespace Nobeta.EUG.FSM.States
             if (reactionTimer > 0)
             {
                 reactionTimer -= Time.deltaTime;
-
-                if (reactionTimer <= 0)
-                {
-                    OnReactionComplete();
-                }
+            }
+            if (reactionTimer <= 0)
+            {
+                OnReactionComplete();
             }
         }
 

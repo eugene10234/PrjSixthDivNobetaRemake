@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Nobeta.EUG.FSM.States
 {
-    public class DyingState : BaseState
+    public class DyingState : ReactiveState
     {
         public DyingState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
@@ -22,7 +22,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            ctx.MovementService.ResetVelocity();
+            //ctx.MovementService.ResetVelocity();
 
             PlayAnimation("Dying");
             PlaySound("Die");
@@ -32,6 +32,16 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Exit();
             ctx.EventBus.Publish(new PlayerLiveStateEvent { IsLive = true });
+        }
+        protected override void OnReactionComplete()
+        {
+            // 死亡狀態不會自動完成，需要外部觸發重生
+        }
+
+        public override bool CanTransitionTo(System.Type stateType)
+        {
+            // 只能轉換到待機（重生）
+            return stateType == typeof(IdleState);
         }
     }
 }

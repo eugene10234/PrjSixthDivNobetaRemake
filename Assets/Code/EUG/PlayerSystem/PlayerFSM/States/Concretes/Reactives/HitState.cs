@@ -13,26 +13,25 @@ using UnityEngine;
 namespace Nobeta.EUG.FSM.States
 {
 
-    public class HitState : BaseState, IUpdatable
+    public class HitState : ReactiveState, IUpdatable
     {
         private float hitTimer;
 
         public HitState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
+            reactionDuration = ctx.Config.hitStunDuration;
         }
 
         public override void Enter()
         {
             base.Enter();
-            hitTimer = ctx.Config.hitStunDuration;
-            ctx.MovementService.ResetVelocity();
-
+            //ctx.MovementService.ResetVelocity();
             PlayAnimation("Head_Hit_R");
             PlaySound("Hit");
         }
 
-        public void Update()
+        protected override void OnReactionComplete()
         {
             hitTimer -= Time.deltaTime;
 

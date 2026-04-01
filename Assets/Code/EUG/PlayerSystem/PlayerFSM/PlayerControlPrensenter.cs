@@ -117,6 +117,7 @@ namespace Nobeta.EUG.FSM
             }
             if(!stateMachine.IsInState<DyingState>())
             {
+                if (_context.CurrentStamina<5) rrrrrr();
                 if (!StartUpLock) StatusTimeRecoveryAPI();
             }
             else
@@ -127,6 +128,10 @@ namespace Nobeta.EUG.FSM
             }
 
             // 這裡可以添加其他全局轉換邏輯
+        }
+        private void rrrrrr()
+        {
+
         }
         private bool StartUpLock = false;
         private const float StartUp_DURATION = 0.5f;
