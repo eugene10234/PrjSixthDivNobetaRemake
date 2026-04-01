@@ -69,7 +69,7 @@ namespace Nobeta.EUG.FSM.States
         public override void FixedUpdate()
         {
             // 停止移動
-            if (TurningTimerLock) ctx.MovementService.StopMovement(ctx.Config.acceleration*0.45f);
+            if (TurningTimerLock) ctx.MovementService.StopMovement(ctx.Config.acceleration*0.3f);
             //else ApplyMovementAndRotation(ctx.Config.walkSpeed);
             base.FixedUpdate();
         }

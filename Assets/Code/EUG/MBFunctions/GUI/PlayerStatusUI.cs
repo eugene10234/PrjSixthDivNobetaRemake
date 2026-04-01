@@ -64,7 +64,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             // 更新耐力條
             //if (staminaBar != null)
             //    staminaBar.fillAmount = evt.CurrentStamina / evt.MaxStamina;
-            _staminaCtrl.FillType.LerpUpdate(evt.CurrentStamina / evt.MaxStamina,1.5f);
+            _staminaCtrl.FillType.LerpUpdate(evt.CurrentStamina / evt.MaxStamina,0.15f);
             // 提示：如果要讓動畫更平滑，建議配合 DOTween 使用
             // healthBar.DOFillAmount(evt.CurrentHealth / evt.MaxHealth, 0.2f);
         }

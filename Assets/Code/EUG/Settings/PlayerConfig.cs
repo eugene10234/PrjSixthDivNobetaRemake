@@ -28,7 +28,7 @@ namespace Nobeta.EUG.Settings
         public float dodgeDistance = 6f;
         public float dodgeDuration = 0.5f;
         public float dodgeCooldown = 1f;
-        public int maxDodgeCharges = 2;
+        public int maxDodgeCharges = 1;
         public int maxAirJumpCharges =1;
 
         [Header("魔法設置")]
@@ -39,6 +39,7 @@ namespace Nobeta.EUG.Settings
         public float meleeAttackDuration = 0.6f;
         public float hitStunDuration = 0.4f;
         public float comboWindow = 1f;
-        
+        public int dodgeStaminaCost = 60;
+        public int jumpStaminaCost = 15;
     }
 }

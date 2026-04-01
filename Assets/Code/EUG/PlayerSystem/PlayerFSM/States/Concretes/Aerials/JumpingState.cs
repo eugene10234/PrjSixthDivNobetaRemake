@@ -23,6 +23,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            ctx.ConsumeStamina(ctx.Config.jumpStaminaCost);
             BaseState prevState = stateMachine.PreviousState;
             if (typeof(AerialState).IsAssignableFrom(prevState.GetType()))
             {

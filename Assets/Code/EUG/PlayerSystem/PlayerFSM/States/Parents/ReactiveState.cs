@@ -13,7 +13,7 @@ namespace Nobeta.EUG.FSM.States
     /// 反應狀態 - 被動反應的父類
     /// 包含：Hit, Dying
     /// </summary>
-    public abstract class ReactiveState : BaseState, IUpdatable
+    public abstract class ReactiveState : BaseState, IUpdatable, IFixedUpdatable
     {
         protected float reactionDuration;
         protected float reactionTimer;
@@ -26,14 +26,20 @@ namespace Nobeta.EUG.FSM.States
             reactionTimer = reactionDuration;
 
             // 停止移動
-            ctx.MovementService.StopMovement(ctx.Config.acceleration);
+            //ctx.MovementService.StopMovement(ctx.Config.acceleration*2f);
         }
 
         public virtual void Update()
         {
             UpdateReactionTimer();
         }
-
+        public virtual void FixedUpdate()
+        {
+            // 默認行為：應用重力
+            ctx.MovementService.ApplyGravity(ctx.Config.gravity);
+            // 執行移動
+            ctx.MovementService.ExecuteMovement();
+        }
         /// <summary>
         /// 更新反應計時器
         /// </summary>

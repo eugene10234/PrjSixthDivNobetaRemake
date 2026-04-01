@@ -135,7 +135,7 @@ namespace Nobeta.EUG.FSM.Core
             CurrentHealth = MaxHealth;
             MaxMana = 300;
             CurrentMana = MaxMana;
-            MaxStamina = 50;
+            MaxStamina = 400;
             CurrentStamina = MaxMana;
             // 狀態標記
             CurrentSpeedType = typeof(IdleState);

@@ -107,8 +107,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void OnIconAimEnd() { IsAimPressed = false; OnProgress(); }
         private void OnIconFireStart() { IsFirePressed = true; OnProgress(); }
         private void OnIconFireEnd() { IsFirePressed = false; OnProgress(); }
-        private void OnPlayerAimStart(PlayerAimingStartEvent evt) { OnIconAimStart(); }
-        private void OnPlayerAimEnd(PlayerAimingEndEvent evt) { OnIconAimEnd(); }
+        private void OnPlayerAimStart(CameraReactStartEvent evt) { OnIconAimStart(); }
+        private void OnPlayerAimEnd(CameraReactEndEvent evt) { OnIconAimEnd(); }
         private void AssignInputEvents()
         {
             _playerInputService.OnAimStart += OnIconAimStart;

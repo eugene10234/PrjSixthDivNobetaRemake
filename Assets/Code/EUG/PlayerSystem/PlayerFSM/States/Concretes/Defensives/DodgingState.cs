@@ -22,6 +22,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            ctx.ConsumeStamina(ctx.Config.dodgeStaminaCost);
             dodgeDirCheck = true;
             // 設置閃避方向
             Vector2 input = ctx.InputService.MoveInput;

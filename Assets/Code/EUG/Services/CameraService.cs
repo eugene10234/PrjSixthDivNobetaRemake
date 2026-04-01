@@ -28,8 +28,8 @@ namespace Nobeta.EUG.Services
         private float mVerticalSensetivity = 0.5f;
         private readonly static float DefaultFOV = 50f;
         private readonly static float DefaultCamDistance = 2f;
-        private readonly static float DefaultShoulderHeight = -0.11f;
-        private float _targetFOV = DefaultFOV;        
+        private readonly static float DefaultShoulderHeight = -0.21f;
+        private float _targetFOV = DefaultFOV;
         private float _targetDistance = DefaultCamDistance;
         private float _targetShoulderOffset = DefaultShoulderHeight;
         private Vector3 _targetShoulder = new Vector3(0.5f, DefaultShoulderHeight, 0);
@@ -38,15 +38,15 @@ namespace Nobeta.EUG.Services
 
         public float GetHorizonOffset => horizonOffset;
         public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
-        public float CinCameraDistance { get => _cinemachineThirdPersonFollow.CameraDistance; set => _cinemachineThirdPersonFollow.CameraDistance= value; }
+        public float CinCameraDistance { get => _cinemachineThirdPersonFollow.CameraDistance; set => _cinemachineThirdPersonFollow.CameraDistance = value; }
         [Inject]
-        public CameraService(IPlayerInputService playerInputService ,IEventBus eventBus)
+        public CameraService(IPlayerInputService playerInputService, IEventBus eventBus)
         {
             _playerInputService = playerInputService;
             _eventBus = eventBus;
             mainCamera = Camera.main;
             AssignInputEvents();
-            _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
+            SubscribeEvents();
         }
 
         public Vector3 GetCameraRelativeDirection(Vector2 input)
@@ -129,13 +129,13 @@ namespace Nobeta.EUG.Services
         {
             // 這裡的 smoothSpeed 決定了相機跟隨目標 FOV 的速度
             FieldOfView = Mathf.Lerp(FieldOfView, _targetFOV, _smoothFOVSpeed);
-            CinCameraDistance = Mathf.Lerp(CinCameraDistance, _targetDistance, _smoothFOVSpeed*0.6f);
+            CinCameraDistance = Mathf.Lerp(CinCameraDistance, _targetDistance, _smoothFOVSpeed * 0.6f);
             _cinemachineThirdPersonFollow.ShoulderOffset = Vector3.Lerp(_cinemachineThirdPersonFollow.ShoulderOffset, SetTargerShoulderValue(_targetShoulder), _smoothFOVSpeed);
 
         }
         public Vector3 SetTargerShoulderValue(Vector3 targetShoulder)
         {
-            targetShoulder.y =_targetShoulderOffset;
+            targetShoulder.y = _targetShoulderOffset;
 
             return targetShoulder;
 
@@ -143,7 +143,8 @@ namespace Nobeta.EUG.Services
         public void Dispose()
         {
             UnAssignInputEvents();
-            _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
+            UnsubscribeEvents();
+
         }
 
         private void AssignInputEvents()
@@ -157,7 +158,33 @@ namespace Nobeta.EUG.Services
             _playerInputService.OnAimStart -= OnCameraAimStart;
             _playerInputService.OnAimEnd -= OnCameraAimEnd;
         }
+        private void OnCameraReactStart(CameraReactStartEvent evt)
+        {
+            _targetFOV = 52.5f;
+            _targetDistance = 2.25f;
+            _targetShoulderOffset = -0.45f;
+            _smoothFOVSpeed = 0.02f;
+        }
+        private void OnCameraReactEnd(CameraReactEndEvent evt)
+        {
+            _targetFOV = DefaultFOV;
+            _targetDistance = DefaultCamDistance; 
+            _targetShoulderOffset = DefaultShoulderHeight;
+            _smoothFOVSpeed = 0.06f;
+        }
 
+        private void SubscribeEvents()
+        {
+            _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
+            _eventBus.Subscribe<CameraReactStartEvent>(OnCameraReactStart);
+            _eventBus.Subscribe<CameraReactEndEvent>(OnCameraReactEnd);
+        }
+
+        private void UnsubscribeEvents()
+        {
+            _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
+            _eventBus.Unsubscribe<CameraReactStartEvent>(OnCameraReactStart);
+        }
         public void Initial(CinemachineThirdPersonAim cinemachineThirdPersonAim)
         {
             throw new NotImplementedException();
@@ -168,6 +195,7 @@ namespace Nobeta.EUG.Services
             _targetFOV = 52.5f; // 縮小視野，模擬瞄準效果
             _targetDistance = 0.9f; // 拉近相機距離，模擬瞄準效果
             _targetShoulderOffset = -0.38f;
+            _smoothFOVSpeed = 0.06f;
         }
         private void OnCameraAimEnd()
         {
@@ -175,6 +203,7 @@ namespace Nobeta.EUG.Services
             _targetFOV = DefaultFOV; // 縮小視野，模擬瞄準效果
             _targetDistance = DefaultCamDistance; // 拉近相機距離，模擬瞄準效果
             _targetShoulderOffset = DefaultShoulderHeight;
+            _smoothFOVSpeed = 0.06f;
         }
 
         public void LateUpdate()

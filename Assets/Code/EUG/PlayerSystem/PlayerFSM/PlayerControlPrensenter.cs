@@ -1,5 +1,4 @@
-﻿using System;
-using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
@@ -8,6 +7,8 @@ using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
 using Nobeta.EUG.Services;
+using System;
+using UnityEditor;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -62,7 +63,7 @@ namespace Nobeta.EUG.FSM
             _stateMachine.SetInitialState<IdleState>();
 
             _eventBus.Subscribe<PlayerDamagedEvent>(OnTakeDamage);
-            StartUpLock = false;
+            HMStartUpLock = false;
 
 
             Debug.Log("PlayerController 初始化完成（事件驅動模式）");
@@ -117,8 +118,10 @@ namespace Nobeta.EUG.FSM
             }
             if(!stateMachine.IsInState<DyingState>())
             {
-                if (_context.CurrentStamina < 10) TryFellingState();
-                if (!StartUpLock) StatusTimeRecoveryAPI();
+                if (_context.CurrentStamina ==0 && stateMachine.IsInState<RunningState>()) TryFellingState();
+                if (!HMStartUpLock) HealthManaTimeRecoveryAPI();
+                if (!STStartUpLock) StamiaTimeChangeAPI();
+
             }
             else
             {
@@ -131,25 +134,39 @@ namespace Nobeta.EUG.FSM
         }
         private void TryFellingState()
         {
-            if (stateMachine.IsInState<FellingState>()) return;
+            //if (_context.CurrentSpeedType != typeof(RunningState)) return;
             stateMachine.ChangeState<FellingState>(force: true);
         }
-        private bool StartUpLock = false;
-        private const float StartUp_DURATION = 0.5f;
-        private void StatusTimeRecoveryAPI()
+        private bool HMStartUpLock = false;
+        private const float HMStartUp_DURATION = 0.5f;
+        private void HealthManaTimeRecoveryAPI()
         {
-            _timeService.TaskDelayLock(StartUp_DURATION, (b) => StartUpLock = b);
+            _timeService.TaskDelayLock(HMStartUp_DURATION, (b) => HMStartUpLock = b);
             RestoreMana(3);
             Heal(1);
+        }
+        private bool STStartUpLock = false;
+        private const float STStartUp_DURATION = 0.05f;
+        private void StamiaTimeChangeAPI()
+        {
+            Type CurrState = _stateMachine.CurrentState.GetType();
+            if (IsSpecialState(CurrState)) return;
+            _timeService.TaskDelayLock(STStartUp_DURATION, (b) => STStartUpLock = b);
             if (_context.CurrentSpeedType == typeof(RunningState))
-            {
-                _context.ConsumeStamina(16);
+            {                
+                _context.ConsumeStamina(1);
             }
             else
             {
-                RestoreStamina(24);
+                RestoreStamina(2);
             }
+        }
 
+        private static bool IsSpecialState(Type CurrState)
+        {
+            if (typeof(AerialState).IsAssignableFrom(CurrState)) return true;
+            if (CurrState == typeof(DodgingState)) return true;
+            return false;
         }
         #region Public API（公共接口）
         private void OnTakeDamage(PlayerDamagedEvent evt)

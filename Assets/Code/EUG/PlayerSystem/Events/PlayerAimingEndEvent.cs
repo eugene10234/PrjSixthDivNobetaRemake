@@ -2,7 +2,7 @@
 
 namespace Nobeta.EUG.Events
 {
-    public struct PlayerAimingEndEvent
+    public struct CameraReactEndEvent
     {
     }
 }

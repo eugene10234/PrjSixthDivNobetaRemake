@@ -69,7 +69,7 @@ namespace Nobeta.EUG.FSM.States
         {
             if (ctx.CanJump)
             {
-                stateMachine.ChangeState<JumpingState>();
+                stateMachine.ChangeState<JumpingState>(force:true);
             }
         }
 

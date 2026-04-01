@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,8 @@ namespace Assets.Code.EUG.MBFunctions.GUI
 
         private Image _bufferImage;
         private RectTransform _bufferRectScaler;
+        private Action<float> _floatAction;
+        public float floatSetHelper { set => _floatAction?.Invoke(value);  }
         private CancellationTokenSource _cts;
         private CancellationTokenSource _animCts;
 
@@ -27,6 +30,11 @@ namespace Assets.Code.EUG.MBFunctions.GUI
         public StatusBarController(Image bufferBar)
         {
             _bufferImage = bufferBar;
+            StatusBarCtrlnitial();
+        }
+        public StatusBarController(Action<float> floatAction)
+        {
+            _floatAction = floatAction;
             StatusBarCtrlnitial();
         }
         public void ChangeFilter(Image currentMageCDFitler)
@@ -45,6 +53,7 @@ namespace Assets.Code.EUG.MBFunctions.GUI
             FillType = new Property<float>();
             ColorType = new Property<Color>();
             RectType = new Property<Vector3>();
+            FloatType = new Property<float>();
             PropertyInitial();
         }
 
@@ -52,6 +61,7 @@ namespace Assets.Code.EUG.MBFunctions.GUI
         public Property<float> FillType;
         public Property<Color> ColorType;
         public Property<Vector3> RectType;
+        public Property<float> FloatType;
 
         public void PropertyInitial()
         {
@@ -74,6 +84,11 @@ namespace Assets.Code.EUG.MBFunctions.GUI
                 (val) => _bufferRectScaler.localScale = val,
                 (a, b, t) => Vector3.Lerp(a, b, t)
             );
+            FloatType.Initial(
+                () => _bufferImage.fillAmount,
+                (val) => _bufferImage.fillAmount = val,
+                (a, b, t) => Mathf.Lerp(a, b, t)
+);
         }
 
         public void PropertyDispose()
@@ -102,82 +117,82 @@ namespace Assets.Code.EUG.MBFunctions.GUI
         /// 泛型化的 Property 類別，可以處理任何類型的動畫
         /// </summary>
         public class Property<T> : IDisposable
-    {
-        private Image _bufferBar;
-        private CancellationTokenSource _animCts;
-        private Func<T> _getFunc;
-        private Action<T> _setAct;
-        private Func<T, T, float, T> _lerpFunc;
-        public Property()
         {
-        }
-        //public Property(Image bufferBar)
-        //{
-        //    _bufferBar = bufferBar;
-        //}
-
-        /// <summary>
-        /// 初始化屬性
-        /// </summary>
-        /// <param name="getFunc">取得當前值的函數</param>
-        /// <param name="setAct">設定新值的動作</param>
-        /// <param name="lerpFunc">插值函數 (startValue, targetValue, t) => interpolatedValue</param>
-        public void Initial(Func<T> getFunc, Action<T> setAct, Func<T, T, float, T> lerpFunc)
-        {
-            _getFunc = getFunc;
-            _setAct = setAct;
-            _lerpFunc = lerpFunc;
-        }
-        Func<float, float, float> EaseIn = (d, e) => Mathf.Pow((e / d), 2);
-        Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
-        Func<float, float, float> LerpFunc = (d, e) => e / d;
-
-        public void LerpUpdate(T target, float duration = 0.25f)
-        {
-            SmoothBufferUpdate(target, LerpFunc, duration).Forget();
-        }
-
-        public void EaseOutUpdate(T target, float duration = 0.25f)
-        {
-            SmoothBufferUpdate(target, EaseOut, duration).Forget();
-        }
-        public void EaseInUpdate(T target, float duration = 0.25f)
-        {
-            SmoothBufferUpdate(target, EaseIn, duration).Forget();
-        }
-        public async UniTaskVoid SmoothBufferUpdate(T target, Func<float, float, float> easingFunc, float duration = 0.5f)
-        {
-            if (_getFunc == null) return;
-            if (_setAct == null) return;
-            if (_lerpFunc == null) return;
-
-            _animCts?.Cancel();
-            _animCts?.Dispose();
-            _animCts = new CancellationTokenSource();
-            var token = _animCts.Token;
-            T startValue = _getFunc.Invoke();
-            float elapsed = 0f;
-
-            try
+            private Image _bufferBar;
+            private CancellationTokenSource _animCts;
+            private Func<T> _getFunc;
+            private Action<T> _setAct;
+            private Func<T, T, float, T> _lerpFunc;
+            public Property()
             {
-                while (elapsed < duration)
-                {
-                    elapsed += Time.deltaTime;
-                    float t = easingFunc(duration, elapsed);
-                    T currentValue = _lerpFunc(startValue, target, t);
-                    _setAct.Invoke(currentValue);
-                    await UniTask.Yield(PlayerLoopTiming.Update, token);
-                }
-                _setAct.Invoke(target);
             }
-            catch (System.OperationCanceledException) { }
-        }
+            //public Property(Image bufferBar)
+            //{
+            //    _bufferBar = bufferBar;
+            //}
 
-        public void Dispose()
-        {
-            _animCts?.Cancel();
-            _animCts?.Dispose();
-        }
+            /// <summary>
+            /// 初始化屬性
+            /// </summary>
+            /// <param name="getFunc">取得當前值的函數</param>
+            /// <param name="setAct">設定新值的動作</param>
+            /// <param name="lerpFunc">插值函數 (startValue, targetValue, t) => interpolatedValue</param>
+            public void Initial(Func<T> getFunc, Action<T> setAct, Func<T, T, float, T> lerpFunc)
+            {
+                _getFunc = getFunc;
+                _setAct = setAct;
+                _lerpFunc = lerpFunc;
+            }
+            Func<float, float, float> EaseIn = (d, e) => Mathf.Pow((e / d), 2);
+            Func<float, float, float> EaseOut = (d, e) => 1f - Mathf.Pow(1f - (e / d), 2);
+            Func<float, float, float> LerpFunc = (d, e) => e / d;
+
+            public void LerpUpdate(T target, float duration = 0.25f)
+            {
+                SmoothBufferUpdate(target, LerpFunc, duration).Forget();
+            }
+
+            public void EaseOutUpdate(T target, float duration = 0.25f)
+            {
+                SmoothBufferUpdate(target, EaseOut, duration).Forget();
+            }
+            public void EaseInUpdate(T target, float duration = 0.25f)
+            {
+                SmoothBufferUpdate(target, EaseIn, duration).Forget();
+            }
+            public async UniTaskVoid SmoothBufferUpdate(T target, Func<float, float, float> easingFunc, float duration = 0.5f)
+            {
+                if (_getFunc == null) return;
+                if (_setAct == null) return;
+                if (_lerpFunc == null) return;
+
+                _animCts?.Cancel();
+                _animCts?.Dispose();
+                _animCts = new CancellationTokenSource();
+                var token = _animCts.Token;
+                T startValue = _getFunc.Invoke();
+                float elapsed = 0f;
+
+                try
+                {
+                    while (elapsed < duration)
+                    {
+                        elapsed += Time.deltaTime;
+                        float t = easingFunc(duration, elapsed);
+                        T currentValue = _lerpFunc(startValue, target, t);
+                        _setAct.Invoke(currentValue);
+                        await UniTask.Yield(PlayerLoopTiming.Update, token);
+                    }
+                    _setAct.Invoke(target);
+                }
+                catch (System.OperationCanceledException) { }
+            }
+
+            public void Dispose()
+            {
+                _animCts?.Cancel();
+                _animCts?.Dispose();
+            }
         }
 
 

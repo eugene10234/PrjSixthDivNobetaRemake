@@ -39,13 +39,13 @@ namespace Nobeta.EUG.FSM.States
             base.Enter();
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
-            PlayAnimation("AimingWalk2",0.1f);
+            PlayAnimation("AimingWalk2", 0.1f);
 
             // 降低移動速度
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
 
             // 發布事件（通知攝影機切換）
-            PublishEvent(new PlayerAimingStartEvent());
+            PublishEvent(new CameraReactStartEvent());
             //_debugServiceMb.AddGiz(() =>
             //{
             //    Gizmos.color = Color.red; // 甚至可以順便設顏色
@@ -74,15 +74,15 @@ namespace Nobeta.EUG.FSM.States
             base.Exit();
 
             // 發布事件
-            PublishEvent(new PlayerAimingEndEvent());
+            PublishEvent(new CameraReactEndEvent());
         }
 
-            
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    stateMachine.ChangeState<ChargingState>();
-            //    return;
-            //}
+
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    stateMachine.ChangeState<ChargingState>();
+        //    return;
+        //}
 
 
         public override void Update()
@@ -96,9 +96,9 @@ namespace Nobeta.EUG.FSM.States
             // 持續面向瞄準方向
             Vector3 aimDirection = GetAimDirection();
             ctx.MovementService.RotateTowards(aimDirection, ctx.Config.rotationSpeed);
-            
+
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
-            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);           
+            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
             SetTargetSpeed(_speedType);
             AnimatorSetting();
         }
@@ -109,11 +109,15 @@ namespace Nobeta.EUG.FSM.States
             // 瞄準時可以緩慢移動
             _movement = ctx.InputService.MoveInput;
             //Debug.LogWarning($"MoveInput: {_movement}:{DateTime.Now}");
-            if(!ctx.InputService.IsAimPressed) stateMachine.ChangeStateByParent<GroundedState>(_speedType);
+            if (!ctx.InputService.IsAimPressed) stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             if (_movement.magnitude > 0.1f)
             {
-               // Debug.LogWarning($"222222222222222222:{DateTime.Now}");
-                if (typeof(IdleState) == _speedType) _speedType = typeof(WalkingState);
+                // Debug.LogWarning($"222222222222222222:{DateTime.Now}");
+                if (typeof(IdleState) == _speedType)
+                {
+                    _speedType = typeof(WalkingState);
+                    ctx.CurrentSpeedType = typeof(WalkingState);
+                }
                 Vector3 direction = ctx.CameraService.GetCameraRelativeDirection(_movement);
                 //Debug.LogWarning($"_targetSpeed==={_targetSpeed}:{DateTime.Now}");
                 // 使用較低的速度
@@ -149,7 +153,7 @@ namespace Nobeta.EUG.FSM.States
         {
             if (ctx.CanJump)
             {
-                stateMachine.ChangeState<JumpingState>();
+                stateMachine.ChangeState<JumpingState>(force:true);
             }
         }
         //public override void DetectionHandler()
@@ -201,6 +205,7 @@ namespace Nobeta.EUG.FSM.States
         public override void OnStopInput()
         {
             _speedType = typeof(IdleState);
+            ctx.CurrentSpeedType = typeof(IdleState);
             SetTargetSpeed(_speedType);
         }
         public override void OnMoveInput()
@@ -208,6 +213,7 @@ namespace Nobeta.EUG.FSM.States
             if (_movement.magnitude < 0.1f)
             {
                 _speedType = typeof(WalkingState);
+                ctx.CurrentSpeedType = typeof(WalkingState);
                 SetTargetSpeed(_speedType);
             }
         }
@@ -216,12 +222,13 @@ namespace Nobeta.EUG.FSM.States
             if (_movement.magnitude > 0.1f)
             {
                 _speedType = typeof(RunningState);
+                ctx.CurrentSpeedType = typeof(RunningState);
                 SetTargetSpeed(_speedType);
             }
         }
         public override void OnAimEndInput()
         {
-            
+
             if (ctx.IsGrounded)
             {
                 stateMachine.ChangeStateByParent<GroundedState>(_speedType);
