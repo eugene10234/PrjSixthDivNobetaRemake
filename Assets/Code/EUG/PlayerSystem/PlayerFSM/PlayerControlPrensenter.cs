@@ -54,7 +54,7 @@ namespace Nobeta.EUG.FSM
                 Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
                 return;
             }
-            //_debugService.GUI.Add(DrawDebugInfo);
+            _debugService.GUI.Add(DrawDebugInfo);
             //訂閱輸入事件
             //Debug.LogWarning("mbPlayerControllerStart");
 
@@ -117,7 +117,7 @@ namespace Nobeta.EUG.FSM
             }
             if(!stateMachine.IsInState<DyingState>())
             {
-                if (_context.CurrentStamina<5) rrrrrr();
+                if (_context.CurrentStamina < 10) TryFellingState();
                 if (!StartUpLock) StatusTimeRecoveryAPI();
             }
             else
@@ -129,9 +129,10 @@ namespace Nobeta.EUG.FSM
 
             // 這裡可以添加其他全局轉換邏輯
         }
-        private void rrrrrr()
+        private void TryFellingState()
         {
-
+            if (stateMachine.IsInState<FellingState>()) return;
+            stateMachine.ChangeState<FellingState>(force: true);
         }
         private bool StartUpLock = false;
         private const float StartUp_DURATION = 0.5f;
@@ -167,7 +168,7 @@ namespace Nobeta.EUG.FSM
             if (_context.CurrentHealth <= 0)
             {
                 _context.CurrentHealth = 0;
-                stateMachine.ChangeState<DyingState>();
+                stateMachine.ChangeState<DyingState>(force: true);
             }
             else
             {

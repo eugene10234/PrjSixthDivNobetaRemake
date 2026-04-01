@@ -79,7 +79,6 @@ namespace Nobeta.EUG.FSM.States
 
         public override void OnDodgeInput()
         {
-            // 空中閃避
             if (ctx.CanDodge)
             {
                 stateMachine.ChangeState<DodgingState>(force: true);

@@ -117,6 +117,7 @@ public class PlayerLifetimeScope : LifetimeScope
         // 反應狀態
         builder.Register<HitState>(Lifetime.Transient);
         builder.Register<DyingState>(Lifetime.Transient);
+        builder.Register<FellingState>(Lifetime.Transient);
 
         // 戰鬥狀態
         builder.Register<AimingState>(Lifetime.Transient);
