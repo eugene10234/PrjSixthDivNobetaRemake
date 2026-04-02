@@ -120,7 +120,7 @@ namespace Nobeta.EUG.FSM
             if(!stateMachine.IsInState<DyingState>())
             {
                 float StaminaRatio = (float)_context.CurrentStamina / _context.MaxStamina;
-                if (_context.StaminaFlag && StaminaRatio>0.35f)
+                if (_context.StaminaFlag && StaminaRatio>0.4f)
                 {
                     _context.StaminaFlag = false;
                     _eventBus.Publish(new StaminaWarningEvent()
@@ -155,7 +155,7 @@ namespace Nobeta.EUG.FSM
         }
         private void TryFellingState()
         {
-            //if (_context.CurrentSpeedType != typeof(RunningState)) return;
+            _context.CurrentSpeedType = typeof(IdleState);
             stateMachine.ChangeState<FellingState>(force: true);
         }
         private bool HMStartUpLock = false;
@@ -179,7 +179,7 @@ namespace Nobeta.EUG.FSM
             }
             else
             {
-                RestoreStamina(4);
+                RestoreStamina(6);
             }
         }
 
