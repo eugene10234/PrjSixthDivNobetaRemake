@@ -87,7 +87,7 @@ namespace Nobeta.EUG.Tests
                             _eventBus.Publish(new InteractEreaEnterEvent
                             {
                                 InteractObj = this,
-                                Message = $"UnityChan希望你繼續離開!!!"
+                                Message = $"UnityChan希望你滾開!!!"
                             });
                         }
                     }
