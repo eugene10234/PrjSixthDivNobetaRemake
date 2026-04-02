@@ -18,6 +18,10 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
+            if (ctx.StaminaFlag)
+            {
+                stateMachine.ChangeState<FellingState>(force: true);
+            }
             ctx.CurrentSpeedType = typeof(RunningState);
             RunningTimer = RUNNING_DURATION;
             base.Enter();
@@ -63,15 +67,15 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void DetectionHandler()
         {
-                base.DetectionHandler();
+            base.DetectionHandler();
             if (ctx.CurrentSpeed < 1.5f) stateMachine.ChangeState<TurningState>();
             var absTurnAngle = Mathf.Abs(_turnAngle);
             if (absTurnAngle > 0)
                 //Debug.Log($"turnAngle: {absTurnAngle}");
-            if (absTurnAngle > 150f)
-            {
-                stateMachine.ChangeState<TurningState>();
-            }
+                if (absTurnAngle > 150f)
+                {
+                    stateMachine.ChangeState<TurningState>();
+                }
         }
 
         public override void OnStopInput()

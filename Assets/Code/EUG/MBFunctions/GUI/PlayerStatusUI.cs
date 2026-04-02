@@ -1,9 +1,10 @@
-﻿using Assets.Code.EUG.MBFunctions.GUI;
+﻿using System;
+using System.Threading;
+using Assets.Code.EUG.MBFunctions.GUI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Nobeta.EUG.Interfaces;
-using System;
-using System.Threading;
+using Nobeta.EUG.MBFunctions.Events;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private Image manaBar;
         [SerializeField] private Image manaBuffer;
         [SerializeField] private Image staminaBar;
+        [SerializeField] private Image staminaWarning;
         [Inject]private readonly IEventBus _eventBus;
         private CancellationTokenSource _cts;
         [Header("Settings")]
@@ -32,9 +34,11 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private StatusBarController _manaBufCtrl;
         private StatusBarController _staminaCtrl;
         private Color healthWarningPrototype;
+        private Color staminaWarningPrototype;
         private void OnEnable()
         {
             healthWarningPrototype = healthWarning.color;
+            staminaWarningPrototype = staminaWarning.color;
             _cts = new CancellationTokenSource();
             _hpCtrl = new StatusBarController(healthBar);
             _hpBufCtrl = new StatusBarController(healthBuffer);
@@ -43,6 +47,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _staminaCtrl = new StatusBarController(staminaBar);
             // 訂閱事件
             _eventBus.Subscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
+            _eventBus.Subscribe<StaminaWarningEvent>(OnStaminaFlagChanged);
         }
 
         private void OnDisable()
@@ -56,6 +61,30 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _staminaCtrl.Dispose();
             // 取消訂閱，防止記憶體洩漏
             _eventBus.Unsubscribe<PlayerStatusUpdateEvent>(OnPlayerStatusChanged);
+            _eventBus.Unsubscribe<StaminaWarningEvent>(OnStaminaFlagChanged);
+        }
+
+        private void OnStaminaFlagChanged(StaminaWarningEvent evt)
+        {
+            
+            if (evt.IsWarning)
+            {
+                // 檢查是否已經在閃爍，避免重複播放
+                if (!DOTween.IsTweening("STFlash"))
+                {
+                    staminaWarningPrototype.a = 0.5f;
+                    staminaWarning.DOColor(staminaWarningPrototype, 0.25f) // 速度極快
+                        .SetEase(Ease.Linear)
+                        .SetLoops(-1, LoopType.Yoyo)
+                        .SetId("STFlash");
+                }
+            }
+            else
+            {
+                staminaWarningPrototype.a = 0f;
+                DOTween.Kill("STFlash");
+                staminaWarning.color = staminaWarningPrototype;
+            }
         }
 
         //private CancellationTokenSource staminaTokenSoure;
@@ -83,7 +112,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
                 // 檢查是否已經在閃爍，避免重複播放
                 if (!DOTween.IsTweening("HPFlash"))
                 {
-                    healthWarningPrototype.a = 0.75f;
+                    healthWarningPrototype.a = 0.8f;
                     healthWarning.DOColor(healthWarningPrototype, 0.25f) // 速度極快
                         .SetEase(Ease.Linear)
                         .SetLoops(-1, LoopType.Yoyo)
@@ -92,7 +121,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             }
             else
             {
-                healthWarningPrototype.a = 0.2f;
+                healthWarningPrototype.a = 0f;
                 DOTween.Kill("HPFlash");
                 healthWarning.color = healthWarningPrototype;
             }

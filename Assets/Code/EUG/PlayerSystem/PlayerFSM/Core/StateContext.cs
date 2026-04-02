@@ -86,6 +86,8 @@ namespace Nobeta.EUG.FSM.Core
         // 戰鬥相關
         public int ComboCounter { get; set; }
         public float LastAttackTime { get; set; }
+        public bool StaminaFlag { get; set; }
+
         public Dictionary<BulletType, BulletConfig> _bulletsDiction;
         #endregion
 
@@ -152,6 +154,8 @@ namespace Nobeta.EUG.FSM.Core
             // 戰鬥
             ComboCounter = 0;
             LastAttackTime = 0f;
+            StaminaFlag = false;
+
             _bulletsDiction = new Dictionary<BulletType, BulletConfig>();
             _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
             _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);

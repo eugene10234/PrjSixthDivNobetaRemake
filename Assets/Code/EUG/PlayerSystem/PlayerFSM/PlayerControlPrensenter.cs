@@ -1,13 +1,14 @@
-﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+﻿using System;
+using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.MBFunctions.Events;
 using Nobeta.EUG.MBFunctions.PlayerUI;
 using Nobeta.EUG.Services;
-using System;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
@@ -118,7 +119,27 @@ namespace Nobeta.EUG.FSM
             }
             if(!stateMachine.IsInState<DyingState>())
             {
-                if (_context.CurrentStamina ==0 && stateMachine.IsInState<RunningState>()) TryFellingState();
+                float StaminaRatio = (float)_context.CurrentStamina / _context.MaxStamina;
+                if (_context.StaminaFlag && StaminaRatio>0.4f)
+                {
+                    _context.StaminaFlag = false;
+                    _eventBus.Publish(new StaminaWarningEvent()
+                    {
+                        IsWarning = false
+                    });
+                }
+                if (_context.CurrentStamina ==0 )
+                {
+                    _context.StaminaFlag = true;
+                    _eventBus.Publish(new StaminaWarningEvent()
+                    {
+                        IsWarning = true
+                    });
+                    if (stateMachine.IsInState<RunningState>())
+                    {
+                        TryFellingState();
+                    }
+                }
                 if (!HMStartUpLock) HealthManaTimeRecoveryAPI();
                 if (!STStartUpLock) StamiaTimeChangeAPI();
 
@@ -158,7 +179,7 @@ namespace Nobeta.EUG.FSM
             }
             else
             {
-                RestoreStamina(2);
+                RestoreStamina(4);
             }
         }
 

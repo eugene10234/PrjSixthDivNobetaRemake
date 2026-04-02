@@ -81,7 +81,10 @@ namespace Nobeta.EUG.FSM.States
         {
             if (ctx.CanDodge)
             {
-                stateMachine.ChangeState<DodgingState>(force: true);
+                if (ctx.StaminaFlag)
+                    stateMachine.ChangeState<FellingState>(force: true);
+                else
+                    stateMachine.ChangeState<DodgingState>(force: true);
             }
         }
         private void SetBulletFunc(int msNum)
