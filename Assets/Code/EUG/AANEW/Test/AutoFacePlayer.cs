@@ -138,7 +138,7 @@ namespace Nobeta.EUG.Tests
                         _eventBus.Publish(new InteractEreaEnterEvent
                         {
                             InteractObj = this,
-                            Message = $"UnityChane感覺周圍好像有人"
+                            Message = $"UnityChan感覺周圍好像有人"
                         });
                         _facingFlag = false;
                     }
@@ -165,6 +165,7 @@ namespace Nobeta.EUG.Tests
                 });
                 _dMaxLevel = 0;
                 _facingFlag = false;
+                _dCurrLevel =-1;
             }
 
         }
