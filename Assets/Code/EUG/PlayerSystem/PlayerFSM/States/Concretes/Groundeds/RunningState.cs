@@ -21,6 +21,7 @@ namespace Nobeta.EUG.FSM.States
             if (ctx.StaminaFlag)
             {
                 stateMachine.ChangeState<FellingState>(force: true);
+                return;
             }
             ctx.CurrentSpeedType = typeof(RunningState);
             RunningTimer = RUNNING_DURATION;
