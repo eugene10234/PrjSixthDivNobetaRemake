@@ -40,7 +40,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public static BulletConfig Normal => new BulletConfig
         {
             Speed = 35f,
-            Damage = 40,
+            Damage = 99940,
             ManaCost = 0,
             CoolTime = 0.5f,
             //CoolTimerLock = false,
