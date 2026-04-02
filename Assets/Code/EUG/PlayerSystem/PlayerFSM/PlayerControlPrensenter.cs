@@ -120,7 +120,7 @@ namespace Nobeta.EUG.FSM
             if(!stateMachine.IsInState<DyingState>())
             {
                 float StaminaRatio = (float)_context.CurrentStamina / _context.MaxStamina;
-                if (_context.StaminaFlag && StaminaRatio>0.4f)
+                if (_context.StaminaFlag && StaminaRatio>0.35f)
                 {
                     _context.StaminaFlag = false;
                     _eventBus.Publish(new StaminaWarningEvent()
