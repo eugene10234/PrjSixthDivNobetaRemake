@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 50
   length: 50
-  size: 1
+  size: 2
   origin: {x: 0, y: 0, z: 0}
   oriPoints:
-  - {x: 0, y: 0, z: 0}
+  - {x: 444, y: 72, z: 588}
+  - {x: 528, y: 69.4, z: 645}
+  - {x: 532, y: 61.79, z: 598.6}

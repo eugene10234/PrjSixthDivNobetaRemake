@@ -30012,7 +30012,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.61755055, y: 0.59, z: 3.59}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8501346957603637533}
@@ -44950,8 +44950,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.36966458, y: 0.5601281, z: 1.1394176}
-  m_Center: {x: -0.23311086, y: -0.20275502, z: 0.22244537}
+  m_Size: {x: 0.3696646, y: 0.5601281, z: 1.5236858}
+  m_Center: {x: -0.23311087, y: -0.20275503, z: 0.41457924}
 --- !u!114 &4815306679502961071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44965,5 +44965,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyStat: {fileID: 11400000, guid: ef0d84141edb90f42a94e736e874cdbd, type: 2}
-  RuneFX: {fileID: 7649933662803056763}
-  FlameFX: {fileID: 5836911145484153053}
+  PreAttackFX: {fileID: 7649933662803056763}
+  AttackFX: {fileID: 5836911145484153053}

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: GiantBeastGhostStat
   m_EditorClassIdentifier: 
   MaxHP: 1000
-  AttackPower: 50
+  AttackPower: 25
   Speed: 5
   SpacingSpeed: 3
   AggroRange: 25
   ChaseRange: 30
   AttackRange: 13
   AttackSpeed: 0.3
+  DeathDuration: 3
   dodgeSpeed: 5

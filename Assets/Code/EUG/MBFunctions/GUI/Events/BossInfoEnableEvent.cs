@@ -10,7 +10,7 @@ namespace Nobeta.EUG.Events
 {
     public struct BossInfoEnableEvent
     {
-        public int CurrentHealth;
-        public int MaxHealth;
+        public float HealthRatio;
+        public string BossName;
     }
 }

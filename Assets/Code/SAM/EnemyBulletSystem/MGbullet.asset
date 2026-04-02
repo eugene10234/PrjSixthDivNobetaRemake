@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 184908444d94044418a6491837ece45b, type: 3}
   m_Name: MGbullet
   m_EditorClassIdentifier: 
-  Speed: 12
+  Speed: 25
   Lifetime: 5
   IsHoming: 1
   HomingStrength: 5
-  Damage: 10
+  Damage: 3
   AoERadius: 0
   AoEFalloff: 1
   PoolSize: 20
-  ImpactVFXPrefab: {fileID: 1702214789260805808, guid: 12810d38e717e5d4daa5253a9b8fcb45, type: 3}
-  ProjectilePrefab: {fileID: 4378749385301255917, guid: d991616053c614c45891d8ddaf100e3c, type: 3}
+  ImpactVFXPrefab: {fileID: 7278940596830747790, guid: 98aa66ea08c2e8745aaa92b8564940ad, type: 3}
+  ProjectilePrefab: {fileID: 104846761847353966, guid: 077d034b857079c449ed4f6082911c6a, type: 3}

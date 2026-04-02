@@ -13,6 +13,9 @@ namespace Nobeta.Sam.Enemy
     /// </summary>
     public class GiantBeastGhostData : BaseEnemyData
     {
+        public string Name = "陰鬱的疾風生骸";
+        public string Reward = "疾風魔法";
+
         [Inject]
         public GiantBeastGhostData(GiantBeastGhostStat stat) : base(stat) { }
     }

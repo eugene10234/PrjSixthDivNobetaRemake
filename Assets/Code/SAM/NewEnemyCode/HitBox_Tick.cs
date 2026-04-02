@@ -12,8 +12,8 @@ public class HitBox_Tick : MonoBehaviour
     private BoxCollider hitarea;
     private IEventBus _eventBus;
     public EnemyStat enemyStat;
-    public GameObject RuneFX;
-    public GameObject FlameFX;
+    public GameObject PreAttackFX;
+    public GameObject AttackFX;
     private void Awake()
     {
         _eventBus = EventBusProvider.GetEventBus();
@@ -23,46 +23,51 @@ public class HitBox_Tick : MonoBehaviour
             hitarea.isTrigger = true;
             hitarea.enabled = false;
         }
-        FlameFX.SetActive(false);
+        AttackFX.SetActive(false);
     }
 
-    public async UniTask StartBreatheFireFX()
+    public async UniTask StartAttackFX()
     {
-       bool succes = await RuneActivation(this.destroyCancellationToken);
+       bool succes = await StartAttackSequence(this.destroyCancellationToken);
         if (succes)
         {
-            FireActivation();
+            AttackActivation();
         }
     }
 
-    private void FireActivation()
+    private void AttackActivation()
     {
-        FlameFX.SetActive(false);
-        FlameFX.SetActive(true);
+        AttackFX.SetActive(false);
+        AttackFX.SetActive(true);
         hitarea.enabled = true;
     }
-    private async UniTask <bool> RuneActivation(CancellationToken token)
+    private async UniTask <bool> StartAttackSequence(CancellationToken token)
     {
         try
         {
-            RuneFX.SetActive(true);
+            PreAttackFX.SetActive(true);
             await UniTask.Delay(500, cancellationToken: token);
             return true;
         }
         catch (OperationCanceledException)
         {
             // Handle cleanup if the enemy dies/action is interrupted mid-way
-            EndBreatheFireFX();
+            EndPreAttackFX();
+            EndAttackFX();
             hitarea.enabled = false;
             return false;
         }
     }
 
-   
-
-    public void EndBreatheFireFX()
+    public void EndAttackFX()
     {
-        RuneFX.SetActive(false);
+        AttackFX.SetActive(false);
+        hitarea.enabled = false;
+    }
+
+    public void EndPreAttackFX()
+    {
+        PreAttackFX.SetActive(false);
         hitarea.enabled = false;
     }
     private void OnTriggerEnter(Collider other)

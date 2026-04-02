@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d204b4ef6fc3184ba9af8a5a6e3ee9a, type: 3}
   m_Name: FDStat
   m_EditorClassIdentifier: 
-  MaxHP: 1000
+  MaxHP: 800
   AttackPower: 30
   Speed: 3
   SpacingSpeed: 1
   AggroRange: 20
   ChaseRange: 20
-  AttackRange: 3
+  AttackRange: 8
   AttackSpeed: 0.5
+  DeathDuration: 3

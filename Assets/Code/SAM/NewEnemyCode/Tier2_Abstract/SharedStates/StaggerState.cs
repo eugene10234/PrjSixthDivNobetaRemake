@@ -18,7 +18,7 @@ namespace Nobeta.Sam.Enemy
 
         private Vector3 _hitPosition;
         private float   _staggerTimer;
-        private const float StaggerDuration = 0.4f;
+        private const float StaggerDuration = 0.2f;
 
         public event Action OnStaggerFinished;
 
@@ -45,7 +45,9 @@ namespace Nobeta.Sam.Enemy
         {
             _staggerTimer -= Time.fixedDeltaTime;
             if (_staggerTimer <= 0f)
+            { 
                 OnStaggerFinished?.Invoke();
+            } 
         }
 
         public void OnExit() { }

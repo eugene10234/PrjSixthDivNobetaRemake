@@ -16,8 +16,9 @@ MonoBehaviour:
   AttackPower: 20
   Speed: 2
   SpacingSpeed: 1
-  AggroRange: 50
+  AggroRange: 35
   ChaseRange: 50
   AttackRange: 50
   AttackSpeed: 0.5
+  DeathDuration: 3
   ChaseWeight: 0.7

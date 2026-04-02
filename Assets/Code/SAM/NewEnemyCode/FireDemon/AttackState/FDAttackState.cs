@@ -36,7 +36,6 @@ namespace Nobeta.Sam.Enemy
         public void OnEnter()
         {
             _movement.LookAt(_data.Target.transform.position);
-            _attackCooldown = 0f; // attack immediately on entry
         }
 
         public void OnFixedTick()
@@ -50,12 +49,12 @@ namespace Nobeta.Sam.Enemy
                 return;
             }
 
-            _movement.Stop();
             _movement.LookAt(_data.Target.transform.position);
 
             _attackCooldown -= Time.fixedDeltaTime;
             if (_attackCooldown <= 0f)
             {
+                _movement.Stop();
                 StartBreatheFire();
             }
         }
@@ -71,7 +70,7 @@ namespace Nobeta.Sam.Enemy
         }
         public void OnExit()
         {
-            _attackCooldown = 0f;
+            _attackCooldown = 0;
         }
     }
 }

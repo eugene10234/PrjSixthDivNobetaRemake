@@ -47,7 +47,7 @@ namespace Nobeta.Sam.Bullet
         public Bullet FireAt(Vector3 origin, Vector3 targetPosition, BulletData data,
                              GameObject instigator, Transform homingTarget = null)
         {
-            Vector3 direction = (targetPosition - origin).normalized;
+            Vector3 direction = (targetPosition+new Vector3(0,1.3f,0) - origin).normalized;
             return Fire(origin, direction, data, instigator, homingTarget);
         }
 

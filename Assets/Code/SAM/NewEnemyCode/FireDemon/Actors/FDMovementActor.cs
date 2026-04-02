@@ -133,8 +133,6 @@ namespace Nobeta.Sam.Enemy
 
         public void LookAt(Vector3 target)
         {
-            if (_rb.linearVelocity.sqrMagnitude <= 0.1f) return;
-
             Vector3 lookDir;
             if (hasLOS)
             {

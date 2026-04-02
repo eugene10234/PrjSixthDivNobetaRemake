@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace Nobeta.Sam.Enemy
         
         public void OnEnter()
         {
+            _animation.HideRune();
             _animation.PlaySleep();
         }
 

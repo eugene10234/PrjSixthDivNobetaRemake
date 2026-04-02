@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using VContainer;
 
@@ -16,7 +17,8 @@ namespace Nobeta.Sam.Enemy
         private Animator _animator;
         private SkinnedMeshRenderer _smr;
         private MaterialPropertyBlock _propBlock;
-        private HitBox _hitbox;
+        
+        private MGRune _mgRune;
 
         private static readonly int DissolveAmountId = Shader.PropertyToID("_Dissolve");
 
@@ -24,7 +26,8 @@ namespace Nobeta.Sam.Enemy
         {
             _animator = GetComponent<Animator>();
             _smr = GetComponentInChildren<SkinnedMeshRenderer>();
-            _hitbox = GetComponentInChildren<HitBox>();
+            
+            _mgRune = GetComponentInChildren<MGRune>();
         }
 
         // ── IAnimationActor ───────────────────────────────────────────────────
@@ -55,18 +58,25 @@ namespace Nobeta.Sam.Enemy
         }
         public UniTask PlayAttack()
         {
-            _animator.SetTrigger("tAttack");
+            //_hitboxtick.StartAttackFX().Forget();
             return UniTask.CompletedTask;
         }
 
-        public void AE_ActivateHitBox()
+        public async UniTask PlayPreAttack()
         {
-            _hitbox.ActivateHitArea();
+            _mgRune.Show();
+            await UniTask.Delay(3000);
         }
 
-        public void AE_DeActivateHitBox()
+        public async UniTask StartLaser()
         {
-            _hitbox.DeActivateHitArea();
+            
+            await UniTask.Delay(3000);
+        }
+
+        public void HideRune()
+        {
+            _mgRune.Hide();  
         }
 
         public void PlayVictory()
@@ -82,7 +92,7 @@ namespace Nobeta.Sam.Enemy
         public async UniTask PlayDeathSequence(float duration)
         {
             if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
-
+            HideRune();
             float elapsed = 0f;
             while (elapsed < duration)
             {

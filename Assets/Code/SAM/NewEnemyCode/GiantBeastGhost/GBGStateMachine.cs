@@ -1,3 +1,6 @@
+using Nobeta.EUG.Events;
+using Nobeta.EUG.Interfaces;
+using Nobeta.Sam.Events;
 using System;
 using System.Threading;
 using UnityEngine;
@@ -28,6 +31,7 @@ namespace Nobeta.Sam.Enemy
         private GBGAttackState      _attack;
         private StaggerState        _stagger;
         private GBGDodgeState       _dodge;
+        private IEventBus           _eventBus;
 
         [Inject]
         public void Construct(
@@ -40,6 +44,7 @@ namespace Nobeta.Sam.Enemy
             VictoryState        victory,
             DeathState          death)
         {
+            _eventBus = EventBusProvider.GetEventBus();
             _data    = data;
             _idle    = idle;
             _chase   = chase;
@@ -96,19 +101,27 @@ namespace Nobeta.Sam.Enemy
         {
             if (_data.IsDead) return;
             _stagger.Activate(hitPosition);
-
-            // Scan for player on hit — if we don't have a target yet, find one now
-            // (handled inside StaggerState.OnExit → OnStaggerFinished → back to chase)
+            _eventBus.Publish(new BossHealthUpdateEvent
+            {
+                HealthRatio = _data.HealthPercent,
+                BossName = _data.Name,
+            });
+            if (CurrentState == _stagger) return;
             TransitionTo<StaggerState>();
         }
 
         public override void OnDeath()
         {
+            _eventBus.Publish(new BossInfoDisableEvent
+            {
+            });
+            _eventBus.Publish(new EnemyDeathEvent { Reward = _data.Reward });
             TransitionTo<DeathState>();
         }
 
         public override void OnVictory()
         {
+            _eventBus.Publish(new EnemyVictoryEvent { });
             TransitionTo<VictoryState>();
         }
 
@@ -153,6 +166,11 @@ namespace Nobeta.Sam.Enemy
             // Idle GoHome → stop when arrived (player spotted mid-return is also handled inside IdleState)
             _idle.OnPlayerDetected += () =>
             {
+                _eventBus.Publish(new BossInfoEnableEvent
+                {
+                    BossName = _data.Name,
+                    HealthRatio = _data.HealthPercent,
+                });
                 // Player was spotted mid-return — jump straight into combat
                 if (_data.Target != null) TransitionTo<ChaseState>();
                 else
@@ -165,6 +183,9 @@ namespace Nobeta.Sam.Enemy
             _idle.OnReturnedHome += () =>
             {
                 _idle.Mode = IdleState.IdleMode.Stop;
+                _eventBus.Publish(new BossInfoDisableEvent
+                {
+                });
             };
         }
 

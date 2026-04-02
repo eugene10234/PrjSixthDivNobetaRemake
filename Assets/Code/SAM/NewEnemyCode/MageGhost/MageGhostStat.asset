@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: MageGhostStat
   m_EditorClassIdentifier: 
   MaxHP: 1000
-  AttackPower: 20
+  AttackPower: 1
   Speed: 0
   SpacingSpeed: 0
   AggroRange: 30
   ChaseRange: 30
   AttackRange: 100
-  AttackSpeed: 0.5
+  AttackSpeed: 0.2
+  DeathDuration: 3

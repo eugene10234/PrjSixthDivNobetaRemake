@@ -57,9 +57,6 @@ MonoBehaviour:
   _gbgspawner: {fileID: 4745627259530645664, guid: 0c3cbe2ad0f896a429baae58eccdd237, type: 3}
   _mageGhostScopePrefab: {fileID: 7409183661793916896, guid: 556d01a3a4e430b48a4758601feb39af, type: 3}
   _mgSpawner: {fileID: 3098951574946981224, guid: 590f77ec46473bc47b3ecc1ea85f56fb, type: 3}
-  _sgScopePrefab: {fileID: 799614414657268342, guid: 15bdc4d1b10939743bb094926d7abf4b, type: 3}
-  _sgspawner: {fileID: 0}
-  _enemyBulletSystemRoot: {fileID: 0}
 --- !u!114 &7989597185749338313
 MonoBehaviour:
   m_ObjectHideFlags: 0

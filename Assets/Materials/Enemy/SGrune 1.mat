@@ -35,7 +35,7 @@ Material:
     m_Floats:
     - _Alpha: 1
     - _Dissolve: 0
-    - _EdgeWidth: 0.05
+    - _EdgeWidth: 0
     - _EmissionIntensity: 6.22
     - _RotationOffset: 0
     - _RotationSpeed: 1

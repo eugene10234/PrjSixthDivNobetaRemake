@@ -1,4 +1,9 @@
+using Nobeta.EUG.Events;
+using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.Services;
+using Nobeta.Sam.Enemy;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Nobeta.Sam.Bullet
@@ -27,7 +32,7 @@ namespace Nobeta.Sam.Bullet
         private SphereCollider _col;
         private TrailRenderer[] allTrails;
         private bool _hasTrails;
-
+        private IEventBus _eventbus;
         // ── Events ────────────────────────────────────────────────────────────
 
         /// Raised on impact — BulletPool listens to this to return the bullet.
@@ -43,6 +48,7 @@ namespace Nobeta.Sam.Bullet
             _rb.useGravity  = false;
             _rb.isKinematic = false;
             _rb.constraints = RigidbodyConstraints.FreezeRotation;
+            _eventbus = EventBusProvider.GetEventBus();
         }
 
         private void OnEnable()
@@ -96,25 +102,35 @@ namespace Nobeta.Sam.Bullet
             Vector3 hitPos = transform.position;
 
             // ── Direct hit ────────────────────────────────────────────────────
-            var directHandler = other.GetComponentInParent<IBulletHitHandler>();
-            if (directHandler != null)
+            //var directHandler = other.GetComponentInParent<IBulletHitHandler>();
+            //if (directHandler != null)
+            //{
+
+            //var evt = BuildEvent(hitPos, _data.Damage);
+            //directHandler.OnBulletHit(evt);
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                var evt = BuildEvent(hitPos, _data.Damage);
-                directHandler.OnBulletHit(evt);
-                ReturnToPool(hitPos, didHit: true);
-                return;
+                _eventbus.Publish(new PlayerDamagedEvent
+                {
+                    Damage = Mathf.FloorToInt(_data.Damage),
+                    hitPosition = transform.position
+                });
             }
+            ReturnToPool(hitPos, didHit: true);
+                //return;
+            //}
 
             // ── AoE hit ───────────────────────────────────────────────────────
-            if (_data.AoERadius > 0f)
-            {
-                ApplyAoE(hitPos);
-                ReturnToPool(hitPos, didHit: true);
-                return;
-            }
+            //if (_data.AoERadius > 0f)
+            //{
+            //    ApplyAoE(hitPos);
+            //    ReturnToPool(hitPos, didHit: true);
+            //    return;
+            //}
 
             // Hit something with no handler (wall, terrain) — still return
-            ReturnToPool(hitPos, didHit: true);
+            //ReturnToPool(hitPos, didHit: true);
         }
 
         // ── Public API (called by BulletPool) ─────────────────────────────────
@@ -122,6 +138,14 @@ namespace Nobeta.Sam.Bullet
         public void Activate(BulletData data, Vector3 position, Vector3 direction,
                              GameObject instigator, Transform homingTarget = null)
         {
+            if (data == null)
+            {
+                Debug.LogError("❌ BulletData is NULL");
+                return;
+            }
+            Debug.Log($"data null? {data == null}");
+            Debug.Log($"instigator null? {instigator == null}");
+            Debug.Log($"homingTarget null? {homingTarget == null}");
             _data          = data;
             _instigator    = instigator;
             _homingTarget  = homingTarget;

@@ -10,11 +10,16 @@ public class MGLifetimeScope : LifetimeScope
 {
     [SerializeField] private MageGhostStat _stat;
     [SerializeField] private BulletData _spellData;    // MageGhost spell asset
-    [SerializeField] private Transform _muzzlePoint;  // child transform on prefab
-    [SerializeField] private GameObject _barrierSphere; // child sphere ¡X toggled by summon
-    [SerializeField] private Barrier _barrier;
+ 
+    
+    
     protected override void Configure(IContainerBuilder builder)
     {
+        builder.RegisterInstance(_spellData)
+                .AsSelf()
+                .As<BulletData>();
+
+
         // ¢w¢w Stat ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         builder.RegisterInstance(_stat)
                .AsSelf()
@@ -22,8 +27,7 @@ public class MGLifetimeScope : LifetimeScope
 
         // ¢w¢w Spell config ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         // Injected into MGCastState directly ¡X BulletSystem resolves from parent scope.
-        builder.RegisterInstance(_spellData);
-        builder.RegisterInstance(_muzzlePoint);
+      
 
         // ¢w¢w Runtime data ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         builder.Register<MageGhostData>(Lifetime.Scoped)
@@ -42,11 +46,7 @@ public class MGLifetimeScope : LifetimeScope
         // ¢w¢w Post-construction barrier wiring ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         // VContainer doesn't support passing a scene GameObject into a plain C# class
         // constructor cleanly, so we use a callback to set it after construction.
-        builder.RegisterBuildCallback(container =>
-        {
-            var summon = container.Resolve<MGSummonState>();
-            summon.Activate(destroyCancellationToken);
-        });
+      
 
         // ¢w¢w Spacing system ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         //builder.Register<SpacingSystem>(Lifetime.Scoped)
@@ -71,11 +71,16 @@ public class MGLifetimeScope : LifetimeScope
         builder.RegisterComponent(GetComponentInChildren<Barrier>())
                .AsSelf();
 
+        //builder.RegisterComponent(GetComponentInChildren<HitBox_Tick>())
+        //       .AsSelf();
+
         // Facade ¡X AsSelf so MGStateMachine.TriggerSummon can resolve MageGhost
         // for the destroyCancellationToken
         builder.RegisterComponent(GetComponent<MageGhost>())
                .AsSelf()
                .As<EnemyProvider>();
+
+        
 
         // ¢w¢w Shared states ¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w
         builder.Register<IdleState>(Lifetime.Scoped);

@@ -37,7 +37,7 @@ namespace Nobeta.Sam.Enemy
         private async UniTask BreatheFire(CancellationToken token)
         {
             _breatheFireTimer = 0; // Reset at start to be safe
-            _hitboxtick.StartBreatheFireFX();
+            _hitboxtick.StartAttackFX();
 
             try
             {
@@ -54,7 +54,7 @@ namespace Nobeta.Sam.Enemy
             finally
             {
                 // 'finally' ensures the hitbox turns off even if the task is cancelled
-                _hitboxtick.EndBreatheFireFX();
+                _hitboxtick.EndPreAttackFX();
                 _breatheFireTimer = 0;
             }
         }

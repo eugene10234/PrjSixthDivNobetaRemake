@@ -33,17 +33,16 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         }
         private void OnBossHealthUpdate(BossHealthUpdateEvent evt)
         {
-            float targetRatio = (float)evt.CurrentHealth / evt.MaxHealth;
+            float targetRatio = evt.HealthRatio;
             UpdateBossHealth(targetRatio);
         }
         private void OnBossArenaStart(BossInfoEnableEvent evt)
         {
             FadeInAndEnable();
-            float targetRatio = 1f;
-            if (evt.MaxHealth != 0) targetRatio = (float)evt.CurrentHealth / evt.MaxHealth;
+            float targetRatio = evt.HealthRatio;
             bossHealthBar.fillAmount = 0f;
             bossHealthBuffer.fillAmount = 0f;
-            UpdateBossHealth(1f);
+            UpdateBossHealth(targetRatio);
         }
         private void OnBossArenaEnd(BossInfoDisableEvent evt)
         {

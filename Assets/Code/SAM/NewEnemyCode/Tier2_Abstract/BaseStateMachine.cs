@@ -59,6 +59,7 @@ namespace Nobeta.Sam.Enemy
 
         // ── IEnemyStateMachine ────────────────────────────────────────────────
 
+        //idle state already scan for player, this never calls.
         public abstract void OnCombatAlert(GameObject target);
         public abstract void OnTargetLost();
         public abstract void OnHit(Vector3 hitPosition);

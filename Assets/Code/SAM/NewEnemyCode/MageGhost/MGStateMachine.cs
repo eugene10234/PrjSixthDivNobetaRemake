@@ -1,3 +1,6 @@
+using Nobeta.EUG.Events;
+using Nobeta.EUG.Interfaces;
+using Nobeta.Sam.Events;
 using UnityEngine;
 using VContainer;
 
@@ -27,6 +30,7 @@ namespace Nobeta.Sam.Enemy
         private MGAttackState _attack;
         private MGSummonState _summon;
         private Barrier _barrier;
+        private IEventBus _eventBus;
 
 
         [Inject]
@@ -41,6 +45,7 @@ namespace Nobeta.Sam.Enemy
             DeathState death,
             Barrier barrier)
         {
+            _eventBus = EventBusProvider.GetEventBus();
             _data = data;
             _sleep = sleep;
             _summon = summon;
@@ -94,24 +99,29 @@ namespace Nobeta.Sam.Enemy
         public override void OnHit(Vector3 hitPosition)
         {
             if (_data.IsDead) return;
-
+            if (CurrentState is MGSummonState) return; // summon is uninterruptible
             _stagger.Activate(hitPosition);
-
-            // Scan for player on hit — if we don't have a target yet, find one now
-            // (handled inside StaggerState.OnExit → OnStaggerFinished → back to chase)
+            _eventBus.Publish(new BossHealthUpdateEvent
+            {
+                HealthRatio = _data.HealthPercent,
+                BossName = _data.Name,
+            });
+            if (CurrentState == _stagger) return;
             TransitionTo<StaggerState>();
-            // Scan for player on hit — if we don't have a target yet, find one now
-            // (handled inside StaggerState.OnExit → OnStaggerFinished → back to chase)
-
         }
 
         public override void OnDeath()
         {
+            _eventBus.Publish(new BossInfoDisableEvent
+            {
+            });
+            _eventBus.Publish(new EnemyDeathEvent { Reward = _data.Reward });
             TransitionTo<DeathState>();
         }
 
         public override void OnVictory()
         {
+            _eventBus.Publish(new EnemyVictoryEvent { });
             TransitionTo<VictoryState>();
         }
 
@@ -123,7 +133,7 @@ namespace Nobeta.Sam.Enemy
             //summon transition
             _summon.OnSummonCompleted += () =>
             {
-                _barrier.Show();
+                //_barrier.Show();
                 TransitionTo<IdleState>();
             };
             _summon.OnAllSummonedDied += () =>
@@ -143,7 +153,7 @@ namespace Nobeta.Sam.Enemy
 
             // Attack → chase when player moves out of attack range
             _attack.OnTargetOutOfRange += () => TransitionTo<IdleState>();
-
+            _attack.OnLaserFinished += () => TransitionTo<IdleState>();
             //stagger
             _stagger.OnStaggerFinished += () =>
             {
@@ -159,6 +169,11 @@ namespace Nobeta.Sam.Enemy
             _idle.OnPlayerDetected += () =>
             {
                 // Player was spotted mid-return — jump straight into combat
+                _eventBus.Publish(new BossInfoEnableEvent
+                {
+                    BossName = _data.Name,
+                    HealthRatio = _data.HealthPercent,
+                });
                 if (_data.Target != null) TransitionTo<MGAttackState>();
                 else
                 {
@@ -170,6 +185,9 @@ namespace Nobeta.Sam.Enemy
             _idle.OnReturnedHome += () =>
             {
                 _idle.Mode = IdleState.IdleMode.Stop;
+                _eventBus.Publish(new BossInfoDisableEvent
+                {
+                });
             };
         }
 
