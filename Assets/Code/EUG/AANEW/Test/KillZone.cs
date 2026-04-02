@@ -2,25 +2,29 @@ using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 
-public class KillZoneTest : MonoBehaviour
+namespace Nobeta.EUG.Tests
 {
-    private IEventBus _eventBus;
-    private void Awake()
+    public class KillZoneTest : MonoBehaviour
     {
-        _eventBus = EventBusProvider.GetEventBus();
-    }
-
-    // Update is called once per frame
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        private IEventBus _eventBus;
+        private void Awake()
         {
-            // 發布事件
-            _eventBus.Publish(new PlayerDamagedEvent
+            _eventBus = EventBusProvider.GetEventBus();
+        }
+
+        // Update is called once per frame
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                Damage = 99999,
-                hitPosition = transform.position
-            });
+                // 發布事件
+                _eventBus.Publish(new PlayerDamagedEvent
+                {
+                    Damage = 99999,
+                    hitPosition = transform.position
+                });
+            }
         }
     }
 }
+

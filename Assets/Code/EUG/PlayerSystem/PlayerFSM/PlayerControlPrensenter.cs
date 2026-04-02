@@ -56,7 +56,7 @@ namespace Nobeta.EUG.FSM
                 Debug.LogError("PlayerControlPresenter: _stateMachine 尚未實例化！");
                 return;
             }
-            _debugService.GUI.Add(DrawDebugInfo);
+            //_debugService.GUI.Add(DrawDebugInfo);
             //訂閱輸入事件
             //Debug.LogWarning("mbPlayerControllerStart");
 

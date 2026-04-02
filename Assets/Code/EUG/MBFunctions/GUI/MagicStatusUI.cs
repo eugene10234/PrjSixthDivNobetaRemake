@@ -1,4 +1,5 @@
 ﻿using Assets.Code.EUG.MBFunctions.GUI;
+using DG.Tweening;
 using Nobeta.EUG.BulletSystem.OOP;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
@@ -114,7 +115,50 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         //    }
         //    catch (System.OperationCanceledException) { }
         //}
+        private CanvasGroup canvasGroup;
+        private float _fadeDuration = 0.5f;
+        // 淡入
+        public void FadeIn()
+        {
+            // 從目前的透明度變化到 1
+            canvasGroup.DOFade(1, _fadeDuration);
+        }
 
+        // 淡出
+        public void FadeOut()
+        {
+            // 變化到 0
+            canvasGroup.DOFade(0, _fadeDuration);
+        }
+        public void FadeInAndEnable()
+        {
+            // 從目前的透明度變化到 1
+            canvasGroup.DOFade(1, _fadeDuration).OnPlay(() =>
+            {
+                gameObject.SetActive(true); // 動畫開始時啟用物件
+                Debug.Log("Fade In Started!");
+            });
+        }
+        public void FadeOutAndDisable()
+        {
+            canvasGroup.DOFade(0, _fadeDuration).OnComplete(() =>
+            {
+                gameObject.SetActive(false); // 動畫結束後關閉物件
+                Debug.Log("Fade Out Finished!");
+            });
+        }
+        public void FadeInWithDelay()
+        {
+            // 延遲 3 秒後，啟動耗時 1 秒的淡入動畫
+            canvasGroup.DOFade(1, 1f).SetDelay(3f);
+        }
+        public void SequenceFade()
+        {
+            Sequence mySequence = DOTween.Sequence();
 
+            mySequence.AppendInterval(3f)     // 插入 3 秒空白等待
+                      .Append(canvasGroup.DOFade(1, 1f)) // 然後淡入
+                      .OnComplete(() => Debug.Log("延遲淡入完成"));
+        }
     }
 }

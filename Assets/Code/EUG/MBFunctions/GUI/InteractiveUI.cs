@@ -1,11 +1,12 @@
-﻿using System;
-using System.Threading;
-using Assets.Code.EUG.MBFunctions.GUI;
+﻿using Assets.Code.EUG.MBFunctions.GUI;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.Interacts;
 using Nobeta.EUG.Services;
+using System;
+using System.Threading;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
@@ -58,13 +59,30 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         }
         private void OnEreaExit(InteractEreaExitEvent evt)
         {
-            _Text.text = evt.Message;
-            TextBar.SetActive(false);
-            _currentOBJ = evt.InteractObj;
-            //if (evt.Enter)
-            //{
+            EreaExit(evt);
+        }
 
-            //}
+        private void EreaExit(InteractEreaExitEvent evt)
+        {
+            //_Text.text = evt.Message;
+            //_currentOBJ = evt.InteractObj;
+            _Text.text = "";
+            TextBar.SetActive(false);
+            _currentOBJ = null;
+            //SequenceFade(evt);
+        }
+        //Sequence mySequence = DOTween.Sequence();
+        public void SequenceFade(InteractEreaExitEvent evt)
+        {
+            Sequence mySequence = DOTween.Sequence();
+
+            mySequence.AppendInterval(3f)
+                      .OnComplete(() =>
+                      {
+                          _Text.text = "";
+                          TextBar.SetActive(false);
+                          _currentOBJ = null;
+                      });
         }
         private void SubscribeEvents()
         {
