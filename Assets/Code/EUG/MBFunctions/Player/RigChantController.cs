@@ -41,7 +41,7 @@ public class RigChantController : MonoBehaviour
     {
         UnsubscribeEvents();
     }
-    private void OnChantStart(PlayerChantStartEvent evt)
+    private void OnChantStart(RigChantStartEvent evt)
     {
         if (rigChant == null) return;
         if (!isPlayerLive) return;
@@ -49,7 +49,7 @@ public class RigChantController : MonoBehaviour
         isChanting = true;
         RigChantTweening(1f, Ease.OutQuad);
     }
-    private void OnChantEnd(PlayerChantEndEvent evt)
+    private void OnChantEnd(RigChantEndEvent evt)
     {
         if (rigChant == null) return;
         if (!isPlayerLive) return;
@@ -87,13 +87,13 @@ public class RigChantController : MonoBehaviour
     private void SubscribeEvents()
     {
         _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
-        _eventBus.Subscribe<PlayerChantStartEvent>(OnChantStart);
-        _eventBus.Subscribe<PlayerChantEndEvent>(OnChantEnd);
+        _eventBus.Subscribe<RigChantStartEvent>(OnChantStart);
+        _eventBus.Subscribe<RigChantEndEvent>(OnChantEnd);
     }
     private void UnsubscribeEvents()
     {
         _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
-        _eventBus.Unsubscribe<PlayerChantStartEvent>(OnChantStart);
-        _eventBus.Unsubscribe<PlayerChantEndEvent>(OnChantEnd);
+        _eventBus.Unsubscribe<RigChantStartEvent>(OnChantStart);
+        _eventBus.Unsubscribe<RigChantEndEvent>(OnChantEnd);
     }
 }

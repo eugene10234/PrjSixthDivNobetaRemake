@@ -1,6 +1,7 @@
 ﻿// ============================================================================
 // BaseState - 更新版狀態基類（支持事件驅動）
 // ============================================================================
+using Nobeta.EUG.Events;
 using System;
 using UnityEngine;
 
@@ -169,6 +170,8 @@ namespace Nobeta.EUG.FSM.Core
         {
             ctx.EventBus.Publish(gameEvent);
         }
+
+
 
         #endregion
     }

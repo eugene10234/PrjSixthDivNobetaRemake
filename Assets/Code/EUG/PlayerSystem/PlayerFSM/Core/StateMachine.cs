@@ -2,13 +2,14 @@
 // StateMachine - 狀態機核心（VContainer 版本）
 // ============================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
@@ -24,6 +25,8 @@ namespace Nobeta.EUG.FSM.Core
     {
         private readonly IPlayerInputService _inputService;
         private readonly IMovementService _movementService;
+        private readonly IEventBus _eventBus;
+        private StateContext _context;
         private readonly IObjectResolver container;
         private readonly Dictionary<Type, BaseState> stateCache;
         private readonly Queue<Type> stateHistory;
@@ -44,7 +47,10 @@ namespace Nobeta.EUG.FSM.Core
             this.container = container;
             _inputService = container.Resolve<IPlayerInputService>();
             _movementService = container.Resolve<IMovementService>();
+            _eventBus = container.Resolve<IEventBus>();
+            _context = container.Resolve<StateContext>();
             SubscribeInputEvents();
+            SubscribeAPIEvents();
             this.stateCache = new Dictionary<Type, BaseState>();
             this.stateHistory = new Queue<Type>();
         }
@@ -98,7 +104,7 @@ namespace Nobeta.EUG.FSM.Core
             }
 
             // 檢查是否可以轉換
-            if (currentState != null && !currentState.InnerCanTransitionTo(stateType,force))
+            if (currentState != null && !currentState.InnerCanTransitionTo(stateType, force))
             {
                 Debug.LogWarning($"無法從 {currentState.StateName} 轉換到 {newState.StateName}");
                 return;
@@ -238,6 +244,7 @@ namespace Nobeta.EUG.FSM.Core
         public void Dispose()
         {
             UnsubscribeInputEvents();
+            UnsubscribeAPIEvents();
         }
         private void SubscribeInputEvents()
         {
@@ -285,6 +292,48 @@ namespace Nobeta.EUG.FSM.Core
         private void HandleAttackStartInput() => stateMachine.CurrentState?.OnAttackInput();
         private void HandleChantStartInput() => stateMachine.CurrentState?.OnChantInput();
         private void HandleNumSwitchInput() => stateMachine.CurrentState?.OnNumSwitchInput();
+        // ========================================================================
+        //private void HandleTakeDamageAPI(PlayerDamagedEvent evt) => stateMachine.CurrentState?.OnTakeDamge(evt);
+        private void SubscribeAPIEvents()
+        {
+            // 取消訂閱 API 事件
+            //_eventBus.Subscribe<PlayerDamagedEvent>(OnTakeDamage);
+            //_eventBus.Subscribe<PlayerDamagedEvent>(HandleTakeDamageAPI);
+        }
+        private void UnsubscribeAPIEvents()
+        {
+            // 取消訂閱 API 事件
+            //_eventBus.Unsubscribe<PlayerDamagedEvent>(OnTakeDamage);
+            //// 例如：_eventBus.Unsubscribe<TakeDamageEvent>(HandleTakeDamageAPI);
+        }
+        //private void OnTakeDamage(PlayerDamagedEvent evt)
+        //{
+        //    return;
+        //    TakeDamage(evt.Damage);
+        //}
+        ///// <summary>
+        ///// 受到傷害
+        ///// </summary>
+        //public void TakeDamage(int damage)
+        //{
+        //    if (stateMachine.IsInState<DodgingState>()) return;
+        //    _context.CurrentHealth -= damage;
+
+        //    if (_context.CurrentHealth <= 0)
+        //    {
+        //        _context.CurrentHealth = 0;
+        //        stateMachine.ChangeState<DyingState>(force: true);
+        //    }
+        //    else
+        //    {
+        //        if (stateMachine.CurrentState.CanTransitionTo(typeof(HitState)))
+        //        {
+        //            stateMachine.ChangeState<HitState>();
+        //        }
+        //    }
+
+
+        //}
     }
 
     // ========================================================================

@@ -139,7 +139,7 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var spawn = _gameManager.PendingSpawn;
             GUI.color = new Color(0f, 0f, 0f, 0.55f);
-            GUI.DrawTexture(new Rect(10, 170, 320, 100), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(10, 220, 320, 100), Texture2D.whiteTexture);
             GUI.color = Color.white;
 
             var bold = new GUIStyle(GUI.skin.label) { fontSize = 13, fontStyle = FontStyle.Bold };
@@ -147,13 +147,13 @@ namespace Nobeta.EUG.GameFlowTry.GameScene
             var cyan = new GUIStyle(GUI.skin.label) { fontSize = 11, normal = { textColor = Color.cyan } };
             var green = new GUIStyle(GUI.skin.label) { fontSize = 11, normal = { textColor = Color.green } };
 
-            GUI.Label(new Rect(18, 174, 300, 22), "🎮 [GAME DEBUG]", bold);
-            GUI.Label(new Rect(18, 196, 300, 20), $"Scene: {SceneManager.GetActiveScene().name}  Status: {_debugStatus}", normal);
-            GUI.Label(new Rect(18, 214, 300, 20),
+            GUI.Label(new Rect(18, 224, 300, 22), "🎮 [GAME DEBUG]", bold);
+            GUI.Label(new Rect(18, 246, 300, 20), $"Scene: {SceneManager.GetActiveScene().name}  Status: {_debugStatus}", normal);
+            GUI.Label(new Rect(18, 264, 300, 20),
                 spawn != null ? $"Spawn: {spawn.Position:F2}  Cutscene: {spawn.PlayIntroCutscene}" : "Spawn: null", cyan);
-            GUI.Label(new Rect(18, 232, 300, 20),
+            GUI.Label(new Rect(18, 282, 300, 20),
                 $"Init: {(_initCompleted ? "✔ Done" : "⏳ Wait")}  LastSave: {_lastSaveInfo}", green);
-            GUI.Label(new Rect(18, 250, 300, 20), $"PlayerPos: {_player.Position:F2}", normal);
+            GUI.Label(new Rect(18, 300, 300, 20), $"PlayerPos: {_player.Position:F2}", normal);
 #endif
         }
 

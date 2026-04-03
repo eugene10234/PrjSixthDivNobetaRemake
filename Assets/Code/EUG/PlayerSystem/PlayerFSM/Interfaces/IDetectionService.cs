@@ -30,6 +30,7 @@ namespace Nobeta.EUG.FSM.Interfaces
         bool CheckIfMoving(StateContext ctx);
         bool CheckIfTurning(StateContext ctx);
         void UpdateTurnDetection(StateContext ctx);
+        bool CheckGroundBelow(float distance);
 
         bool IsMoving { get; }
         bool IsTurning { get; }

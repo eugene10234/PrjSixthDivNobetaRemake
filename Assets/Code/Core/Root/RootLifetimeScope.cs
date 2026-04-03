@@ -5,6 +5,7 @@ using Nobeta.EUG.GameFlowTry.Core.Save;
 using Nobeta.EUG.GameFlowTry.Core.Scene;
 using Nobeta.EUG.GameFlowTry.DI.Nobeta.EUG.GameFlowTry.DI;
 using Nobeta.EUG.GameFlowTry.Game;
+using Nobeta.EUG.GameFlowTry.GameScene;
 using Nobeta.EUG.GameFlowTry.UI;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.Services;
@@ -32,7 +33,7 @@ namespace Nobeta.Root
             builder.Register<IEventBus, EventBus>(Lifetime.Singleton);
 
             //時間服務（全局單例）
-            builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
+            //builder.Register<ITimeService, TimeService>(Lifetime.Singleton);
 
             //音頻服務（全局單例）
             builder.Register<IAudioService, AudioService>(Lifetime.Singleton);
@@ -47,7 +48,12 @@ namespace Nobeta.Root
             builder.Register<GameManager>(Lifetime.Singleton).As<IGameManager>();
 
             //  EntryPoint 注入 IGameManager，強制 GameManager 立即被建構
-            builder.RegisterEntryPoint<AppInitializer>();
+            builder.UseEntryPoints(config =>
+            {
+                config.Add<AppInitializer>();
+                config.Add<TimeService>().As<ITimeService>();                
+            });
+            //builder.RegisterEntryPoint<AppInitializer>();
             //builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton).AsSelf();
             builder.RegisterComponentInHierarchy<DebugServiceMb>();
             builder.RegisterComponentInHierarchy<EventBusProvider>();

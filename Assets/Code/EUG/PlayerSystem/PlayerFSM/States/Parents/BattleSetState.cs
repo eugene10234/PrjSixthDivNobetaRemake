@@ -38,7 +38,7 @@ namespace Nobeta.EUG.FSM.States
             else _isTriggeringAttack = false;
             if (IsAutoFiring && _isTriggeringAttack)
             {
-                ctx.FireCommand();
+                ctx.CommandFire();
             }
 
         }
@@ -135,7 +135,7 @@ namespace Nobeta.EUG.FSM.States
             _isTriggeringAttack = false;
             InOnFireStart = null;
             InOnFireEnd = null;
-            InOnFireEnd = ctx.FireCommand;
+            InOnFireEnd = ctx.CommandFire;
         }
         protected void TypeAR()
         {
@@ -149,7 +149,7 @@ namespace Nobeta.EUG.FSM.States
             _isTriggeringAttack = false;
             InOnFireStart = null;
             InOnFireEnd = null;
-            InOnFireEnd = ctx.FireCommand;
+            InOnFireEnd = ctx.CommandFire;
         }
         protected void TypeSR()
         {
@@ -157,7 +157,7 @@ namespace Nobeta.EUG.FSM.States
             _isTriggeringAttack = false;
             InOnFireStart = null;
             InOnFireEnd = null;
-            InOnFireEnd = ctx.FireCommand;
+            InOnFireEnd = ctx.CommandFire;
         }
         #endregion
     }

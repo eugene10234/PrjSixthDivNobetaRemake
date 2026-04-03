@@ -15,12 +15,18 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
     {
         [Header("UI References")]
         [SerializeField] private Image MageCDFilter;
+        [SerializeField] private CanvasGroup MageIconSparker;
+        private void Awake()
+        {
+            MageIconSparker.alpha = 0;
+        }        
         public Image GetFilter { get => MageCDFilter; }
         public void SetActice(bool TF) 
         {
             this.gameObject.SetActive(TF);
         }
         public abstract Color GetOriginColor { get; }
+        public CanvasGroup GetIconSparker { get => MageIconSparker; }
         //GameObject _gameObject;
         //private void Awake()
         //{

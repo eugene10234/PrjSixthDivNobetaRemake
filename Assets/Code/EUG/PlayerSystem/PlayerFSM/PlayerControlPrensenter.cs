@@ -1,5 +1,4 @@
-﻿using System;
-using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
@@ -9,10 +8,12 @@ using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.Events;
 using Nobeta.EUG.MBFunctions.PlayerUI;
 using Nobeta.EUG.Services;
+using System;
 using UnityEditor;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using static UnityEditor.Rendering.InspectorCurveEditor;
 
 namespace Nobeta.EUG.FSM
 {
@@ -102,7 +103,7 @@ namespace Nobeta.EUG.FSM
             {
                 CurrentHealth = _context.CurrentHealth,
                 MaxHealth = _context.MaxHealth,
-                CurrentMana = _context.CurrentMana,
+                CurrentMana = _context.CurrentUsableMana,
                 MaxMana = _context.MaxMana,
                 CurrentStamina = _context.CurrentStamina,
                 MaxStamina = _context.MaxStamina
@@ -119,27 +120,8 @@ namespace Nobeta.EUG.FSM
             }
             if(!stateMachine.IsInState<DyingState>())
             {
-                float StaminaRatio = (float)_context.CurrentStamina / _context.MaxStamina;
-                if (_context.StaminaFlag && StaminaRatio>0.4f)
-                {
-                    _context.StaminaFlag = false;
-                    _eventBus.Publish(new StaminaWarningEvent()
-                    {
-                        IsWarning = false
-                    });
-                }
-                if (_context.CurrentStamina ==0 )
-                {
-                    _context.StaminaFlag = true;
-                    _eventBus.Publish(new StaminaWarningEvent()
-                    {
-                        IsWarning = true
-                    });
-                    if (stateMachine.IsInState<RunningState>())
-                    {
-                        TryFellingState();
-                    }
-                }
+                ManaStateChecks();
+                StaminaStateChecks();
                 if (!HMStartUpLock) HealthManaTimeRecoveryAPI();
                 if (!STStartUpLock) StamiaTimeChangeAPI();
 
@@ -153,6 +135,72 @@ namespace Nobeta.EUG.FSM
 
             // 這裡可以添加其他全局轉換邏輯
         }
+        private void ManaStateChecks()
+        {
+            return;
+            if (_context.CurrentBulletConfig.ChantFlag)
+            {
+                Type CurrState = _stateMachine.CurrentState.GetType();
+                if (IsSpecialState(CurrState))
+                {
+                    //_context.CurrentBulletConfig.ChantFlag = false;
+                    _eventBus.Publish(new PlayerChantPauseEvent()
+                    {
+                        bulletConfig = _context.CurrentBulletConfig
+                    });
+                    if (stateMachine.IsInState<ChantingState>())
+                    {
+                        stateMachine.ChangeState<IdleState>();
+                    }
+                }
+            }
+            else
+            {
+                if (stateMachine.IsInState<ChantingState>())
+                {
+                    stateMachine.ChangeState<IdleState>();
+                }
+            }
+            //if (_context.CurrentUsableMana == 0)
+            //{
+            //    if (!stateMachine.IsInState<MagicEmptyState>())
+            //    {
+            //        stateMachine.ChangeState<MagicEmptyState>();
+            //    }
+            //}
+            //else
+            //{
+            //    if (stateMachine.IsInState<MagicEmptyState>())
+            //    {
+            //        stateMachine.ChangeState<IdleState>();
+            //    }
+            //}
+        }
+        private void StaminaStateChecks()
+        {
+            float StaminaRatio = (float)_context.CurrentStamina / _context.MaxStamina;
+            if (_context.StaminaFlag && StaminaRatio > 0.4f)
+            {
+                _context.StaminaFlag = false;
+                _eventBus.Publish(new StaminaWarningEvent()
+                {
+                    IsWarning = false
+                });
+            }
+            if (_context.CurrentStamina == 0)
+            {
+                _context.StaminaFlag = true;
+                _eventBus.Publish(new StaminaWarningEvent()
+                {
+                    IsWarning = true
+                });
+                if (stateMachine.IsInState<RunningState>())
+                {
+                    TryFellingState();
+                }
+            }
+        }
+
         private void TryFellingState()
         {
             _context.CurrentSpeedType = typeof(IdleState);

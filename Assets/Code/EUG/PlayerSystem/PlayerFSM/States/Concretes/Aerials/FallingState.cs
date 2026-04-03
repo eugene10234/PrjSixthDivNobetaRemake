@@ -15,7 +15,7 @@ namespace Nobeta.EUG.FSM.States
 
         public override void Enter()
         {
-            base.Enter();
+            base.Enter();          
             PlayAnimation("Fall",0.15f);
         }
     }

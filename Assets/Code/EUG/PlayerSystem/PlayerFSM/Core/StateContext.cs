@@ -16,6 +16,7 @@ using Nobeta.EUG.Settings;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using VContainer;
 
@@ -163,6 +164,15 @@ namespace Nobeta.EUG.FSM.Core
             _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
             _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
             _bulletsDiction.Add(BulletType.Lightning, BulletConfig.LightningStrike);
+
+            CurrentBulletConfig.SetChantCompleteAction(() =>
+            {
+                EventBus.Publish(new PlayerChantCompleteEvent());
+            });
+            CurrentBulletConfig.SetChantKillAction(() =>
+            {
+                EventBus.Publish(new PlayerChantKillEvent());
+            });
         }
 
         #endregion
@@ -173,7 +183,7 @@ namespace Nobeta.EUG.FSM.Core
         /// 是否在地面上
         /// </summary>
         public bool IsGrounded => Detection.IsGrounded;
-
+        public bool IsGroundedEX => (Time.time-Detection.LastGroundedTime)<10f;
         /// <summary>
         /// 是否可以跳躍（包含土狼時間）
         /// </summary>
@@ -211,6 +221,18 @@ namespace Nobeta.EUG.FSM.Core
         public float CurrentSpeed => MovementService.CurrentHorizontalSpeed;
 
         #endregion
+
+        public int CurrentUsableMana
+        {
+            get
+            {
+                if (CurrentBulletConfig.ChantFlag)
+                {
+                    return Mathf.Max(0, CurrentMana - (int)(CurrentBulletConfig.ChantManaCost * CurrentBulletConfig.ChantRatio));
+                }
+                return CurrentMana;
+            }
+        }
         protected bool HasEnoughMana(int cost)
         {
             return CurrentMana >= cost;
@@ -230,7 +252,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             CurrentStamina = Mathf.Max(0, CurrentStamina - cost);
         }
-        public void FireCommand()
+        public void CommandFire()
         {
             // if (CurrentBulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(CurrentBulletConfig.ManaCost))
@@ -257,42 +279,61 @@ namespace Nobeta.EUG.FSM.Core
                 //PlaySound("ManaNone");
             }
         }
-        public void ChantCommand()
+        public void CommandChant()
         {
-            CurrentBulletConfig.TryChant();
+            CurrentBulletConfig.TryChant(() =>
+            {
+                EventBus.Publish(new PlayerChantStartEvent
+                {
+                    bulletConfig = CurrentBulletConfig
+                });
+            });
+            StartAsyncChant();
         }
+
+        public void ChantContinue()
+        {
+            CurrentBulletConfig.ContinueChant(() =>
+            {
+                EventBus.Publish(new PlayerChantContinueEvent
+                {
+                    bulletConfig = CurrentBulletConfig
+                });
+            });
+        }
+        public void ChantPause()
+        {
+            CurrentBulletConfig.PauseChant(() =>
+            {
+                EventBus.Publish(new PlayerChantPauseEvent
+                {
+                });
+            });
+        }
+        public void ChantKill()
+        {
+            CurrentBulletConfig.KillChant();
+        }
+
         private float counter = 0;
         private int Maxcounter = 1;
         public void StartAsyncChant()
         {
-            //CurrentBulletConfig.TryChant(() =>
+            //if (DOTween.IsTweening(CurrentBulletConfig))
             //{
-            //    ChargeStartTime = Time.time;
-            //    ChargeRatio = 0f;
-            //});
-            if (DOTween.IsTweening(CurrentBulletConfig))
-            {
-                KillAsyncChant();
-                return;
-            }
-            //PRESERVEStartAsyncChant();
-            CurrentBulletConfig.StartChant();
-            //int counter = 0;
+            //    KillAsyncChant();
+            //    return;
+            //}
             DOVirtual.DelayedCall(0.05f, () =>
             {
-                //if (!DOTween.IsTweening(bossHealthBuffer)) DOTween.Kill(bossHealthBuffer);
-                //bossHealthBuffer.DOFillAmount(targetRatio, 0.5f)
-                //              .SetEase(Ease.OutQuad)
-                //              .SetId(bossHealthBuffer);
-                //counter++;
                 EventBus.Publish(new InteractEreaEnterEvent
                 {
                     //InteractObj = this,
                     Message = $"Ratio:{CurrentBulletConfig.ChantRatio}"
                 });
             }).SetUpdate(UpdateType.Normal, false)
-            .SetLoops(-1, LoopType.Restart)
-            .SetId(CurrentBulletConfig);
+            .SetLoops(-1, LoopType.Restart);
+            //.SetId(CurrentBulletConfig);
         }
         public void KillAsyncChant()
         {

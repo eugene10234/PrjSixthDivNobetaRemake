@@ -5,13 +5,14 @@ using Nobeta.EUG.Interfaces;
 using System;
 using System.Threading;
 using UnityEngine;
+using VContainer.Unity;
 using static UnityEngine.Application;
 // ========================================================================
 // TimeService - 時間服務
 // ========================================================================
 namespace Nobeta.EUG.Services
 {
-    public class TimeService : ITimeService
+    public class TimeService : ITimeService, ITickable
     {
         private float gameTime;
         private bool isPaused;
@@ -21,14 +22,13 @@ namespace Nobeta.EUG.Services
         public float FixedDeltaTime => Time.fixedDeltaTime;
         public bool IsPaused => isPaused;
 
-        public void Update()
+        public void UpdateGameTime()
         {
             if (!isPaused)
             {
                 gameTime += Time.deltaTime;
             }
         }
-
         public void Pause()
         {
             isPaused = true;
@@ -40,6 +40,26 @@ namespace Nobeta.EUG.Services
             isPaused = false;
             Time.timeScale = 1f;
         }
+        public event Action SecondPassed;
+        public int SecondsPassed { get; private set; }
+
+        private float _elapsedTime;
+
+        public void Tick()
+        {
+            UpdateGameTime();
+            _elapsedTime += Time.deltaTime;
+
+            if (_elapsedTime < 1f)
+            {
+                return;
+            }
+
+            _elapsedTime = 0f;
+            SecondsPassed++;
+            SecondPassed?.Invoke();
+        }
+
 
         /// <summary>
         /// 等待指定秒數，並在等待期間將傳入的 bool 設為 true (鎖定)

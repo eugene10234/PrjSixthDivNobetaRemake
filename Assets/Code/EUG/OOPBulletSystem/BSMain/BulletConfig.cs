@@ -21,6 +21,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
     /// </summary>
     public class BulletConfig
     {
+
+
         public int Id { get; set; }
         public float Speed { get; set; }
         public int Damage { get; set; }
@@ -42,40 +44,34 @@ namespace Nobeta.EUG.BulletSystem.OOP
             FireAction?.Invoke();
             NextFireTime = Time.time + CoolTime;
         }
-        public void TryChant(/*Action ChantAction, Action KillChantAction*/)
+        public void TryChant(Action chantAction/*, Action KillChantAction*/)
         {
-            if (ChantFlag)
-            {
-                //KillChantAction?.Invoke();
-                KillChant();
-            }
-            else
-            {
-                //ChantAction?.Invoke();
-                StartChant();
-            }
-
+            if (ChantFlag) return;
+            StartChant(chantAction);
         }
-        public void StartChant()
+        public void StartChant(Action chantStartAction)
         {
             ChantRatio = 0f;
             ChantFlag = true;
+            chantStartAction?.Invoke();
             AsyncChantProgess();
         }
-        public void PauseChant()
+        public void PauseChant(Action chantStopAction)
         {
             if (DOTween.IsTweening(this))
             {
+                chantStopAction?.Invoke();
                 DOTween.Kill(this);
             }
         }
-        public void ContinueChant()
+        public void ContinueChant(Action chantContinueAction)
         {
+            chantContinueAction?.Invoke();
             AsyncChantProgess();
         }
         public void KillChant()
         {
-            PauseChant();
+            PauseChant(ChantKillAction);
             ChantFlag = false;
         }
         private void AsyncChantProgess()
@@ -85,13 +81,25 @@ namespace Nobeta.EUG.BulletSystem.OOP
                           .SetEase(Ease.Linear)  // 均速增加
                           .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
                           .SetId(this)
-                          .OnUpdate(() => { })
+                          //.OnUpdate(() => 
+                          //{
+                          //      chantAction?.Invoke();
+                          //})
                           .OnComplete(() =>
                           {
-                              Debug.Log("計數完成！");
+                              ChantCompleteAction?.Invoke();
                           });
         }
-
+        private static Action ChantKillAction;
+        private static Action ChantCompleteAction;
+        public void SetChantCompleteAction(Action action)
+        {
+            ChantCompleteAction = action;
+        }
+        public void SetChantKillAction(Action action)
+        {
+            ChantKillAction = action;
+        }
         // 預定義配置
         public static BulletConfig Normal => new BulletConfig
         {
@@ -104,7 +112,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             ColliderRadius = 0.2f,
             Type = BulletType.Normal,
             NextFireTime = Time.time,
-            ChantManaCost = 20,
+            ChantManaCost = 200,
             ChantDuration = 5f,
             ChantFlag = false,
             ChantRatio = 0f,

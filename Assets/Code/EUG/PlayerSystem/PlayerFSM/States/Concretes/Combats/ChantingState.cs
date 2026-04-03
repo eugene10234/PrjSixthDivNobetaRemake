@@ -40,7 +40,8 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
-            PublishEvent(new PlayerChantStartEvent());
+            ctx.CommandChant();
+            PublishEvent(new RigChantStartEvent());
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
             if (ctx.InputService.IsAimPressed)
@@ -70,9 +71,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Exit()
         {
             base.Exit();
-
-            // 發布事件
-            PublishEvent(new PlayerChantEndEvent());
+            PublishEvent(new RigChantEndEvent());
         }
 
 
@@ -263,7 +262,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnChantInput()
         {
-
+            ctx.ChantKill();
             if (ctx.IsGrounded)
             {
                 stateMachine.ChangeStateByParent<GroundedState>(_speedType);

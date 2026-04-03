@@ -1,4 +1,5 @@
-﻿using Nobeta.EUG.FSM.Core;
+﻿using Nobeta.EUG.Events;
+using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
@@ -16,12 +17,13 @@ namespace Nobeta.EUG.FSM.States
         public DodgingState(StateContext context, StateMachine stateMachine)
             : base(context, stateMachine)
         {
-            stateStartStamp =Time.time;
+            stateStartStamp = Time.time;
         }
 
         public override void Enter()
         {
             base.Enter();
+            EnterFlagCheck();
             ctx.ConsumeStamina(ctx.Config.dodgeStaminaCost);
             dodgeDirCheck = true;
             // 設置閃避方向
@@ -53,9 +55,11 @@ namespace Nobeta.EUG.FSM.States
 
         }
 
+
+
         private void ApplyDodge()
         {
-            
+
             ctx.MovementService.ApplyDodge(
                 dodgeDirection,
                 ctx.Config.dodgeDistance,
@@ -97,7 +101,25 @@ namespace Nobeta.EUG.FSM.States
 
             ctx.MovementService.ExecuteMovement();
         }
-
+        public override void Exit()
+        {
+            base.Exit();
+            ExitFlagCheck();
+        }
+        private void EnterFlagCheck()
+        {
+            if (ctx.CurrentBulletConfig.ChantFlag)
+            {
+                ctx.ChantPause();
+            }
+        }
+        private void ExitFlagCheck()
+        {
+            if (ctx.CurrentBulletConfig.ChantFlag)
+            {
+                ctx.ChantContinue();
+            }
+        }
         public override bool CanTransitionTo(Type stateType)
         {
             // 閃避期間無敵，只能轉到死亡

@@ -2,7 +2,7 @@
 
 namespace Nobeta.EUG.Events
 {
-    public struct PlayerChantEndEvent
+    public struct PlayerChantKillEvent
     {
     }
 }

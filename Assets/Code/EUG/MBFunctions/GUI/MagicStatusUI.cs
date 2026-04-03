@@ -22,6 +22,8 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private MageIconHolder LightningIconHolder;
         [SerializeField] private Image chantBarColor;
         [SerializeField] private CanvasGroup chantBarGroup;
+        [SerializeField] private CanvasGroup ChantSparkBarGroup;
+        
         private IEventBus _eventBus;
         private CancellationTokenSource _cts;
         private StatusBarController _mgCDFilterCtrl;
@@ -38,10 +40,10 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             //CurrentMageCDFitler = NormalIconHolder.GetFilter;
             _cts = new CancellationTokenSource();
             _mgCDFilterCtrl = new StatusBarController(CurrentMageIconHolder.GetFilter);
+            chantBarGroup.alpha = 0f;
             // 訂閱事件
             SetDictionary();
-            _eventBus.Subscribe<PlayerWeaponFireEvent>(OnMagicFire);
-            _eventBus.Subscribe<PlayerWeaponChangeEvent>(OnMagicChange);
+            SubscribeEvents();
         }
 
         private void OnDisable()
@@ -51,8 +53,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _mgCDFilterCtrl.Dispose();
             // 取消訂閱
             BulletTypeDiction.Clear();
-            _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnMagicFire);
-            _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnMagicChange);
+            UnsubscribeEvents();
         }
         private void OnMagicChange(PlayerWeaponChangeEvent evt)
         {
@@ -87,15 +88,20 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _mgCDFilterCtrl.FillType.LerpUpdate(1f, coolTime * unProgressRatio);
             _mgCDFilterCtrl.ColorType.EaseInUpdate(tc, coolTime * unProgressRatio);
         }
-        private void ChantBarEnable()
+
+
+
+        private void ChantBarVisualEnable()
         {
             if (chantBarGroup == null) return;
-            ChantBarFadeTween(1f);
+            chantBarGroup.alpha = 1f;
+            //ChantBarFadeTween(1f);
         }
-        private void ChantBarDisable()
+        private void ChantBarVisualDisable()
         {
             if (chantBarGroup == null) return;
-            ChantBarFadeTween(0f);
+            chantBarGroup.alpha = 0f;
+            //ChantBarFadeTween(0f);
         }
 
         private void ChantBarFadeTween(float target)
@@ -106,30 +112,112 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
                 .SetId(chantBarGroup);
         }
 
-        private void AsyncChantProgess(float Duration)
+        private void OnChantStartVisual(PlayerChantStartEvent evt)
         {
-            if (chantBarGroup == null) return;
             if (chantBarColor == null) return;
-            chantBarColor.DOFillAmount(0.25f, Duration)
+            chantBarColor.fillAmount = 0f;
+            ChantBarVisualEnable();
+            AsyncChantProgess(evt.bulletConfig.ChantDuration, 1- evt.bulletConfig.ChantRatio);
+        }
+        private void OnChantKillVisual(PlayerChantKillEvent evt)
+        {
+            if (chantBarColor == null) return;
+            PauseChantVisual();
+            chantBarColor.fillAmount = 0f;
+            ChantBarVisualDisable();
+        }
+        private void OnChantPauseVisual(PlayerChantPauseEvent evt)
+        {
+            if (chantBarColor == null) return;
+            PauseChantVisual();
+        }
+
+        private void PauseChantVisual()
+        {
+            if (DOTween.IsTweening(chantBarColor))
+            {
+                DOTween.Kill(chantBarColor);
+            }
+        }
+
+        private void OnChantContinueVisual(PlayerChantContinueEvent evt)
+        {
+            if (chantBarColor == null) return;
+            AsyncChantProgess(evt.bulletConfig.ChantDuration, 1 - evt.bulletConfig.ChantRatio);
+        }
+        private void AsyncChantProgess(float ChantDuration, float unProgressRatio)
+        {
+            if (chantBarColor == null) return;
+            if (DOTween.IsTweening(chantBarColor)) DOTween.Kill(chantBarColor);
+            chantBarColor.fillAmount = (1 - unProgressRatio)*0.25f;
+            chantBarColor.DOFillAmount(0.25f, unProgressRatio * ChantDuration)
+                .SetDelay(0.35f)
                 .SetEase(Ease.Linear)
                 .SetUpdate(UpdateType.Normal, false)
-                .SetId(chantBarColor);
-
-
-            //chantBarColor.DOFade(healthWarningPrototype, 0.25f) // 速度極快
-            //            .SetEase(Ease.Linear)
-            //            .SetLoops(-1, LoopType.Yoyo)
-            //            .SetId("HPFlash");
-            //DOTween.To(() => chantBarColor.color, x => ChantRatio = x, 1f, ChantDuration)
-            //              .SetEase(Ease.Linear)  // 均速增加
-            //              .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
-            //              .SetId(this)
-            //              .OnUpdate(() => { })
-            //              .OnComplete(() =>
-            //              {
-            //                  Debug.Log("計數完成！");
-            //              });
+                .SetId(chantBarColor)
+                .OnComplete(() =>
+                {
+                    Debug.Log("計數完成！");
+                });
         }
+        private void OnChantComplete(PlayerChantCompleteEvent evt)
+        {
+            if (ChantSparkBarGroup == null) return;
+            if (!DOTween.IsTweening(ChantSparkBarGroup))
+            {
+                var cIconSparker = CurrentMageIconHolder.GetIconSparker; // 獲取另一個圖示的 CanvasGroup
+
+                // 1. 初始化狀態（確保兩者同步從 0 開始）
+                ChantSparkBarGroup.alpha = 0f;
+                if (cIconSparker != null) cIconSparker.alpha = 0f;
+
+                // 2. 建立 Sequence
+                Sequence mySeq = DOTween.Sequence();
+
+                // 3. 使用 Join 讓兩個動畫同時啟動
+                mySeq.Join(ChantSparkBarGroup.DOFade(1f, 0.15f))
+                     .Join(cIconSparker.DOFade(1f, 0.15f)) // 如果 cIconSparker 是 null，DOTween 會安全忽略
+                     .SetEase(Ease.Linear)
+                     .SetLoops(-1, LoopType.Yoyo)
+                     .SetUpdate(UpdateType.Normal, false) // 照你之前的需求，受 TimeScale 影響
+                     .SetId(ChantSparkBarGroup); // 綁定 ID，讓 IsTweening 可以找到它
+            }
+        }
+        private void SubscribeEvents()
+        {
+            _eventBus.Subscribe<PlayerWeaponFireEvent>(OnMagicFire);
+            _eventBus.Subscribe<PlayerWeaponChangeEvent>(OnMagicChange);
+            _eventBus.Subscribe<PlayerChantStartEvent>(OnChantStartVisual);
+            _eventBus.Subscribe<PlayerChantPauseEvent>(OnChantPauseVisual);
+            _eventBus.Subscribe<PlayerChantContinueEvent>(OnChantContinueVisual);
+            _eventBus.Subscribe<PlayerChantKillEvent>(OnChantKillVisual);
+            _eventBus.Subscribe<PlayerChantCompleteEvent>(OnChantComplete);
+        }
+
+        private void UnsubscribeEvents()
+        {
+            _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnMagicFire);
+            _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnMagicChange);
+            _eventBus.Unsubscribe<PlayerChantStartEvent>(OnChantStartVisual);
+            _eventBus.Unsubscribe<PlayerChantPauseEvent>(OnChantPauseVisual);
+            _eventBus.Unsubscribe<PlayerChantContinueEvent>(OnChantContinueVisual);
+            _eventBus.Unsubscribe<PlayerChantKillEvent>(OnChantKillVisual);
+            _eventBus.Unsubscribe<PlayerChantCompleteEvent>(OnChantComplete);
+        }
+        //chantBarColor.DOFade(healthWarningPrototype, 0.25f) // 速度極快
+        //            .SetEase(Ease.Linear)
+        //            .SetLoops(-1, LoopType.Yoyo)
+        //            .SetId("HPFlash");
+        //DOTween.To(() => chantBarColor.color, x => ChantRatio = x, 1f, ChantDuration)
+        //              .SetEase(Ease.Linear)  // 均速增加
+        //              .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
+        //              .SetId(this)
+        //              .OnUpdate(() => { })
+        //              .OnComplete(() =>
+        //              {
+        //                  Debug.Log("計數完成！");
+        //              });
+        //}
         private void SetDictionary()
         {
             BulletTypeDiction[BulletType.Normal] = NormalIconHolder;
@@ -137,37 +225,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             BulletTypeDiction[BulletType.Fire] = FireIconHolder;
             BulletTypeDiction[BulletType.Lightning] = LightningIconHolder;
         }
-        //private CancellationTokenSource MagicCoolTimeTokenSoure;
-        //private void UpdateBarBufferWithDelay(Image bufferBar, float duration, CancellationTokenSource bufferTokenSoure)
-        //{
-        //    bufferBar.fillAmount = 0f;
-        //    SmoothBufferUpdate(bufferBar, 1f, duration, MagicCoolTimeTokenSoure).Forget();
-        //}
 
-        //private async UniTaskVoid SmoothBufferUpdate(Image bufferBar, float targetRatio, float duration, CancellationTokenSource bufferTokenSoure)
-        //{
-        //    // 這裡維持你的邏輯：殺掉正在跑的舊動畫，但不影響 PRXY 的 Delay
-        //    bufferTokenSoure?.Cancel();
-        //    bufferTokenSoure?.Dispose();
-        //    bufferTokenSoure = new CancellationTokenSource();
-        //    var token = bufferTokenSoure.Token;
-        //    float startFill = bufferBar.fillAmount;
-        //    float elapsed = 0f;
-        //    try
-        //    {
-        //        while (elapsed < duration)
-        //        {
-        //            elapsed += Time.deltaTime;
-        //            //1f - Mathf.Pow(1f - (elapsed / duration), 2);
-        //            float t = elapsed / duration;
-
-        //            bufferBar.fillAmount = Mathf.Lerp(startFill, targetRatio, t);
-        //            await UniTask.Yield(PlayerLoopTiming.Update, token);
-        //        }
-        //        bufferBar.fillAmount = targetRatio;
-        //    }
-        //    catch (System.OperationCanceledException) { }
-        //}
         private CanvasGroup canvasGroup;
         private float _fadeDuration = 0.5f;
         // 淡入
