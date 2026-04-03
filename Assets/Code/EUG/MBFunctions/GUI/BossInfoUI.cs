@@ -55,7 +55,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             bossHealthBar.fillAmount = targetRatio;
             DOVirtual.DelayedCall(0.5f, () =>
             {
-                if (!DOTween.IsTweening(bossHealthBuffer)) DOTween.Kill(bossHealthBuffer);
+                if (DOTween.IsTweening(bossHealthBuffer)) DOTween.Kill(bossHealthBuffer);
                 bossHealthBuffer.DOFillAmount(targetRatio, 0.5f)
                               .SetEase(Ease.OutQuad)
                               .SetId(bossHealthBuffer);

@@ -4,18 +4,20 @@
 // ============================================================================
 
 
-using Nobeta.EUG.FSM.Interfaces;
-using Nobeta.EUG.FSM.Services;
-using Nobeta.EUG.Settings;
-using Nobeta.EUG.Interfaces;
-using UnityEngine;
-using VContainer;
+using DG.Tweening;
 using Nobeta.EUG.BulletSystem.OOP;
 using Nobeta.EUG.Events;
-using System;
+using Nobeta.EUG.FSM.Interfaces;
+using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.FSM.States;
+using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.MBFunctions.PlayerUI;
+using Nobeta.EUG.Settings;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
+using VContainer;
 
 
 namespace Nobeta.EUG.FSM.Core
@@ -135,7 +137,7 @@ namespace Nobeta.EUG.FSM.Core
             // 健康和魔力
             MaxHealth = 500;
             CurrentHealth = MaxHealth;
-            MaxMana = 400;
+            MaxMana = 800;
             CurrentMana = MaxMana;
             MaxStamina = 400;
             CurrentStamina = MaxMana;
@@ -228,7 +230,7 @@ namespace Nobeta.EUG.FSM.Core
         {
             CurrentStamina = Mathf.Max(0, CurrentStamina - cost);
         }
-        public void FireMagic()
+        public void FireCommand()
         {
             // if (CurrentBulletConfig.CoolTimerLock) return;
             if (HasEnoughMana(CurrentBulletConfig.ManaCost))
@@ -255,12 +257,91 @@ namespace Nobeta.EUG.FSM.Core
                 //PlaySound("ManaNone");
             }
         }
+        public void ChantCommand()
+        {
+            CurrentBulletConfig.TryChant();
+        }
+        private float counter = 0;
+        private int Maxcounter = 1;
+        public void StartAsyncChant()
+        {
+            //CurrentBulletConfig.TryChant(() =>
+            //{
+            //    ChargeStartTime = Time.time;
+            //    ChargeRatio = 0f;
+            //});
+            if (DOTween.IsTweening(CurrentBulletConfig))
+            {
+                KillAsyncChant();
+                return;
+            }
+            //PRESERVEStartAsyncChant();
+            CurrentBulletConfig.StartChant();
+            //int counter = 0;
+            DOVirtual.DelayedCall(0.05f, () =>
+            {
+                //if (!DOTween.IsTweening(bossHealthBuffer)) DOTween.Kill(bossHealthBuffer);
+                //bossHealthBuffer.DOFillAmount(targetRatio, 0.5f)
+                //              .SetEase(Ease.OutQuad)
+                //              .SetId(bossHealthBuffer);
+                //counter++;
+                EventBus.Publish(new InteractEreaEnterEvent
+                {
+                    //InteractObj = this,
+                    Message = $"Ratio:{CurrentBulletConfig.ChantRatio}"
+                });
+            }).SetUpdate(UpdateType.Normal, false)
+            .SetLoops(-1, LoopType.Restart)
+            .SetId(CurrentBulletConfig);
+        }
+        public void KillAsyncChant()
+        {
+            if (DOTween.IsTweening(CurrentBulletConfig))
+            {
+                DOTween.Kill(CurrentBulletConfig);
+            }
+        }
 
         public void ChangeBullet(BulletType bulletType)
         {
             CurrentBulletConfig = _bulletsDiction[bulletType];
         }
-
+        float lastNotifyTime = 0;
+        float interval = 0.05f; // 你想要的 0.05 秒
+        public void PRESERVEStartAsyncChant()
+        {
+            //CurrentBulletConfig.TryChant(() =>
+            //{
+            //    ChargeStartTime = Time.time;
+            //    ChargeRatio = 0f;
+            //});
+            if (DOTween.IsTweening(CurrentBulletConfig))
+            {
+                KillAsyncChant();
+                return;
+            }
+            //int counter = 0;
+            DOTween.To(() => counter, x => counter = x, CurrentBulletConfig.ManaCost, 0.2f)
+                .SetSpeedBased()       // 讓 1f 變成「每秒增加 1」
+                .SetEase(Ease.Linear)  // 均速增加
+                .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
+                .SetId(CurrentBulletConfig)
+                .OnUpdate(() =>
+                {
+                    //if (Time.time - lastNotifyTime >= interval)
+                    //{
+                    //    // 每次數值變動都會跑這裡
+                    //    EventBus.Publish(new InteractEreaEnterEvent
+                    //    {
+                    //        Message = $"C:{counter}Ratio:{((float)counter / Maxcounter) * 100}%"
+                    //    });
+                    //}
+                })
+                .OnComplete(() =>
+                {
+                    Debug.Log("計數完成！");
+                });
+        }
 
     }
 }

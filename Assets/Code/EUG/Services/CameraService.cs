@@ -160,10 +160,10 @@ namespace Nobeta.EUG.Services
         }
         private void OnCameraReactStart(CameraReactStartEvent evt)
         {
-            _targetFOV = 52.5f;
-            _targetDistance = 2.25f;
-            _targetShoulderOffset = -0.45f;
-            _smoothFOVSpeed = 0.02f;
+            _targetFOV = evt.TargetFOV;
+            _targetDistance = evt.TargetDistance;
+            _targetShoulderOffset = evt.TargetShoulderOffset;
+            _smoothFOVSpeed = evt.SmoothSpeed;
         }
         private void OnCameraReactEnd(CameraReactEndEvent evt)
         {

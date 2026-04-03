@@ -20,12 +20,18 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private MageIconHolder IceIconHolder;
         [SerializeField] private MageIconHolder FireIconHolder;
         [SerializeField] private MageIconHolder LightningIconHolder;
-        [Inject] private readonly IEventBus _eventBus;
+        [SerializeField] private Image chantBarColor;
+        [SerializeField] private CanvasGroup chantBarGroup;
+        private IEventBus _eventBus;
         private CancellationTokenSource _cts;
         private StatusBarController _mgCDFilterCtrl;
         private MageIconHolder CurrentMageIconHolder;
         //private Image CurrentMageCDFitler;
         private Dictionary<BulletType, MageIconHolder> BulletTypeDiction = new();
+        private void Awake()
+        {
+            _eventBus = EventBusProvider.GetEventBus();
+        }
         private void OnEnable()
         {
             CurrentMageIconHolder = NormalIconHolder;
@@ -56,8 +62,12 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             CurrentMageIconHolder.SetActice(true);
             _mgCDFilterCtrl.ChangeFilter(CurrentMageIconHolder.GetFilter);
 
+            var tc = CurrentMageIconHolder.GetOriginColor;
+            tc.a = 0.45f;
+            chantBarColor.color = tc;
+
             if (evt.bulletConfig.CoolTime == 0) return;
-            var UnProgressRatio =Mathf.Max(0, evt.bulletConfig.NextFireTime - Time.time) / evt.bulletConfig.CoolTime;
+            var UnProgressRatio = Mathf.Max(0, evt.bulletConfig.NextFireTime - Time.time) / evt.bulletConfig.CoolTime;
             MagicCoolTimeVisual(evt.bulletConfig.CoolTime, UnProgressRatio);
         }
         private void OnMagicFire(PlayerWeaponFireEvent evt)
@@ -68,7 +78,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void MagicCoolTimeVisual(float coolTime, float unProgressRatio)
         {
             if (coolTime == 0) return;
-            var tc = CurrentMageIconHolder.GetOriginColor;
+            Color tc = CurrentMageIconHolder.GetOriginColor;
             tc.a = 1 - unProgressRatio;
             CurrentMageIconHolder.GetFilter.color = tc;
             tc.a = 1f;
@@ -76,6 +86,49 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
 
             _mgCDFilterCtrl.FillType.LerpUpdate(1f, coolTime * unProgressRatio);
             _mgCDFilterCtrl.ColorType.EaseInUpdate(tc, coolTime * unProgressRatio);
+        }
+        private void ChantBarEnable()
+        {
+            if (chantBarGroup == null) return;
+            ChantBarFadeTween(1f);
+        }
+        private void ChantBarDisable()
+        {
+            if (chantBarGroup == null) return;
+            ChantBarFadeTween(0f);
+        }
+
+        private void ChantBarFadeTween(float target)
+        {
+            if (DOTween.IsTweening(chantBarGroup)) DOTween.Kill(chantBarGroup);
+            chantBarGroup.DOFade(target, 0.15f)
+                .SetEase(Ease.OutQuad)
+                .SetId(chantBarGroup);
+        }
+
+        private void AsyncChantProgess(float Duration)
+        {
+            if (chantBarGroup == null) return;
+            if (chantBarColor == null) return;
+            chantBarColor.DOFillAmount(0.25f, Duration)
+                .SetEase(Ease.Linear)
+                .SetUpdate(UpdateType.Normal, false)
+                .SetId(chantBarColor);
+
+
+            //chantBarColor.DOFade(healthWarningPrototype, 0.25f) // 速度極快
+            //            .SetEase(Ease.Linear)
+            //            .SetLoops(-1, LoopType.Yoyo)
+            //            .SetId("HPFlash");
+            //DOTween.To(() => chantBarColor.color, x => ChantRatio = x, 1f, ChantDuration)
+            //              .SetEase(Ease.Linear)  // 均速增加
+            //              .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
+            //              .SetId(this)
+            //              .OnUpdate(() => { })
+            //              .OnComplete(() =>
+            //              {
+            //                  Debug.Log("計數完成！");
+            //              });
         }
         private void SetDictionary()
         {

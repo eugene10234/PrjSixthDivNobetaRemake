@@ -27,7 +27,8 @@ namespace Nobeta.EUG.FSM.States
             {
                 TargetFOV = 52.5f,
                 TargetDistance = 2.25f,
-                TargetShoulderOffset = -0.45f
+                TargetShoulderOffset = -0.45f,
+                SmoothSpeed = 0.02f
             };
         }
 

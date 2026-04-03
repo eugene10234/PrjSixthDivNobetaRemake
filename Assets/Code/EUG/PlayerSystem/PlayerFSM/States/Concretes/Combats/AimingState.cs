@@ -45,7 +45,7 @@ namespace Nobeta.EUG.FSM.States
             ctx.MovementService.StopMovement(ctx.Config.acceleration * 2f);
 
             // 發布事件（通知攝影機切換）
-            PublishEvent(new CameraReactStartEvent());
+            //PublishEvent(new CameraReactStartEvent());
             //_debugServiceMb.AddGiz(() =>
             //{
             //    Gizmos.color = Color.red; // 甚至可以順便設顏色
@@ -74,7 +74,7 @@ namespace Nobeta.EUG.FSM.States
             base.Exit();
 
             // 發布事件
-            PublishEvent(new CameraReactEndEvent());
+            //PublishEvent(new CameraReactEndEvent());
         }
 
 

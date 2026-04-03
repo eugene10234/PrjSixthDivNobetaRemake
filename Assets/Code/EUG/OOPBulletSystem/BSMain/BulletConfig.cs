@@ -2,13 +2,15 @@
 // Pure C# OOP Bullet System - 完整實現
 // 團隊友好版：熟悉的 OOP + VContainer + EventBus + ObjectPool
 // ============================================================================
+using DG.Tweening;
+using Nobeta.EUG.Events;
+using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Nobeta.EUG.Events;
-using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 // ========================================================================
 // BulletConfig (配置類)
 // ========================================================================
@@ -28,6 +30,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public float Lifetime { get; set; }
         public float ColliderRadius { get; set; }
         public BulletType Type { get; private set; }
+        public int ChantManaCost { get; set; }
+        public float ChantDuration { get; set; }
+        public bool ChantFlag { get; set; }
+        public float ChantRatio { get; set; }
+
         public float NextFireTime { get; private set; }
         public void TryFire(Action FireAction)
         {
@@ -35,19 +42,72 @@ namespace Nobeta.EUG.BulletSystem.OOP
             FireAction?.Invoke();
             NextFireTime = Time.time + CoolTime;
         }
+        public void TryChant(/*Action ChantAction, Action KillChantAction*/)
+        {
+            if (ChantFlag)
+            {
+                //KillChantAction?.Invoke();
+                KillChant();
+            }
+            else
+            {
+                //ChantAction?.Invoke();
+                StartChant();
+            }
+
+        }
+        public void StartChant()
+        {
+            ChantRatio = 0f;
+            ChantFlag = true;
+            AsyncChantProgess();
+        }
+        public void PauseChant()
+        {
+            if (DOTween.IsTweening(this))
+            {
+                DOTween.Kill(this);
+            }
+        }
+        public void ContinueChant()
+        {
+            AsyncChantProgess();
+        }
+        public void KillChant()
+        {
+            PauseChant();
+            ChantFlag = false;
+        }
+        private void AsyncChantProgess()
+        {
+            if (DOTween.IsTweening(this)) DOTween.Kill(this);
+            DOTween.To(() => ChantRatio, x => ChantRatio = x, 1f, ChantDuration)
+                          .SetEase(Ease.Linear)  // 均速增加
+                          .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
+                          .SetId(this)
+                          .OnUpdate(() => { })
+                          .OnComplete(() =>
+                          {
+                              Debug.Log("計數完成！");
+                          });
+        }
 
         // 預定義配置
         public static BulletConfig Normal => new BulletConfig
         {
             Speed = 35f,
-            Damage = 99940,
+            Damage = 40,
             ManaCost = 0,
             CoolTime = 0.5f,
             //CoolTimerLock = false,
             Lifetime = 5f,
             ColliderRadius = 0.2f,
             Type = BulletType.Normal,
-            NextFireTime = Time.time
+            NextFireTime = Time.time,
+            ChantManaCost = 20,
+            ChantDuration = 5f,
+            ChantFlag = false,
+            ChantRatio = 0f,
 
         };
         public static BulletConfig IceBall => new BulletConfig
@@ -60,7 +120,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Lifetime = 5f,
             ColliderRadius = 0.15f,
             Type = BulletType.Ice,
-            NextFireTime = Time.time
+            NextFireTime = Time.time,
+            ChantManaCost = 20,
+            ChantDuration = 5f,
+            ChantFlag = false,
+            ChantRatio = 0f,
 
         };
         public static BulletConfig FireBall => new BulletConfig
@@ -73,7 +137,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Lifetime = 4f,
             ColliderRadius = 0.3f,
             Type = BulletType.Fire,
-            NextFireTime = Time.time
+            NextFireTime = Time.time,
+            ChantManaCost = 20,
+            ChantDuration = 5f,
+            ChantFlag = false,
+            ChantRatio = 0f,
 
         };
         public static BulletConfig LightningStrike => new BulletConfig
@@ -86,7 +154,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
             Lifetime = 4f,
             ColliderRadius = 0.1f,
             Type = BulletType.Lightning,
-            NextFireTime = Time.time
+            NextFireTime = Time.time,
+            ChantManaCost = 20,
+            ChantDuration = 5f,
+            ChantFlag = false,
+            ChantRatio = 0f,
 
         };
     }

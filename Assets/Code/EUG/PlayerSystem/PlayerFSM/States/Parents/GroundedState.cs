@@ -92,6 +92,8 @@ namespace Nobeta.EUG.FSM.States
             //Debug.LogWarning("OnAimStartInput");
 
             stateMachine.ChangeState<ChantingState>();
+            //ctx.ChantMagic();
+            //ctx.StartAsyncChant();
 
         }
         public override void OnAttackInput()

@@ -1,20 +1,19 @@
 ﻿
 using Nobeta.EUG.AANEW.MBbulletsystems;
 using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
 using System;
 using UnityEngine;
 using VContainer;
-using static UnityEngine.Debug;
-
+// ========================================================================
+// ChantingState - 詠唱狀態
+// ========================================================================
 
 namespace Nobeta.EUG.FSM.States
 {
-    // ========================================================================
-    // AimingState - 瞄準狀態
-    // ========================================================================
 
     /// <summary>
     /// 瞄準狀態
@@ -41,19 +40,20 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            PublishEvent(new PlayerChantStartEvent());
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
             if (ctx.InputService.IsAimPressed)
             {
                 PlayAnimation("AimingWalk2", 0.1f);
                 _isAimAnimate = true;
-            }               
+            }
             else
             {
                 PlayAnimation("MovementState", 0.1f);
                 _isAimAnimate = false;
             }
-                
+
 
 
             // 降低移動速度
@@ -72,8 +72,8 @@ namespace Nobeta.EUG.FSM.States
             base.Exit();
 
             // 發布事件
-            //PublishEvent(new PlayerAimingEndedEvent());
-        }           
+            PublishEvent(new PlayerChantEndEvent());
+        }
 
 
         public override void Update()
@@ -91,9 +91,9 @@ namespace Nobeta.EUG.FSM.States
             else
                 direction = GetMoveDirection();
             ctx.MovementService.RotateTowards(direction, ctx.Config.rotationSpeed);
-            
+
             Vector3 movement = ctx.CameraService.GetCameraRelativeDirection(ctx.InputService.MoveInput);
-            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);           
+            _turnAngle = Vector3.SignedAngle(ctx.Transform.forward, movement, Vector3.up);
             SetTargetSpeed(_speedType);
             AnimatorSetting();
         }
@@ -114,7 +114,7 @@ namespace Nobeta.EUG.FSM.States
                 // 使用較低的速度
                 ctx.MovementService.ApplyGroundMovement(
                     direction,
-                    _targetSpeed * 0.5f* SpeedStartFilter(),  // 瞄準時速度減半
+                    _targetSpeed * 0.5f * SpeedStartFilter(),  // 瞄準時速度減半
                     ctx.Config.acceleration
                 );
             }
@@ -132,7 +132,7 @@ namespace Nobeta.EUG.FSM.States
         }
         private float SpeedStartFilter()
         {
-            if (Time.time-_idleTimeStamp <0.15f)
+            if (Time.time - _idleTimeStamp < 0.15f)
             {
                 return 0.15f;
             }
@@ -142,10 +142,10 @@ namespace Nobeta.EUG.FSM.States
         {
             if (ctx.InputService.IsAimPressed)
             {
-                if(!_isAimAnimate)
+                if (!_isAimAnimate)
                 {
                     PlayAnimation("AimingWalk2", 0.1f);
-                    _isAimAnimate =true;
+                    _isAimAnimate = true;
                 }
                 Vector2 dir = ctx.InputService.MoveInput;
                 ctx.AnimationService.SetFloat("xVelocity", dir.x);
@@ -156,7 +156,7 @@ namespace Nobeta.EUG.FSM.States
                 if (_isAimAnimate)
                 {
                     PlayAnimation("MovementState", 0.1f);
-                    _isAimAnimate =false;
+                    _isAimAnimate = false;
                 }
                 var customAniSpeed = GetAniSpeed(ctx.CurrentSpeed);
                 ctx.AnimationService.SetFloat("Speed", customAniSpeed);
@@ -174,11 +174,11 @@ namespace Nobeta.EUG.FSM.States
         private float GetAniSpeed(float speed)
         {
             // 確保輸入在 0 到 10 之間
-            float clampSpeed = Mathf.Clamp(speed, 0f,ctx.Config.runSpeed);
+            float clampSpeed = Mathf.Clamp(speed, 0f, ctx.Config.runSpeed);
 
             if (_movement.sqrMagnitude > 0.01f)
             {
-                float t = clampSpeed / (ctx.Config.runSpeed *0.5f);
+                float t = clampSpeed / (ctx.Config.runSpeed * 0.5f);
 
                 return Mathf.Lerp(0, 5, t);
             }
@@ -263,7 +263,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnChantInput()
         {
-            
+
             if (ctx.IsGrounded)
             {
                 stateMachine.ChangeStateByParent<GroundedState>(_speedType);

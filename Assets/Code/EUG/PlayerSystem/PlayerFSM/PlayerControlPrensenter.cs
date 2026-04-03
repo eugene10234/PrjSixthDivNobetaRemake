@@ -163,7 +163,7 @@ namespace Nobeta.EUG.FSM
         private void HealthManaTimeRecoveryAPI()
         {
             _timeService.TaskDelayLock(HMStartUp_DURATION, (b) => HMStartUpLock = b);
-            RestoreMana(3);
+            RestoreMana(6);
             Heal(1);
         }
         private bool STStartUpLock = false;
