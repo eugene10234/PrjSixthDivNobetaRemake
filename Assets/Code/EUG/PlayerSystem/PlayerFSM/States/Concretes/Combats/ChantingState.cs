@@ -85,9 +85,9 @@ namespace Nobeta.EUG.FSM.States
             //}
             // 持續面向瞄準方向
             Vector3 direction;
-            if (ctx.InputService.IsAimPressed)
-                direction = GetAimDirection();
-            else
+            //if (ctx.InputService.IsAimPressed)
+            //    direction = GetAimDirection();
+            //else
                 direction = GetMoveDirection();
             ctx.MovementService.RotateTowards(direction, ctx.Config.rotationSpeed);
 
@@ -139,18 +139,18 @@ namespace Nobeta.EUG.FSM.States
         }
         private void AnimatorSetting()
         {
-            if (ctx.InputService.IsAimPressed)
-            {
-                if (!_isAimAnimate)
-                {
-                    PlayAnimation("AimingWalk2", 0.1f);
-                    _isAimAnimate = true;
-                }
-                Vector2 dir = ctx.InputService.MoveInput;
-                ctx.AnimationService.SetFloat("xVelocity", dir.x);
-                ctx.AnimationService.SetFloat("zVelocity", dir.y);
-            }
-            else
+            //if (ctx.InputService.IsAimPressed)
+            //{
+            //    if (!_isAimAnimate)
+            //    {
+            //        PlayAnimation("AimingWalk2", 0.1f);
+            //        _isAimAnimate = true;
+            //    }
+            //    Vector2 dir = ctx.InputService.MoveInput;
+            //    ctx.AnimationService.SetFloat("xVelocity", dir.x);
+            //    ctx.AnimationService.SetFloat("zVelocity", dir.y);
+            //}
+            //else
             {
                 if (_isAimAnimate)
                 {
@@ -298,14 +298,17 @@ namespace Nobeta.EUG.FSM.States
             if (typeof(IdleState) == speedType)
             {
                 _targetSpeed = 0f;
+                ctx.CurrentSpeedType = typeof(IdleState);
             }
             else if (typeof(WalkingState) == speedType)
             {
                 _targetSpeed = ctx.Config.walkSpeed;
+                ctx.CurrentSpeedType = typeof(WalkingState);
             }
             else if (typeof(RunningState) == speedType)
             {
                 _targetSpeed = ctx.Config.runSpeed;
+                ctx.CurrentSpeedType = typeof(RunningState);
             }
         }
 

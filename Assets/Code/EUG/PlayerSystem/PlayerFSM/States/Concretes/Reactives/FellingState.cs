@@ -35,6 +35,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            ctx.CurrentSpeedType = typeof(IdleState);
             PublishEvent(_cameraReactStartEvent);
             //ctx.MovementService.ResetVelocity();
             PlayAnimation("Felling");

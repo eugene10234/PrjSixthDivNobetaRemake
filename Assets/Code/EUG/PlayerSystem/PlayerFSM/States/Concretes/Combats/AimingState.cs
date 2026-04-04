@@ -243,14 +243,17 @@ namespace Nobeta.EUG.FSM.States
             if (typeof(IdleState) == speedType)
             {
                 _targetSpeed = 0f;
+                ctx.CurrentSpeedType = typeof(IdleState);
             }
             else if (typeof(WalkingState) == speedType)
             {
                 _targetSpeed = ctx.Config.walkSpeed;
+                ctx.CurrentSpeedType = typeof(WalkingState);
             }
             else if (typeof(RunningState) == speedType)
             {
                 _targetSpeed = ctx.Config.runSpeed;
+                ctx.CurrentSpeedType = typeof(RunningState);
             }
         }
     }
