@@ -10,6 +10,8 @@ namespace Nobeta.EUG.Events
     public struct PlayerWeaponFireEvent
     {
         public BulletConfig bulletConfig;
+        public bool IsSpecial;
+        public int FinalManaCost;
     }
    
 }

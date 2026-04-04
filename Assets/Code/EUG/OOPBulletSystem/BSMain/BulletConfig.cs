@@ -40,6 +40,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public int ChantManaCost { get; set; }
         public float ChantDuration { get; set; }
         public bool ChantFlag { get; set; }
+        public bool IsChantComplete { get; set; }
         public float ChantRatio { get; set; }
 
         public float NextFireTime { get; private set; }
@@ -52,7 +53,41 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public void TryFire(Action<PlayerWeaponFireEvent> FireAction)
         {
             if (Time.time < NextFireTime) return;
-            FireAction?.Invoke(new PlayerWeaponFireEvent { bulletConfig = this });
+            if (ChantFlag)
+            {
+                if (IsChantComplete)
+                {
+                    FireAction?.Invoke(new PlayerWeaponFireEvent
+                    {
+                        bulletConfig = this,
+                        IsSpecial = true,
+                        FinalManaCost = ChantManaCost
+                    });
+                }
+                else
+                {
+                    EventBus.Publish(new PlayerWeaponFireEvent
+                    {
+                        bulletConfig = this,
+                        IsSpecial = false,
+                        FinalManaCost = ManaCost
+                    });
+                }
+                ChantRatio = 0f;
+                IsChantComplete = false;
+                ChantFlag = false;
+                KillChant(evt => EventBus.Publish(evt));
+            }
+            else
+            {
+                FireAction?.Invoke(new PlayerWeaponFireEvent
+                {
+                    bulletConfig = this,
+                    IsSpecial = false,
+                    FinalManaCost = ManaCost
+                });
+            }
+            //FireAction?.Invoke(new PlayerWeaponFireEvent { bulletConfig = this });
             NextFireTime = Time.time + CoolTime;
         }
         public void TryChant(/*Action<PlayerChantStartEvent> StartAct*/)
@@ -90,11 +125,12 @@ namespace Nobeta.EUG.BulletSystem.OOP
         private void AsyncChantProgess(Action<PlayerChantUpdateEvent> UpdateAct, Action<PlayerChantCompleteEvent> CompleteAct)
         {
             if (DOTween.IsTweening(this)) DOTween.Kill(this);
-            DOTween.To(() => ChantRatio, x => ChantRatio = x, 1f, ChantDuration*(1-ChantRatio))
+            DOTween.To(() => ChantRatio, x => ChantRatio = x, 1f, ChantDuration * (1 - ChantRatio))
                           .SetEase(Ease.Linear)  // 均速增加
                           .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
                           .SetId(this)
-                          .OnStart(() => {
+                          .OnStart(() =>
+                          {
                               lastInvokeTime = 0f; // 確保每次重新開始時重置
                           })
                           .OnUpdate(() =>
@@ -108,6 +144,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
                           })
                           .OnComplete(() =>
                           {
+                              IsChantComplete = true;
                               CompleteAct?.Invoke(new PlayerChantCompleteEvent { });
                           });
         }
@@ -132,6 +169,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             ChantManaCost = 200,
             ChantDuration = 5f,
             ChantFlag = false,
+            IsChantComplete = false,
             ChantRatio = 0f,
 
         };
@@ -149,6 +187,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             ChantManaCost = 20,
             ChantDuration = 5f,
             ChantFlag = false,
+            IsChantComplete = false,
             ChantRatio = 0f,
 
         };
@@ -166,6 +205,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             ChantManaCost = 20,
             ChantDuration = 5f,
             ChantFlag = false,
+            IsChantComplete = false,
             ChantRatio = 0f,
 
         };
@@ -183,6 +223,7 @@ namespace Nobeta.EUG.BulletSystem.OOP
             ChantManaCost = 20,
             ChantDuration = 5f,
             ChantFlag = false,
+            IsChantComplete = false,
             ChantRatio = 0f,
 
         };
@@ -193,7 +234,8 @@ namespace Nobeta.EUG.BulletSystem.OOP
         Normal,
         Ice,
         Fire,
-        Lightning
+        Lightning,
+        SpecialNormal,
     }
 
 }

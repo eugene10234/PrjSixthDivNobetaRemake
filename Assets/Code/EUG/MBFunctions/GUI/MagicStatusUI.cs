@@ -123,8 +123,10 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         private void OnChantKillVisual(PlayerChantKillEvent _)
         {
             if (chantBarColor == null) return;
-            //PauseChantVisual();
+            DOTween.Kill(chantBarColor);
+            DOTween.Kill(ChantSparkBarGroup);
             chantBarColor.fillAmount = 0f;
+            ChantSparkBarGroup.alpha = 0f;
             ChantBarVisualDisable();
         }
         //private void OnChantPauseVisual(PlayerChantPauseEvent evt)

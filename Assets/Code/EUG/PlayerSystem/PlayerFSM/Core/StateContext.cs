@@ -275,7 +275,7 @@ namespace Nobeta.EUG.FSM.Core
                 CurrentBulletConfig.TryFire(evt =>
                 {
                     EventBus.Publish(evt);
-                    ConsumeMana(CurrentBulletConfig.ManaCost);
+                    ConsumeMana(evt.FinalManaCost);
                 });
 
 

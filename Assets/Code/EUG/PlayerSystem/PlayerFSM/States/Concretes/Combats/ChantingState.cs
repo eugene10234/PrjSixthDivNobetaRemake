@@ -189,6 +189,11 @@ namespace Nobeta.EUG.FSM.States
         public override void DetectionHandler()
         {
             base.DetectionHandler();
+            if (!ctx.IsGrounded)
+            {
+                stateMachine.ChangeState<FallingState>();
+                return;
+            }
             if (ctx.InputService.IsAimPressed)
             {
                 stateMachine.ChangeState<AimingState>();
