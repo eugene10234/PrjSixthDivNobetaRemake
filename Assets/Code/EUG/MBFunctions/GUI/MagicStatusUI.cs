@@ -23,7 +23,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
         [SerializeField] private Image chantBarColor;
         [SerializeField] private CanvasGroup chantBarGroup;
         [SerializeField] private CanvasGroup ChantSparkBarGroup;
-        
+
         private IEventBus _eventBus;
         private CancellationTokenSource _cts;
         private StatusBarController _mgCDFilterCtrl;
@@ -112,55 +112,75 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
                 .SetId(chantBarGroup);
         }
 
-        private void OnChantStartVisual(PlayerChantStartEvent evt)
+        private void OnChantStartVisual(PlayerChantStartEvent _)
         {
             if (chantBarColor == null) return;
             chantBarColor.fillAmount = 0f;
             ChantBarVisualEnable();
-            AsyncChantProgess(evt.bulletConfig.ChantDuration, 1- evt.bulletConfig.ChantRatio);
+            //UpdateChantRatio(evt.bulletConfig.ChantRatio);
+            //AsyncChantProgess(evt.bulletConfig.ChantDuration, 1 - evt.bulletConfig.ChantRatio);
         }
-        private void OnChantKillVisual(PlayerChantKillEvent evt)
+        private void OnChantKillVisual(PlayerChantKillEvent _)
         {
             if (chantBarColor == null) return;
-            PauseChantVisual();
+            //PauseChantVisual();
             chantBarColor.fillAmount = 0f;
             ChantBarVisualDisable();
         }
-        private void OnChantPauseVisual(PlayerChantPauseEvent evt)
-        {
-            if (chantBarColor == null) return;
-            PauseChantVisual();
-        }
+        //private void OnChantPauseVisual(PlayerChantPauseEvent evt)
+        //{
+        //    if (chantBarColor == null) return;
+        //    PauseChantVisual();
+        //}
 
-        private void PauseChantVisual()
-        {
-            if (DOTween.IsTweening(chantBarColor))
-            {
-                DOTween.Kill(chantBarColor);
-            }
-        }
+        //private void PauseChantVisual()
+        //{
+        //    if (DOTween.IsTweening(chantBarColor))
+        //    {
+        //        DOTween.Kill(chantBarColor);
+        //    }
+        //}
 
-        private void OnChantContinueVisual(PlayerChantContinueEvent evt)
+        private void OnChantUpdateVisual(PlayerChantUpdateEvent evt)
         {
             if (chantBarColor == null) return;
-            AsyncChantProgess(evt.bulletConfig.ChantDuration, 1 - evt.bulletConfig.ChantRatio);
+
+            UpdateChantRatio(evt.TargetRatio);
+            //chantBarColor.fillAmount = evt.TargetRatio * 0.25f;
+            //AsyncChantProgess(evt.bulletConfig.ChantDuration, 1 - evt.bulletConfig.ChantRatio);
         }
-        private void AsyncChantProgess(float ChantDuration, float unProgressRatio)
+        //private void AsyncChantProgess(float ChantDuration, float unProgressRatio)
+        //{
+        //    if (chantBarColor == null) return;
+        //    if (DOTween.IsTweening(chantBarColor)) DOTween.Kill(chantBarColor);
+        //    chantBarColor.fillAmount = (1 - unProgressRatio) * 0.25f;
+        //    chantBarColor.DOFillAmount(0.25f, unProgressRatio * ChantDuration)
+        //        .SetDelay(0.35f)
+        //        .SetEase(Ease.Linear)
+        //        .SetUpdate(UpdateType.Normal, false)
+        //        .SetId(chantBarColor)
+        //        .OnComplete(() =>
+        //        {
+        //            Debug.Log("計數完成！");
+        //        });
+        //}
+        private void UpdateChantRatio(float targetRatio)
         {
             if (chantBarColor == null) return;
+
+            // 1. 停止任何正在運行的動畫（避免衝突）
             if (DOTween.IsTweening(chantBarColor)) DOTween.Kill(chantBarColor);
-            chantBarColor.fillAmount = (1 - unProgressRatio)*0.25f;
-            chantBarColor.DOFillAmount(0.25f, unProgressRatio * ChantDuration)
-                .SetDelay(0.35f)
+
+            // 2. 直接計算目標值
+            float finalAmount = targetRatio * 0.25f;
+
+            // 3. 使用簡單的平滑移動，時間縮短到與事件頻率接近 (例如 0.2s)
+            chantBarColor.DOFillAmount(finalAmount, 0.15f)
                 .SetEase(Ease.Linear)
                 .SetUpdate(UpdateType.Normal, false)
-                .SetId(chantBarColor)
-                .OnComplete(() =>
-                {
-                    Debug.Log("計數完成！");
-                });
+                .SetId(chantBarColor);
         }
-        private void OnChantComplete(PlayerChantCompleteEvent evt)
+        private void OnChantComplete(PlayerChantCompleteEvent _)
         {
             if (ChantSparkBarGroup == null) return;
             if (!DOTween.IsTweening(ChantSparkBarGroup))
@@ -188,8 +208,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _eventBus.Subscribe<PlayerWeaponFireEvent>(OnMagicFire);
             _eventBus.Subscribe<PlayerWeaponChangeEvent>(OnMagicChange);
             _eventBus.Subscribe<PlayerChantStartEvent>(OnChantStartVisual);
-            _eventBus.Subscribe<PlayerChantPauseEvent>(OnChantPauseVisual);
-            _eventBus.Subscribe<PlayerChantContinueEvent>(OnChantContinueVisual);
+            _eventBus.Subscribe<PlayerChantUpdateEvent>(OnChantUpdateVisual);
             _eventBus.Subscribe<PlayerChantKillEvent>(OnChantKillVisual);
             _eventBus.Subscribe<PlayerChantCompleteEvent>(OnChantComplete);
         }
@@ -199,8 +218,7 @@ namespace Nobeta.EUG.MBFunctions.PlayerUI
             _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnMagicFire);
             _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnMagicChange);
             _eventBus.Unsubscribe<PlayerChantStartEvent>(OnChantStartVisual);
-            _eventBus.Unsubscribe<PlayerChantPauseEvent>(OnChantPauseVisual);
-            _eventBus.Unsubscribe<PlayerChantContinueEvent>(OnChantContinueVisual);
+            _eventBus.Unsubscribe<PlayerChantUpdateEvent>(OnChantUpdateVisual);
             _eventBus.Unsubscribe<PlayerChantKillEvent>(OnChantKillVisual);
             _eventBus.Unsubscribe<PlayerChantCompleteEvent>(OnChantComplete);
         }

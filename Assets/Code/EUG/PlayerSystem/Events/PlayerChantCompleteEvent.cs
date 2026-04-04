@@ -1,11 +1,9 @@
-﻿using Nobeta.EUG.BulletSystem.OOP;
-using Nobeta.EUG.BulletSystem.OOP;
-using UnityEngine;
+﻿using Nobeta.EUG.IEvent;
 
 namespace Nobeta.EUG.Events
 {
-    public struct PlayerChantCompleteEvent
+    public struct PlayerChantCompleteEvent:IBulletEvent
     {
-        public BulletConfig bulletConfig;
+
     }
 }

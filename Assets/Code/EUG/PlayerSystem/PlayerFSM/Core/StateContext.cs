@@ -165,14 +165,15 @@ namespace Nobeta.EUG.FSM.Core
             _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
             _bulletsDiction.Add(BulletType.Lightning, BulletConfig.LightningStrike);
 
-            CurrentBulletConfig.SetChantCompleteAction(() =>
-            {
-                EventBus.Publish(new PlayerChantCompleteEvent());
-            });
-            CurrentBulletConfig.SetChantKillAction(() =>
-            {
-                EventBus.Publish(new PlayerChantKillEvent());
-            });
+            //CurrentBulletConfig.SetChantCompleteAction(() =>
+            //{
+            //    EventBus.Publish(new PlayerChantCompleteEvent());
+            //});
+            //CurrentBulletConfig.SetChantKillAction(() =>
+            //{
+            //    EventBus.Publish(new PlayerChantKillEvent());
+            //});
+            CurrentBulletConfig.SetIEventBus(EventBus);
         }
 
         #endregion
@@ -183,7 +184,7 @@ namespace Nobeta.EUG.FSM.Core
         /// 是否在地面上
         /// </summary>
         public bool IsGrounded => Detection.IsGrounded;
-        public bool IsGroundedEX => (Time.time-Detection.LastGroundedTime)<10f;
+        public bool IsGroundedEX => (Time.time - Detection.LastGroundedTime) < 10f;
         /// <summary>
         /// 是否可以跳躍（包含土狼時間）
         /// </summary>
@@ -263,14 +264,21 @@ namespace Nobeta.EUG.FSM.Core
                 //    TimeService.TaskDelayLock(CurrentBulletConfig.CoolTime, (b) => CurrentBulletConfig.CoolTimerLock = b);
                 //// 發布施法事件
                 ///
-                CurrentBulletConfig.TryFire(() =>
+                //CurrentBulletConfig.TryFire(() =>
+                //{
+                //    EventBus.Publish(new PlayerWeaponFireEvent
+                //    {
+                //        bulletConfig = CurrentBulletConfig
+                //    });
+                //    ConsumeMana(CurrentBulletConfig.ManaCost);
+                //});
+                CurrentBulletConfig.TryFire(evt =>
                 {
-                    EventBus.Publish(new PlayerWeaponFireEvent
-                    {
-                        bulletConfig = CurrentBulletConfig
-                    });
+                    EventBus.Publish(evt);
                     ConsumeMana(CurrentBulletConfig.ManaCost);
                 });
+
+
                 //Debug.Log($"施放魔法！蓄力: {context.ChargeLevel:P0}, 威力: {spellPower}, 魔力消耗: {manaCost}");
             }
             else
@@ -281,38 +289,21 @@ namespace Nobeta.EUG.FSM.Core
         }
         public void CommandChant()
         {
-            CurrentBulletConfig.TryChant(() =>
-            {
-                EventBus.Publish(new PlayerChantStartEvent
-                {
-                    bulletConfig = CurrentBulletConfig
-                });
-            });
+            CurrentBulletConfig.TryChant();
             StartAsyncChant();
         }
 
         public void ChantContinue()
         {
-            CurrentBulletConfig.ContinueChant(() =>
-            {
-                EventBus.Publish(new PlayerChantContinueEvent
-                {
-                    bulletConfig = CurrentBulletConfig
-                });
-            });
+            CurrentBulletConfig.ContinueChant();
         }
         public void ChantPause()
         {
-            CurrentBulletConfig.PauseChant(() =>
-            {
-                EventBus.Publish(new PlayerChantPauseEvent
-                {
-                });
-            });
+            CurrentBulletConfig.PauseChant();
         }
         public void ChantKill()
         {
-            CurrentBulletConfig.KillChant();
+            CurrentBulletConfig.KillChant(evt => EventBus.Publish(evt));
         }
 
         private float counter = 0;

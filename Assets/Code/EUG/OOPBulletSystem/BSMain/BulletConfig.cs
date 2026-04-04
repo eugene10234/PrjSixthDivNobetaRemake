@@ -4,6 +4,7 @@
 // ============================================================================
 using DG.Tweening;
 using Nobeta.EUG.Events;
+using Nobeta.EUG.IEvent;
 using Nobeta.EUG.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,11 @@ namespace Nobeta.EUG.BulletSystem.OOP
     public class BulletConfig
     {
 
-
+        public static IEventBus EventBus;
+        public void SetIEventBus(IEventBus eventBus)
+        {
+            EventBus = eventBus;
+        }
         public int Id { get; set; }
         public float Speed { get; set; }
         public int Damage { get; set; }
@@ -38,68 +43,80 @@ namespace Nobeta.EUG.BulletSystem.OOP
         public float ChantRatio { get; set; }
 
         public float NextFireTime { get; private set; }
-        public void TryFire(Action FireAction)
+        //public void TryFire(Action FireAction)
+        //{
+        //    if (Time.time < NextFireTime) return;
+        //    FireAction?.Invoke();
+        //    NextFireTime = Time.time + CoolTime;
+        //}
+        public void TryFire(Action<PlayerWeaponFireEvent> FireAction)
         {
             if (Time.time < NextFireTime) return;
-            FireAction?.Invoke();
+            FireAction?.Invoke(new PlayerWeaponFireEvent { bulletConfig = this });
             NextFireTime = Time.time + CoolTime;
         }
-        public void TryChant(Action chantAction/*, Action KillChantAction*/)
+        public void TryChant(/*Action<PlayerChantStartEvent> StartAct*/)
         {
             if (ChantFlag) return;
-            StartChant(chantAction);
+            StartChant(evt => EventBus.Publish(evt));
         }
-        public void StartChant(Action chantStartAction)
+        public void StartChant(Action<PlayerChantStartEvent> StartAct)
         {
             ChantRatio = 0f;
             ChantFlag = true;
-            chantStartAction?.Invoke();
-            AsyncChantProgess();
+            StartAct?.Invoke(new PlayerChantStartEvent { });
+            AsyncChantProgess(evt => EventBus.Publish(evt), evt => EventBus.Publish(evt));
         }
-        public void PauseChant(Action chantStopAction)
+        public void PauseChant(/*Action<PlayerChantPauseEvent> PauseAct*/)
         {
             if (DOTween.IsTweening(this))
             {
-                chantStopAction?.Invoke();
+                //PauseAct?.Invoke(new PlayerChantPauseEvent { });
                 DOTween.Kill(this);
             }
         }
-        public void ContinueChant(Action chantContinueAction)
+        public void ContinueChant(/*Action chantContinueAction*/)
         {
-            chantContinueAction?.Invoke();
-            AsyncChantProgess();
+            //chantContinueAction?.Invoke();
+            AsyncChantProgess(evt => EventBus.Publish(evt), evt => EventBus.Publish(evt));
         }
-        public void KillChant()
+        public void KillChant(Action<PlayerChantKillEvent> act)
         {
-            PauseChant(ChantKillAction);
+            PauseChant(/*evt => EventBus.Publish(evt)*/);
+            act.Invoke(new PlayerChantKillEvent { });
             ChantFlag = false;
         }
-        private void AsyncChantProgess()
+        float lastInvokeTime = 0f; // 記錄上一次觸發的時間點
+        private void AsyncChantProgess(Action<PlayerChantUpdateEvent> UpdateAct, Action<PlayerChantCompleteEvent> CompleteAct)
         {
             if (DOTween.IsTweening(this)) DOTween.Kill(this);
-            DOTween.To(() => ChantRatio, x => ChantRatio = x, 1f, ChantDuration)
+            DOTween.To(() => ChantRatio, x => ChantRatio = x, 1f, ChantDuration*(1-ChantRatio))
                           .SetEase(Ease.Linear)  // 均速增加
                           .SetUpdate(UpdateType.Normal, false)      // 受 TimeScale 影響
                           .SetId(this)
-                          //.OnUpdate(() => 
-                          //{
-                          //      chantAction?.Invoke();
-                          //})
+                          .OnStart(() => {
+                              lastInvokeTime = 0f; // 確保每次重新開始時重置
+                          })
+                          .OnUpdate(() =>
+                          {
+                              // 邏輯：如果距離上次執行超過了 0.2 秒
+                              if (Time.time - lastInvokeTime >= 0.05)
+                              {
+                                  UpdateAct?.Invoke(new PlayerChantUpdateEvent { TargetRatio = ChantRatio });
+                                  lastInvokeTime = Time.time;
+                              }
+                          })
                           .OnComplete(() =>
                           {
-                              ChantCompleteAction?.Invoke();
+                              CompleteAct?.Invoke(new PlayerChantCompleteEvent { });
                           });
         }
-        private static Action ChantKillAction;
-        private static Action ChantCompleteAction;
-        public void SetChantCompleteAction(Action action)
-        {
-            ChantCompleteAction = action;
-        }
-        public void SetChantKillAction(Action action)
-        {
-            ChantKillAction = action;
-        }
+        float lastNotifyTime = 0;
+        float interval = 0.05f; // 你想要的 0.05 秒
+        //public void SetChantKillAction(Action action)
+        //{
+        //    ChantKillAction = action;
+        //}
         // 預定義配置
         public static BulletConfig Normal => new BulletConfig
         {
