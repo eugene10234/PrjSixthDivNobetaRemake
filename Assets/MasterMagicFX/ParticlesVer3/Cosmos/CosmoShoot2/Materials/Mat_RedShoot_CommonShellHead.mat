@@ -28,7 +28,6 @@ Material:
   - _BUILTIN_SURFACE_TYPE_TRANSPARENT
   - _EDGEFADE
   - _LUT
-  - _SURFACE_TYPE_TRANSPARENT
   - _USEMASK
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -141,7 +140,6 @@ Material:
     - _DepthFadeMin: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 1
-    - _DstBlendAlpha: 1
     - _EDGEFADE: 1
     - _EdgeFade: 0.652
     - _EdgeFadeMax: 0.98
@@ -169,8 +167,7 @@ Material:
     - _Repeat: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 5
-    - _SrcBlendAlpha: 1
+    - _SrcBlend: 1
     - _Surface: 1
     - _USEMASK: 1
     - _USEMASK2: 0

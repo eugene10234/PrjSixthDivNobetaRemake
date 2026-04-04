@@ -59,7 +59,8 @@ namespace Nobeta.EUG.FSM.States
 
             // 1. 如果在地面，重置垂直速度並保持貼地
             if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
-            if (ctx.CurrentBulletConfig.ChantFlag) stateMachine.ChangeState<ChantingState>();
+            if (ctx.CurrentBulletConfig.ChantFlag && !ctx.CurrentBulletConfig.IsChantComplete) 
+                stateMachine.ChangeState<ChantingState>();
             if (RunningTimer < 0.01)
             {
                 if (!ctx.Detection.CheckIfMoving(ctx)) stateMachine.ChangeState<IdleState>();

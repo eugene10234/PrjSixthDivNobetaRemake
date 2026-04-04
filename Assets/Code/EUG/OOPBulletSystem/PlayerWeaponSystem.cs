@@ -111,12 +111,24 @@ namespace Nobeta.EUG.BulletSystem.OOP.UnityBridge
         }
         private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
-            Vector3 targetPoint = GetPlayerTargetPoint();
-            bulletSystem.Fire(
-                BulletConfig.Normal,
-                firePoint.position,
-                targetPoint - firePoint.position
-            );
+            if (!evt.IsSpecial)
+            {
+                Vector3 targetPoint = GetPlayerTargetPoint();
+                bulletSystem.Fire(
+                    BulletConfig.SpecialNormalBullet,
+                    firePoint.position,
+                    targetPoint - firePoint.position
+                );
+            }
+            else
+            {
+                Vector3 targetPoint = GetPlayerTargetPoint();
+                bulletSystem.Fire(
+                    BulletConfig.Normal,
+                    firePoint.position,
+                    targetPoint - firePoint.position
+                );
+            }
         }
         private void OnIceFire(PlayerWeaponFireEvent evt)
         {

@@ -1809,38 +1809,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].trailPrefab
-      value: 
-      objectReference: {fileID: 7295552712867091612, guid: a1ffcf1b93e3da24b9b334f74a9b9e28, type: 3}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].trailLifetime
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].hitEffectPrefab
-      value: 
-      objectReference: {fileID: 8933189046970082843, guid: 38524cfa65738714696de3bfe37176e7, type: 3}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].hitEffectLifetime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].muzzleFlashPrefab
-      value: 
-      objectReference: {fileID: 6439093443533909743, guid: 6a82dc8c2f2ae5045a317c48289c8dbf, type: 3}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].bulletVisualPrefab
-      value: 
-      objectReference: {fileID: 2550374052878321256, guid: c735f244aeab08b4e982a307f07bb269, type: 3}
-    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
-      propertyPath: bulletVFXConfigs.Array.data[4].muzzleFlashLifetime
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8291527152146335549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
       propertyPath: firePoint
       value: 
@@ -1989,6 +1957,10 @@ PrefabInstance:
     - target: {fileID: 3254971553640806226, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106868479151914821, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.656569
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

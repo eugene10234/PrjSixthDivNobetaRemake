@@ -189,6 +189,7 @@ namespace Nobeta.EUG.FSM.States
         public override void DetectionHandler()
         {
             base.DetectionHandler();
+
             if (!ctx.IsGrounded)
             {
                 stateMachine.ChangeState<FallingState>();
@@ -198,6 +199,10 @@ namespace Nobeta.EUG.FSM.States
             {
                 stateMachine.ChangeState<AimingState>();
                 return;
+            }
+            if (ctx.CurrentBulletConfig.IsChantComplete)
+            {
+                stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             }
         }
         
