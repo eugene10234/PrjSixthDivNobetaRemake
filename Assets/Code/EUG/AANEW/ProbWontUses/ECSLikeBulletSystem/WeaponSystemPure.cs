@@ -7,7 +7,7 @@ using VContainer;
 // ========================================================================
 // Weapon System（使用示例）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 武器系統（使用 BulletManager 的示例）

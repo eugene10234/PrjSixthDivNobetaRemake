@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Bullet Movement System（子彈移動系統 - Pure C#）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
 
     /// <summary>

@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Bullet Factory（子彈工廠 - Pure C#）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈工廠

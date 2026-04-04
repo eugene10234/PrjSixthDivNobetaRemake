@@ -9,7 +9,7 @@ using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;  // 僅用於 Vector3, Quaternion 等數學類型
 
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈管理器橋接層（唯一的 MonoBehaviour）

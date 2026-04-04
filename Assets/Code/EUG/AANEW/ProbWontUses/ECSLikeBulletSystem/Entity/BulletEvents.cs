@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Events（事件 - Pure Struct）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     public struct BulletSpawnedEvent
     {

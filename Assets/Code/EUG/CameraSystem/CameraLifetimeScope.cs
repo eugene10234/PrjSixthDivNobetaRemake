@@ -2,7 +2,7 @@
 using Nobeta.EUG.FSM;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
-using Nobeta.EUG.GameFlowTry.Menu;
+using Nobeta.EUG.GameFlow.Menu;
 using Nobeta.EUG.Services;
 using Unity.Cinemachine;
 using UnityEngine;

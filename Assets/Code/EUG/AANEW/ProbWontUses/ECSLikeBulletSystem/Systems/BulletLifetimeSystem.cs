@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Bullet Lifetime System（子彈生命週期系統 - Pure C#）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈生命週期系統

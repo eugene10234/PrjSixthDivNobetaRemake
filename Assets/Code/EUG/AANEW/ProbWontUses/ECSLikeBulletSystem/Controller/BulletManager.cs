@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Bullet Manager（子彈管理器 - Pure C#，核心）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈管理器（Pure C#，完全脫離 MonoBehaviour）

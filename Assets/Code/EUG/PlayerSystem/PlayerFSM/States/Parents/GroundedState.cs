@@ -1,4 +1,4 @@
-﻿using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+﻿using Nobeta.EUG.BulletSystemV1.OOP.UnityBridge;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;

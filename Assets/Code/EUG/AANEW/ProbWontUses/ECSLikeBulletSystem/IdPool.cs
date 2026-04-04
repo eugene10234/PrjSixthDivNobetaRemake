@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Object Pool（對象池 - Pure C#）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// ID 池（重用子彈 ID）

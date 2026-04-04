@@ -1,6 +1,6 @@
 ﻿using Assets.Code.EUG.MBFunctions.GUI;
 using DG.Tweening;
-using Nobeta.EUG.BulletSystem.OOP;
+using Nobeta.EUG.BulletSystemV1.OOP;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using System.Collections.Generic;

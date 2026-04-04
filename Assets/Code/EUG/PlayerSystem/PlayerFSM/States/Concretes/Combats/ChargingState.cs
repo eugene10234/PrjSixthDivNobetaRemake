@@ -1,7 +1,7 @@
 ﻿
 using System;
 using Nobeta.EUG.AANEW.MBbulletsystems;
-using Nobeta.EUG.BulletSystem.OOP.UnityBridge;
+using Nobeta.EUG.BulletSystemV1.OOP.UnityBridge;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;

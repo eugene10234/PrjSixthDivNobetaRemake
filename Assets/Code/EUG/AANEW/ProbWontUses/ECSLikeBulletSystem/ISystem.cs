@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // System Interface（系統接口）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
 
     /// <summary>

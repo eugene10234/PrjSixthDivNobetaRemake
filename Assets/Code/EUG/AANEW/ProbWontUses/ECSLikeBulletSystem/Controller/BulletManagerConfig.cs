@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Bullet Manager Config（配置）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈管理器配置

@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Supporting Structures（輔助結構）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 統計信息

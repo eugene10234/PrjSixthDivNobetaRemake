@@ -6,7 +6,7 @@ using UnityEngine;
 // ========================================================================
 // Core Data Structures（核心數據結構 - Pure Struct）
 // ========================================================================
-namespace Nobeta.EUG.BulletSystem.ECSLike.Pure
+namespace Nobeta.EUG.BulletSystemV1.ECSLike.Pure
 {
     /// <summary>
     /// 子彈數據（Pure Struct，無引用類型，零 GC）
