@@ -89,7 +89,7 @@ public class RigHeadTargetController : MonoBehaviour
         float targetPitch = 0f;
         float currentSmooth = returnSmoothTime;
         Vector3 targetPoint = transform.position + Camera.main.transform.forward * 50f;
-        if (_cameraService.TryGetCameraSphereHit(0.2f, 50f, out RaycastHit hitInfo))
+        if (_cameraService.TryGetCameraSphereHit(0.2f, 50f, out RaycastHit hitInfo, LayerMask.GetMask("Enemy")))
         {
             targetPoint = hitInfo.point;
 

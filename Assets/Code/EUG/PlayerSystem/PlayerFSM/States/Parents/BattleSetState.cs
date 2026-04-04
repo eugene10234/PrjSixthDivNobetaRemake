@@ -69,7 +69,7 @@ namespace Nobeta.EUG.FSM.States
         }
         public override void OnNumSwitchInput()
         {
-
+            if (ctx.CurrentBulletConfig.ChantFlag) return;
             var msNum = ctx.InputService.PressedNumSwitch;
             var te = (int)ctx.CurrentBulletConfig.Type + 1;
             if (msNum != te)

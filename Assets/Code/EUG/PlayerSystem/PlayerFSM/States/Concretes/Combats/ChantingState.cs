@@ -44,12 +44,12 @@ namespace Nobeta.EUG.FSM.States
             PublishEvent(new RigChantStartEvent());
             _speedType = stateMachine.GetLastGroundedState();
             SetTargetSpeed(_speedType);
-            if (ctx.InputService.IsAimPressed)
-            {
-                PlayAnimation("AimingWalk2", 0.1f);
-                _isAimAnimate = true;
-            }
-            else
+            //if (ctx.InputService.IsAimPressed)
+            //{
+            //    PlayAnimation("AimingWalk2", 0.1f);
+            //    _isAimAnimate = true;
+            //}
+            //else
             {
                 PlayAnimation("MovementState", 0.1f);
                 _isAimAnimate = false;
@@ -186,11 +186,32 @@ namespace Nobeta.EUG.FSM.States
                 return -4f;
             }
         }
+        public override void DetectionHandler()
+        {
+            base.DetectionHandler();
+            if (ctx.InputService.IsAimPressed)
+            {
+                stateMachine.ChangeState<AimingState>();
+                return;
+            }
+        }
+        
         // 輸入事件處理
         public override void OnJumpInput()
         {
-            // 瞄準時不能跳躍
-            //Debug.LogWarning("OnJumpInput");
+            if (ctx.CanJump)
+            {
+                stateMachine.ChangeState<JumpingState>(force: true);
+            }
+        }
+        //    }
+        //} if (ctx.InputService.IsAimPressed) stateMachine.ChangeState<AimingState>();
+        public override void OnAimStartInput()
+        {
+            //Debug.LogWarning("OnAimStartInput");
+
+            stateMachine.ChangeState<AimingState>();
+
         }
         //public override void DetectionHandler()
         //{ 
