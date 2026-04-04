@@ -56,6 +56,18 @@ namespace Nobeta.EUG.FSM.States
             }
 
         }
+        public override void Exit()
+        {
+            base.Exit();
+            ExitFlagCheck();
+        }
+        private void ExitFlagCheck()
+        {
+            if (ctx.CurrentBulletConfig.ChantFlag)
+            {
+                ctx.ChantContinue();
+            }
+        }
         public override void OnFireStartInput()
         {            
         }

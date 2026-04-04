@@ -22,6 +22,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Enter()
         {
             base.Enter();
+            EnterFlagCheck();
             _previousSpeed = ctx.CurrentSpeed;
             _previousMoveDirection = GetMoveDirection();
         }
@@ -57,6 +58,13 @@ namespace Nobeta.EUG.FSM.States
 
             // 執行移動
             ctx.MovementService.ExecuteMovement();
+        }
+        private void EnterFlagCheck()
+        {
+            if (ctx.CurrentBulletConfig.ChantFlag)
+            {
+                ctx.ChantPause();
+            }
         }
 
         #region Input Handlers
