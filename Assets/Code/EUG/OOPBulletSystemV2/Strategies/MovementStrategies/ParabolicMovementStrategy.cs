@@ -14,7 +14,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
 
         /// <param name="gravity">重力加速度（建議 9.8 ~ 20）</param>
         /// <param name="launchPitchUp">初始仰角補正（度），用來讓水平瞄準的子彈也能畫出拋物線</param>
-        public ParabolicMovementStrategy(float gravity = 9.8f, float launchPitchUp = 25f)
+        public ParabolicMovementStrategy(float gravity = 4.9f, float launchPitchUp = 25f)
         {
             _gravity = gravity;
             _launchPitchUp = launchPitchUp;
@@ -26,7 +26,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             state.LaunchPosition = state.Position;
 
             // 對發射方向加上仰角讓軌跡更自然
-            Quaternion pitchUp = Quaternion.AngleAxis(-_launchPitchUp, Vector3.Cross(state.Direction, Vector3.up));
+            Quaternion pitchUp = Quaternion.AngleAxis(_launchPitchUp, Vector3.Cross(state.Direction, Vector3.up));
             Vector3 adjustedDir = pitchUp * state.Direction;
             state.Velocity = adjustedDir.normalized * state.Speed;
         }

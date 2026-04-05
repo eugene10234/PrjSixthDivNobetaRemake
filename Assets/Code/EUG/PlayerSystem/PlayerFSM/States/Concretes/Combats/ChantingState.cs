@@ -200,7 +200,7 @@ namespace Nobeta.EUG.FSM.States
                 stateMachine.ChangeState<AimingState>();
                 return;
             }
-            if (ctx.CurrentBulletConfig.IsChantComplete)
+            if (ctx.CurrentBulletConfig.ChantFlag || ctx.CurrentBulletConfig.IsChantComplete)
             {
                 stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             }

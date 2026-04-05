@@ -54,8 +54,10 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 
         private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
-            // 直線單顆（BulletConfig.Normal 已含 SingleSpawn + Forward + Single Damage）
-            _bulletSystem.Fire(BulletConfig.Normal, _firePoint.position, GetAimDirection());
+            if (!evt.IsSpecial)
+                _bulletSystem.Fire(BulletConfig.Normal, _firePoint.position, GetAimDirection());
+            else
+                StartAutoFireball();
         }
 
         private void OnIceFire(PlayerWeaponFireEvent evt)
@@ -85,15 +87,15 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             // 建立一個 IntervalSpawnStrategy 的設定
             var intervalConfig = new BulletConfig
             {
-                Speed = 15f,
+                Speed = 50f,
                 Damage = 30,
                 Lifetime = 4f,
                 ColliderRadius = 0.3f,
                 Type = BulletType.Fire,
                 SpawnStrategy = new IntervalSpawnStrategy(
-                    interval: 2f,
-                    inner: new BurstSpawnStrategy(count: 1)),   // 每 2 秒 1 顆
-                MovementStrategy = new ParabolicMovementStrategy(),
+                    interval: 0.5f,
+                    inner: new BurstSpawnStrategy(count: 5,spreadAngle:10,offsetY:20)),   // 每 2 秒 1 顆
+                MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.5f, frequency: 2f),
                 DamageStrategy = new AoeDamageStrategy(radius: 3f),
             };
 

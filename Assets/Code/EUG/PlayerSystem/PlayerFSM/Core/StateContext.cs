@@ -5,7 +5,7 @@
 
 
 using DG.Tweening;
-using Nobeta.EUG.BulletSystemV1.OOP;
+using Nobeta.EUG.BulletSystemV2.OOP;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;

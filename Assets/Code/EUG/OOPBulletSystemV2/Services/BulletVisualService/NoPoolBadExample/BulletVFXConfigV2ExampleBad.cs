@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Nobeta.EUG.BulletSystemV2.OOP;
 using System.Collections.Generic;
 using UnityEngine;
 // ============================================================================
@@ -13,10 +14,10 @@ using UnityEngine;
 //   VFX 層只訂閱 EventBus 事件，不需要知道 Strategy 的存在。
 //
 // ============================================================================
-namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
+namespace Nobeta.EUG.BulletSystemV2ExampleBad.OOP.UnityBridge
 {
     [System.Serializable]
-    public class BulletVFXConfig
+    public class BulletVFXConfigExampleBad
     {
         public BulletType Type;
 

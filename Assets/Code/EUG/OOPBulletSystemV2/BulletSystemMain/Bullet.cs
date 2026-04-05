@@ -113,6 +113,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             var hit = _physicsService.OverlapSphere(
                 State.Position,
                 State.ColliderRadius,
+                State.Direction,
                 LayerMask.GetMask("Enemy", "Ground", "Obstacle")
             );
 
@@ -121,10 +122,10 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             {
                 // sweepRadius = ColliderRadius + Speed * 補償係數
                 // 補償係數確保高速子彈不穿透
-                float sweepDist = Vector3.Distance(prevPosition, State.Position) * 1.1f;
+                float sweepDist = Vector3.Distance(prevPosition, State.Position) * 1.6f;
                 hit = _physicsService.SphereCast(
                     prevPosition,
-                    State.ColliderRadius,
+                    State.ColliderRadius*2,
                     State.Direction,
                     sweepDist,
                     LayerMask.GetMask("Enemy", "Ground", "Obstacle")

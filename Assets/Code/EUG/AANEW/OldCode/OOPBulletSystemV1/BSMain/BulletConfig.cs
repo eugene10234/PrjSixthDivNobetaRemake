@@ -217,7 +217,7 @@ namespace Nobeta.EUG.BulletSystemV1.OOP
             CoolTime = 1.25f,
             //CoolTimerLock = false,
             Lifetime = 4f,
-            ColliderRadius = 0.1f,
+            ColliderRadius = 0.15f,
             Type = BulletType.Lightning,
             NextFireTime = Time.time,
             ChantManaCost = 20,

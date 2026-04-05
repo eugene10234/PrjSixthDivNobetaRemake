@@ -210,25 +210,25 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             ChantManaCost = 20,
             ChantDuration = 5f,
             // 火球：一次5顆散射 + 拋物線 + 範圍爆炸
-            SpawnStrategy = new BurstSpawnStrategy(count: 5, spreadAngle: 20f),
-            MovementStrategy = new ParabolicMovementStrategy(gravity: 12f, launchPitchUp: 20f),
+            SpawnStrategy = new ShotgunSpawnStrategy(pellets: 9, spreadAngle: 16f),
+            MovementStrategy = new ParabolicMovementStrategy(gravity: 0f, launchPitchUp: 0f),
             DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
         };
 
         public static BulletConfig LightningStrike => new BulletConfig
         {
             Speed = 80f,
-            Damage = 250,
+            Damage = 80,
             ManaCost = 50,
             CoolTime = 1.25f,
             Lifetime = 4f,
-            ColliderRadius = 0.1f,
+            ColliderRadius = 0.15f,
             Type = BulletType.Lightning,
             NextFireTime = Time.time,
             ChantManaCost = 20,
             ChantDuration = 5f,
-            SpawnStrategy = SingleSpawnStrategy.Default,
-            MovementStrategy = new HomingMovementStrategy(turnSpeed: 270f),
+            SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f), 
+            MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
             DamageStrategy = SingleDamageStrategy.Default,
         };
 

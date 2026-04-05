@@ -58,11 +58,12 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             // 找到對應的 Bullet 物件來回收視覺
             foreach (var b in _bulletManager.ActiveBullets)
             {
-                if (b.Id == evt.BulletState.Id)
-                {
-                    _visualService.RecycleVisual(b).Forget();
-                    break;
-                }
+
+                //if (b.Id == evt.BulletState.Id)
+                //{
+                    _visualService.RecycleVisual(b);
+                //    break;
+                //}
             }
         }
 
@@ -70,11 +71,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         {
             foreach (var b in _bulletManager.ActiveBullets)
             {
-                if (b.Id == evt.BulletState.Id)
-                {
-                    _visualService.RecycleVisual(b).Forget();
-                    break;
-                }
+                    _visualService.RecycleVisual(b);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using Nobeta.EUG.BulletSystemV1.OOP;
+﻿using Nobeta.EUG.BulletSystemV2.OOP;
 using UnityEngine;
 
 namespace Nobeta.EUG.Events

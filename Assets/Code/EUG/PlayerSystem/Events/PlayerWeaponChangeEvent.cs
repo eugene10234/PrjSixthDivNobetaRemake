@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nobeta.EUG.BulletSystemV1.OOP;
+using Nobeta.EUG.BulletSystemV2.OOP;
 
 namespace Nobeta.EUG.Events
 {

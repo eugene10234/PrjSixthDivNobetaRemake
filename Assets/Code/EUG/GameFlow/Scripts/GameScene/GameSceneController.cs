@@ -108,7 +108,7 @@ namespace Nobeta.EUG.GameFlow.GameScene
             _eventBus.Publish(new SaveGameRequestedEvent(
                 sceneName,
                 _player.Position,
-                _player.Rotation   // ✅ 新增
+                _player.Rotation  
             ));
         }
 

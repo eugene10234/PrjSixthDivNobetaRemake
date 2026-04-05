@@ -1,13 +1,14 @@
 ﻿using Cysharp.Threading.Tasks;
+using Nobeta.EUG.BulletSystemV2.OOP;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
+namespace Nobeta.EUG.BulletSystemV2ExampleBad.OOP.UnityBridge
 {
-    public class BulletVisualService
+    public class BulletVisualServiceV2ExampleBad
     {
         // ── 每種 BulletType 的 VFX 配置 ──────────────────────────────────
-        private readonly Dictionary<BulletType, BulletVFXConfig> _vfxMap = new();
+        private readonly Dictionary<BulletType, BulletVFXConfigExampleBad> _vfxMap = new();
 
         // ── 子彈視覺物件池：BulletState.Id → GameObject ───────────────────
         private readonly Dictionary<int, GameObject> _activeVisuals = new();
@@ -17,7 +18,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 
         private readonly Transform _visualRoot;
 
-        public BulletVisualService(BulletVFXConfig[] configs, Transform visualRoot)
+        public BulletVisualServiceV2ExampleBad(BulletVFXConfigExampleBad[] configs, Transform visualRoot)
         {
             _visualRoot = visualRoot;
 
@@ -136,7 +137,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 
         // ── Private helpers ───────────────────────────────────────────────
 
-        private async UniTaskVoid PlayMuzzleFlashAsync(BulletVFXConfig cfg, Vector3 pos, Quaternion rot)
+        private async UniTaskVoid PlayMuzzleFlashAsync(BulletVFXConfigExampleBad cfg, Vector3 pos, Quaternion rot)
         {
             if (cfg.MuzzleFlashPrefab == null) return;
 
@@ -148,7 +149,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             if (flash != null) Object.Destroy(flash);
         }
 
-        private GameObject GetOrCreateVisual(BulletType type, BulletVFXConfig cfg)
+        private GameObject GetOrCreateVisual(BulletType type, BulletVFXConfigExampleBad cfg)
         {
             if (_visualPool.TryGetValue(type, out var pool) && pool.Count > 0)
                 return pool.Pop();

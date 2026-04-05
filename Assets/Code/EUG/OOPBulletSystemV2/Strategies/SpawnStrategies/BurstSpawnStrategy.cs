@@ -29,7 +29,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             {
                 float t = _count == 1 ? 0f : (float)i / (_count - 1) - 0.5f; // -0.5 ~ 0.5
                 float yaw = t * _spreadAngle;
-                float pitch = _offsetY;
+                float pitch = -_offsetY;
 
                 Quaternion rot = Quaternion.LookRotation(forward)
                                * Quaternion.Euler(pitch, yaw, 0f);
