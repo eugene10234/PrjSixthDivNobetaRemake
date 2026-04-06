@@ -4,16 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/EUG/MiyPack/MenuScene.unity
-    guid: 317143da1ffbd534b879fa5ab267f359
-  - enabled: 1
-    path: Assets/Scenes/EUG/MiyPack/GameScene1.unity
-    guid: cfd434a650a0c0e498b42302fc4251e0
-  - enabled: 1
-    path: Assets/Scenes/EUG/MiyPack/GameScene2.unity
-    guid: 33f18deeffcbc584ab21012178595cbe
+  m_Scenes: []
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 48cc97498e18e0843ba331a0106690d9, type: 3}
   m_UseUCBPForAssetBundles: 0

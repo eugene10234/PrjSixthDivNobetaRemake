@@ -218,22 +218,16 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         {
             if (trail == null) return;
             var cfgPoolRoot = VisualSystem[cfg];
-            // 解除父子關係
+
             trail.transform.SetParent(cfgPoolRoot.rootTransform);
+            trail.SetActive(true); // ✅ 父物件 disable 連帶 trail，先重新激活
 
-            //trail.SetActive(true);
-            ////停止 TrailRenderer 繼續發射新點
-            //foreach (var tr in trail.GetComponentsInChildren<TrailRenderer>())
-            //{
-            //    tr.emitting = false;
-            //}
-            // 停止發射新粒子
+            foreach (var tr in trail.GetComponentsInChildren<TrailRenderer>())
+                tr.emitting = false;
+
             foreach (var ps in trail.GetComponentsInChildren<ParticleSystem>())
-            {
                 ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-            }
 
-            // ✨ UniTask：異步延遲
             try
             {
                 await UniTask.Delay(
@@ -241,19 +235,15 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
                     cancellationToken: disposeCts.Token
                 );
 
-                // 回收
                 if (trail != null)
                 {
-                    //現在 trail 是 active，能正確找到 TrailRenderer
                     foreach (var tr in trail.GetComponentsInChildren<TrailRenderer>())
                     {
                         tr.Clear();
-                        //tr.emitting = true;  // 為下次使用重置
+                        tr.emitting = true;
                     }
                     foreach (var ps in trail.GetComponentsInChildren<ParticleSystem>())
-                    {
                         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-                    }
 
                     trail.SetActive(false);
                     cfgPoolRoot.TrailRender.Push(trail);
@@ -261,11 +251,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             }
             catch (System.OperationCanceledException)
             {
-                // 取消時清理
-                if (trail != null)
-                {
-                    Object.Destroy(trail);
-                }
+                if (trail != null) Object.Destroy(trail);
             }
         }
 

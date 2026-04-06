@@ -28,7 +28,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 Vector2 spread = Random.insideUnitCircle * _radius;         
 
                 //Quaternion rot = baseRot * Quaternion.Euler(spread.y, spread.x, 0f);
-                origin.y += _height; // 根據偏移調整生成位置的高度
+                origin.y = Random.Range(_height, _height*2.5f); // 根據高度參數調整生成位置的垂直位置
                 origin.x += spread.x; // 根據偏移調整生成位置的水平位置
                 origin.z += spread.y; // 根據偏移調整生成位置的水平位置
                 result[i] = new SpawnData(origin, Vector3.down);
