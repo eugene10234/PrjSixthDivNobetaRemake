@@ -131,15 +131,15 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             // 建立一個 IntervalSpawnStrategy 的設定
             var intervalConfig = new BulletConfig
             {
-                Speed = 160f,
+                Speed = 65f,
                 Damage = 40,
                 Lifetime = 4f,
                 ColliderRadius = 0.15f,
                 Type = BulletType.Lightning,
                 SpawnStrategy = new IntervalSpawnStrategy(
                     interval: 0.1f,
-                    inner: new SkyRadiusSpawnStrategy2(pellets: 1, radius: 0.8f, height: 400)),   
-                MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.5f, frequency: 3.5f),
+                    inner: new SkyRadiusSpawnStrategy2(pellets: 1, radius: 1.1f, height: 16)),   
+                MovementStrategy = new SinWaveMovementStrategy(amplitude: 500f, frequency: 10f),
                 DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f)
             };
             _tpos = _firePoint.position;

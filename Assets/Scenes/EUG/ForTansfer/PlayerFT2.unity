@@ -2335,6 +2335,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2585137204373214539, guid: ebf2524539b465743bcdec6706871934, type: 3}
     - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
+      propertyPath: bulletVFXConfigs.Array.data[3].trailLifetime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440535462649367549, guid: 5dfe58e0eba16354da4be17a31494fec, type: 3}
       propertyPath: bulletVFXConfigs.Array.data[0].HitEffectPrefab
       value: 
       objectReference: {fileID: 323125831052833628, guid: 08a84073813f60049906eafd5e66c940, type: 3}
@@ -2717,7 +2721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8607354276054258812, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.0501099
+      value: 1.0501404
       objectReference: {fileID: 0}
     - target: {fileID: 8674293113275038708, guid: 1e4228a7f1e2caa4c8ff4ffad2c10a2a, type: 3}
       propertyPath: m_AnchoredPosition.x
