@@ -12,8 +12,10 @@ using UnityEngine;
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 { 
-    public sealed class DotDamageStrategy : IDamageStrategy
+    public sealed class DotDamageStrategy : DamageStrategyBase
     {
+        public override BulletHitType HitType => BulletHitType.Dot;
+        private readonly IEventBus _eventBus;  // ✅ 建構時注入，不從 Execute 傳
         private readonly int _tickCount;      // 觸發幾次
         private readonly float _tickInterval;   // 間隔（秒）
         private readonly float _damagePerTick;  // 每次傷害
@@ -21,20 +23,25 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         /// <param name="tickCount">觸發總次數</param>
         /// <param name="tickInterval">每次間隔秒數</param>
         /// <param name="damagePerTick">每次傷害量（0 = 使用 state.Damage / tickCount）</param>
-        public DotDamageStrategy(int tickCount = 5, float tickInterval = 1f, float damagePerTick = 0f)
+        public DotDamageStrategy(IEventBus eventBus, int tickCount = 5, float tickInterval = 1f, float damagePerTick = 0f)
         {
+            _eventBus = eventBus;
             _tickCount = tickCount;
             _tickInterval = tickInterval;
             _damagePerTick = damagePerTick;
         }
 
-        public UniTaskVoid ExecuteAsync(
+        public override UniTaskVoid ExecuteAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus)
+            CollisionHit hit)
         {
+            if (_eventBus==null)
+            { 
+                Debug.LogError("DotDamageStrategy requires a non-null IEventBus instance. Please provide it via the constructor.");
+                return default;
+            }               
             // 立刻 fire-and-forget，不 await（Bullet 本身已設為 IsActive = false）
-            RunDotAsync(state, hit, eventBus, this).Forget();
+            RunDotAsync(state, hit, _eventBus, this).Forget();
             return default;
         }
 
@@ -52,17 +59,17 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 ? self._damagePerTick
                 : (float)state.Damage / self._tickCount;
 
-            // 立即通知 VFX 播放 DoT 特效
-            eventBus.Publish(new BulletHitEvent
-            {
-                BulletState = state,
-                TargetGameObject = hit.GameObject,
-                HitPosition = state.Position,
-                HitNormal = hit.Normal,
-                Damage = state.Damage,
-                Type = state.Type,
-                HitType = BulletHitType.Dot
-            });
+            //// 立即通知 VFX 播放 DoT 特效
+            //eventBus.Publish(new BulletHitEvent
+            //{
+            //    BulletState = state,
+            //    TargetGameObject = hit.GameObject,
+            //    HitPosition = state.Position,
+            //    HitNormal = hit.Normal,
+            //    Damage = state.Damage,
+            //    Type = state.Type,
+            //    HitType = BulletHitType.Dot
+            //});
 
             for (int i = 0; i < self._tickCount; i++)
             {

@@ -78,7 +78,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             Vector3 prevPosition = State.Position;
 
             // 移動策略更新位置
-            _movementStrategy.Update(State, deltaTime);
+            _movementStrategy.UpdateMovement(State, deltaTime);
 
             // 碰撞檢查（CCD：掃描從舊位置到新位置）
             CheckCollision(prevPosition);
@@ -125,7 +125,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 float sweepDist = Vector3.Distance(prevPosition, State.Position) * 1.6f;
                 hit = _physicsService.SphereCast(
                     prevPosition,
-                    State.ColliderRadius*2,
+                    State.ColliderRadius * 2,
                     State.Direction,
                     sweepDist,
                     LayerMask.GetMask("Enemy", "Ground", "Obstacle")
@@ -137,8 +137,22 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
 
         private void OnCollision(CollisionHit hit)
         {
-            // 委託給 DamageStrategy（不同子彈有不同結算行為）
-            _damageStrategy.ExecuteAsync(State, hit, _eventBus);
+            // 1. 傷害結算交給 Strategy
+            _damageStrategy.ExecuteAsync(State, hit);
+
+            // 2. Publish 在這裡，this 拿得到
+            _eventBus.Publish(new BulletHitEvent
+            {
+                Bullet = this,           
+                BulletState = State,
+                TargetGameObject = hit.GameObject,
+                HitPosition = State.Position,
+                HitNormal = hit.Normal,
+                Damage = State.Damage,
+                Type = State.Type,
+                HitType = _damageStrategy.HitType// ← 這個怎麼拿？看下面
+            });
+
             State.IsActive = false;
         }
 

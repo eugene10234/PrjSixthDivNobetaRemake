@@ -24,6 +24,7 @@ public class RigChantController : MonoBehaviour
     private bool isPlayerLive = true;
     private bool isChanting = false;
     private IEventBus _eventBus;
+    private bool isRigTargetLive = false;
 
     private void Awake()
     {
@@ -44,6 +45,7 @@ public class RigChantController : MonoBehaviour
     private void OnChantStart(RigChantStartEvent evt)
     {
         if (rigChant == null) return;
+        if (isRigTargetLive) return;
         if (!isPlayerLive) return;
         if (isChanting == true) return;
         isChanting = true;
@@ -52,11 +54,17 @@ public class RigChantController : MonoBehaviour
     private void OnChantEnd(RigChantEndEvent evt)
     {
         if (rigChant == null) return;
-        if (!isPlayerLive) return;
+
+        ChantEnd();
+    }
+
+    private void ChantEnd()
+    {
         if (isChanting == false) return;
         isChanting = false;
         RigChantTweening(0f, Ease.Linear);
     }
+
     private void RigChantTweening(float target, Ease easeType)
     {
         if (DOTween.IsTweening(rigChant)) DOTween.Kill(rigChant);
@@ -81,6 +89,12 @@ public class RigChantController : MonoBehaviour
     private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
     {
         isPlayerLive = evt.IsLive;
+        if (!isPlayerLive) ChantEnd();
+    }
+    private void OnRigTargetStateChange(RigTargetStateEvent evt)
+    {
+        isRigTargetLive = evt.IsRigTargetLive;
+        if (isRigTargetLive) ChantEnd();
     }
     private void OnChantStart() { isChanting = true; /*OnProgress();*/ }
     private void OnChantEnd() { isChanting = false; /*OnProgress();*/ }
@@ -89,11 +103,13 @@ public class RigChantController : MonoBehaviour
         _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         _eventBus.Subscribe<RigChantStartEvent>(OnChantStart);
         _eventBus.Subscribe<RigChantEndEvent>(OnChantEnd);
+        _eventBus.Subscribe<RigTargetStateEvent>(OnRigTargetStateChange);
     }
     private void UnsubscribeEvents()
     {
         _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         _eventBus.Unsubscribe<RigChantStartEvent>(OnChantStart);
         _eventBus.Unsubscribe<RigChantEndEvent>(OnChantEnd);
+        _eventBus.Unsubscribe<RigTargetStateEvent>(OnRigTargetStateChange);
     }
 }

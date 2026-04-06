@@ -8,11 +8,11 @@ using UnityEngine;
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class AoeDamageStrategy : IDamageStrategy
+    public sealed class AoeDamageStrategy : DamageStrategyBase
     {
         private readonly float _radius;
         private readonly float _falloff; // 距離衰減：0 = 無衰減，1 = 線性衰減到邊緣為0
-
+        public override BulletHitType HitType => BulletHitType.Aoe;
         private static readonly Collider[] _overlapBuffer = new Collider[32];
 
         /// <param name="radius">爆炸半徑</param>
@@ -23,10 +23,9 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _falloff = falloff;
         }
 
-        public UniTaskVoid ExecuteAsync(
+        public override UniTaskVoid ExecuteAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus)
+            CollisionHit hit)
         {
             // OverlapSphere 找出範圍內所有 Collider
             int count = Physics.OverlapSphereNonAlloc(
@@ -43,18 +42,18 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                     target.TakeDamage(dmg, state.Position);
             }
 
-            // 發布爆炸事件（VFX 監聽此事件播放爆炸特效）
-            eventBus.Publish(new BulletHitEvent
-            {
-                BulletState = state,
-                TargetGameObject = hit.GameObject,
-                HitPosition = state.Position,
-                HitNormal = hit.Normal,
-                Damage = state.Damage,
-                Type = state.Type,
-                HitType = BulletHitType.Aoe,
-                AoeRadius = _radius
-            });
+            //// 發布爆炸事件（VFX 監聽此事件播放爆炸特效）
+            //eventBus.Publish(new BulletHitEvent
+            //{
+            //    BulletState = state,
+            //    TargetGameObject = hit.GameObject,
+            //    HitPosition = state.Position,
+            //    HitNormal = hit.Normal,
+            //    Damage = state.Damage,
+            //    Type = state.Type,
+            //    HitType = BulletHitType.Aoe,
+            //    AoeRadius = _radius
+            //});
 
             return default;
         }

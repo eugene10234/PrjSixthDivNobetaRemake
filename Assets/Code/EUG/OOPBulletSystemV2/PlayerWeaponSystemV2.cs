@@ -1,4 +1,5 @@
-﻿using Nobeta.EUG.Events;
+﻿using DG.Tweening;
+using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
 using UnityEngine;
 using VContainer;
@@ -17,7 +18,9 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         [Inject] private IEventBus _eventBus;
 
         // ── 定時發射的 handle（取消用）────────────────────────────────────
-        private int _intervalFireHandle = -1;
+        private int _intervalIceBallHandle = -1;
+        private Vector3 _tpos;
+        private int _intervalLightHandle = -1;
 
         private void OnEnable()
         {
@@ -31,8 +34,8 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnChange);
 
             // 取消任何進行中的定時發射
-            if (_intervalFireHandle >= 0)
-                _bulletSystem.CancelIntervalFire(_intervalFireHandle);
+            if (_intervalIceBallHandle >= 0)
+                _bulletSystem.CancelIntervalFire(_intervalIceBallHandle);
         }
 
         // ── Fire 路由（原版邏輯不動）──────────────────────────────────────
@@ -51,19 +54,22 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnChange(PlayerWeaponChangeEvent evt) { }
 
         // ── 各武器實作 ────────────────────────────────────────────────────
-
+     
         private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
             if (!evt.IsSpecial)
                 _bulletSystem.Fire(BulletConfig.Normal, _firePoint.position, GetAimDirection());
             else
-                StartAutoFireball();
+                StartAutoLightning();
         }
 
         private void OnIceFire(PlayerWeaponFireEvent evt)
         {
             // 冰矢：直線 + 冰凍 DoT
-            _bulletSystem.Fire(BulletConfig.IceBall, _firePoint.position, GetAimDirection());
+            if (!evt.IsSpecial)
+                _bulletSystem.Fire(BulletConfig.IceBall, _firePoint.position, GetAimDirection());
+            else
+                StartAutoIceball();
         }
 
         private void OnFireBallFire(PlayerWeaponFireEvent evt)
@@ -80,39 +86,73 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 
         // ── 定時發射範例：每 2 秒自動射出一顆火球 ───────────────────────
 
-        public void StartAutoFireball()
+        public void StartAutoIceball()
         {
-            if (_intervalFireHandle >= 0) return;
+            if (_intervalIceBallHandle >= 0) return;
 
             // 建立一個 IntervalSpawnStrategy 的設定
             var intervalConfig = new BulletConfig
             {
                 Speed = 50f,
-                Damage = 30,
+                Damage = 15,
                 Lifetime = 4f,
-                ColliderRadius = 0.3f,
-                Type = BulletType.Fire,
+                ColliderRadius = 0.15f,
+                Type = BulletType.Ice,
                 SpawnStrategy = new IntervalSpawnStrategy(
-                    interval: 0.5f,
-                    inner: new BurstSpawnStrategy(count: 5,spreadAngle:10,offsetY:20)),   // 每 2 秒 1 顆
-                MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.5f, frequency: 2f),
-                DamageStrategy = new AoeDamageStrategy(radius: 3f),
+                    interval: 0.25f,
+                    inner: new SkyRadiusSpawnStrategy(pellets: 5, radius: 30, height: 20)),   // 每 2 秒 1 顆
+                MovementStrategy = new AutoHomingMovementStrategy(),
+                DamageStrategy = new CompositeDamageStrategy(
+                SingleDamageStrategy.Default,
+                new DotDamageStrategy(_eventBus,tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
             };
 
-            _intervalFireHandle = _bulletSystem.RegisterIntervalFire(
+            _intervalIceBallHandle = _bulletSystem.RegisterIntervalFire(
                 intervalConfig,
                 originGetter: () => _firePoint.position,
                 forwardGetter: () => GetAimDirection()
             );
+            DOVirtual.DelayedCall(7f, () =>
+            {
+                StopAutoIceball();
+            }).SetUpdate(UpdateType.Normal, false);
         }
 
-        public void StopAutoFireball()
+        public void StopAutoIceball()
         {
-            if (_intervalFireHandle < 0) return;
-            _bulletSystem.CancelIntervalFire(_intervalFireHandle);
-            _intervalFireHandle = -1;
+            if (_intervalIceBallHandle < 0) return;
+            _bulletSystem.CancelIntervalFire(_intervalIceBallHandle);
+            _intervalIceBallHandle = -1;
         }
+        public void StartAutoLightning()
+        {
+            if (_intervalLightHandle >= 0) return;
 
+            // 建立一個 IntervalSpawnStrategy 的設定
+            var intervalConfig = new BulletConfig
+            {
+                Speed = 160f,
+                Damage = 40,
+                Lifetime = 4f,
+                ColliderRadius = 0.15f,
+                Type = BulletType.Lightning,
+                SpawnStrategy = new IntervalSpawnStrategy(
+                    interval: 0.1f,
+                    inner: new SkyRadiusSpawnStrategy2(pellets: 1, radius: 0.8f, height: 400)),   
+                MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.5f, frequency: 3.5f),
+                DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f)
+            };
+            _tpos = _firePoint.position;
+            _intervalLightHandle = _bulletSystem.RegisterIntervalFire(
+                intervalConfig,
+                originGetter: () => _tpos,
+                forwardGetter: () => GetAimDirection()
+            );
+            //DOVirtual.DelayedCall(7f, () =>
+            //{
+            //    StopAutoIceball();
+            //}).SetUpdate(UpdateType.Normal, false);
+        }
         // ── 燃燒彈範例（手動調用）────────────────────────────────────────
 
         public void FireBurnBomb()

@@ -4,16 +4,16 @@
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class ForwardMovementStrategy : IMovementStrategy
+    public sealed class ForwardMovementStrategy : MovementStrategyBase
     {
         public static readonly ForwardMovementStrategy Default = new();
 
-        public void OnInitialize(BulletState state)
+        public override void OnInitialize(BulletState state)
         {
             state.Velocity = state.Direction * state.Speed;
         }
 
-        public void Update(BulletState state, float deltaTime)
+        public override void UpdateMovement(BulletState state, float deltaTime)
         {
             state.Position += state.Velocity * deltaTime;
             UpdateRotation(state);

@@ -18,8 +18,19 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
     {
         // ── 原有欄位（不動）──────────────────────────────────────────────
 
-        public static IEventBus EventBus;
-        public void SetIEventBus(IEventBus eventBus) => EventBus = eventBus;
+        public static IEventBus _eventBus;
+        public BulletConfig()
+        {
+            _eventBus = EventBusProvider.GetEventBus();
+
+            //// 預設使用全局事件總線（如果有的話）
+            //if (_eventBus == null && EventBusProvider.GetEventBus != null)
+            //{
+            //    _eventBus = EventBusProvider.GlobalEventBus;
+            //}
+        }
+
+        public void SetIEventBus(IEventBus eventBus) => _eventBus = eventBus;
 
         public int Id { get; set; }
         public float Speed { get; set; }
@@ -72,7 +83,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 }
                 else
                 {
-                    EventBus.Publish(new PlayerWeaponFireEvent
+                    _eventBus.Publish(new PlayerWeaponFireEvent
                     {
                         bulletConfig = this,
                         IsSpecial = false,
@@ -83,7 +94,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 ChantRatio = 0f;
                 IsChantComplete = false;
                 ChantFlag = false;
-                KillChant(evt => EventBus.Publish(evt));
+                KillChant(evt => _eventBus.Publish(evt));
             }
             else
             {
@@ -101,7 +112,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         public void TryChant()
         {
             if (ChantFlag) return;
-            StartChant(evt => EventBus.Publish(evt));
+            StartChant(evt => _eventBus.Publish(evt));
         }
 
         public void StartChant(Action<PlayerChantStartEvent> startAct)
@@ -109,7 +120,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             ChantRatio = 0f;
             ChantFlag = true;
             startAct?.Invoke(new PlayerChantStartEvent { });
-            AsyncChantProgess(evt => EventBus.Publish(evt), evt => EventBus.Publish(evt));
+            AsyncChantProgess(evt => _eventBus.Publish(evt), evt => _eventBus.Publish(evt));
         }
 
         public void PauseChant()
@@ -119,7 +130,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
 
         public void ContinueChant()
         {
-            AsyncChantProgess(evt => EventBus.Publish(evt), evt => EventBus.Publish(evt));
+            AsyncChantProgess(evt => _eventBus.Publish(evt), evt => _eventBus.Publish(evt));
         }
 
         public void KillChant(Action<PlayerChantKillEvent> act)
@@ -194,7 +205,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             // 冰矢：單體 + DoT（凍傷每秒8點，持續3秒）
             DamageStrategy = new CompositeDamageStrategy(
                 SingleDamageStrategy.Default,
-                new DotDamageStrategy(tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
+                new DotDamageStrategy(_eventBus,tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
         };
 
         public static BulletConfig FireBall => new BulletConfig
@@ -262,7 +273,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             // 燃燒彈：範圍 + 持續燃燒 DoT（每0.5秒10點，共10次）
             DamageStrategy = new CompositeDamageStrategy(
                 new AoeDamageStrategy(radius: 4f, falloff: 0.3f),
-                new DotDamageStrategy(tickCount: 10, tickInterval: 0.5f, damagePerTick: 10f)),
+                new DotDamageStrategy(_eventBus, tickCount: 10, tickInterval: 0.5f, damagePerTick: 10f)),
         };
     }
 

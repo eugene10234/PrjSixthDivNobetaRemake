@@ -23,7 +23,7 @@ namespace Nobeta.EUG.BulletSystemV2
             // 子彈工廠（Transient Bullet + Singleton Factory）
             builder.Register<Bullet>(Lifetime.Transient);
             builder.Register<BulletFactory>(Lifetime.Singleton);
-
+            builder.Register<BulletConfigFactory>(Lifetime.Singleton);
             // 子彈管理器
             builder.Register<BulletManager>(Lifetime.Singleton);
 

@@ -15,7 +15,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         {
             // 1. 使用 NonAlloc 避免產生垃圾記憶體 (效能優化關鍵)
             Collider[] results = new Collider[5];
-            int count = Physics.OverlapSphereNonAlloc(position, radius, results, layerMask);
+            int count = Physics.OverlapSphereNonAlloc(position, radius*1.5f, results, layerMask);
 
             for (int i = 0; i < count; i++)
             {

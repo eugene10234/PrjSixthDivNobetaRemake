@@ -58,12 +58,20 @@ public class RigHeadTargetController : MonoBehaviour
     {
         isPlayerLive = evt.IsLive;
     }
+    private bool prevState = false;
     void Update()
     {
         if (!isPlayerLive) return;
         bool isLooking = _playerInputService.IsFirePressed || _playerInputService.IsAimPressed;
         if (isLooking) LookingTimer = LOOKING_DURATION;
-        LookingTimer -= Time.deltaTime;
+
+        if (prevState != isLooking )
+        {
+            prevState= isLooking;
+            _eventBus.Publish(new RigTargetStateEvent() { IsRigTargetLive = isLooking });
+        }
+
+            LookingTimer -= Time.deltaTime;
         //bool hasTarget = target != null;
         if (LookingTimer > 0.01f)
         {

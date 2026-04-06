@@ -40,8 +40,9 @@ namespace Nobeta.EUG.Services
         public float FieldOfView { get => _cinemachineCamera.Lens.FieldOfView; set => _cinemachineCamera.Lens.FieldOfView = value; }
         public float CinCameraDistance { get => _cinemachineThirdPersonFollow.CameraDistance; set => _cinemachineThirdPersonFollow.CameraDistance = value; }
         [Inject]
-        public CameraService(IPlayerInputService playerInputService, IEventBus eventBus)
+        public CameraService(IPlayerInputService playerInputService, IEventBus eventBus )
         {
+      
             _playerInputService = playerInputService;
             _eventBus = eventBus;
             mainCamera = Camera.main;
@@ -229,6 +230,19 @@ namespace Nobeta.EUG.Services
         private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
         {
             isPlayerLive = evt.IsLive;
+        }
+        public (Vector3, Vector3) GetAimPosition()
+        {
+            Vector3 target = Camera.main.transform.position + Camera.main.transform.forward * 75f;
+            Vector3 normal = Vector3.up;
+            if (TryGetCameraSphereHit(0.1f, Mathf.Infinity, out RaycastHit hit,
+                LayerMask.GetMask("Ground", "Obstacle")))
+            {
+                target = hit.point;
+                normal = hit.normal;
+            }
+
+            return (target, normal);
         }
     }
 }

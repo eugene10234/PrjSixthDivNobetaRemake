@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class SinWaveMovementStrategy : IMovementStrategy
+    public sealed class SinWaveMovementStrategy : MovementStrategyBase
     {
         private readonly float _amplitude; // 振幅（Units）
         private readonly float _frequency; // 頻率（Hz）
@@ -15,14 +15,14 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _frequency = frequency;
         }
 
-        public void OnInitialize(BulletState state)
+        public override void OnInitialize(BulletState state)
         {
             state.ElapsedTime = 0f;
             state.LaunchPosition = state.Position;
             state.Velocity = state.Direction * state.Speed;
         }
 
-        public void Update(BulletState state, float deltaTime)
+        public override void UpdateMovement(BulletState state, float deltaTime)
         {
             state.ElapsedTime += deltaTime;
 

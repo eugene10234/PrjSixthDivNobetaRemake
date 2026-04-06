@@ -1,5 +1,6 @@
 ﻿using Nobeta.EUG.Interfaces;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // ============================================================================
@@ -166,7 +167,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         public List<Bullet> SpawnPattern(BulletConfig config, Vector3 origin, int count, float angleStep)
         {
             // 動態建立 CircleSpawnStrategy，不改原有呼叫方式
-            var tempConfig = ShallowCopy(config);
+            var tempConfig = DeepCopy(config);
             tempConfig.SpawnStrategy = new CircleSpawnStrategy(count);
             return SpawnBullet(tempConfig, origin, Vector3.forward);
         }
@@ -174,7 +175,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         public List<Bullet> SpawnCircleShotgunPattern(
             BulletConfig config, Vector3 origin, Vector3 forwardDirection, int count, float spreadAngle)
         {
-            var tempConfig = ShallowCopy(config);
+            var tempConfig = DeepCopy(config);
             tempConfig.SpawnStrategy = new ShotgunSpawnStrategy(count, spreadAngle);
             return SpawnBullet(tempConfig, origin, forwardDirection);
         }
@@ -211,7 +212,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _bulletPool.Push(bullet);
         }
 
-        private static BulletConfig ShallowCopy(BulletConfig src)
+        private static BulletConfig DeepCopy(BulletConfig src)
         {
             // 建立淺複製，避免污染原始 Config
             return new BulletConfig
@@ -224,8 +225,8 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 Lifetime = src.Lifetime,
                 ColliderRadius = src.ColliderRadius,
                 Type = src.Type,
-                MovementStrategy = src.MovementStrategy,
-                DamageStrategy = src.DamageStrategy,
+                MovementStrategy = src.MovementStrategy.Clone(), // ✅ 深複製
+                DamageStrategy = src.DamageStrategy.Clone(),     // ✅ 深複製
             };
         }
 

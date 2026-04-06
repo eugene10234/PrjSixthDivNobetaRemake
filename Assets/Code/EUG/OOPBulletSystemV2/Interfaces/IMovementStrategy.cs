@@ -13,6 +13,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         /// <summary>
         /// 每幀更新位置與速度，直接修改 BulletState
         /// </summary>
-        void Update(BulletState state, float deltaTime);
+        void UpdateMovement(BulletState state, float deltaTime);
+        IMovementStrategy Clone(); // ✅
     }
 }

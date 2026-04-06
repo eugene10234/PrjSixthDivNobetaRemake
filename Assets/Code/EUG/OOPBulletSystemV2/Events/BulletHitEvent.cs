@@ -6,15 +6,14 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
 {
     public struct BulletHitEvent
     {
-        public BulletState BulletState;
+        public Bullet Bullet; 
+        public BulletState BulletState; 
         public GameObject TargetGameObject;
         public Vector3 HitPosition;
         public Vector3 HitNormal;
         public int Damage;
         public BulletType Type;
-
-        // v2 新增
         public BulletHitType HitType;
-        public float AoeRadius;   // HitType == Aoe 時有效
+        public float AoeRadius;
     }
 }

@@ -12,7 +12,8 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         /// </summary>
         UniTaskVoid ExecuteAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus);
+            CollisionHit hit);
+        BulletHitType HitType { get; }
+        IDamageStrategy Clone(); // ✅
     }
 }

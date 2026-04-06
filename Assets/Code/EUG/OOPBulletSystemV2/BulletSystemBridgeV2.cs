@@ -54,17 +54,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         {
             // 依 HitType 播放對應特效（核心：不需要另一個 VisualService）
             _visualService.PlayHitEffectAsync(evt).Forget();
-
-            // 找到對應的 Bullet 物件來回收視覺
-            foreach (var b in _bulletManager.ActiveBullets)
-            {
-
-                //if (b.Id == evt.BulletState.Id)
-                //{
-                    _visualService.RecycleVisual(b);
-                //    break;
-                //}
-            }
+            _visualService.RecycleVisual(evt.Bullet); // ✅ O(1)，不需要 foreach
         }
 
         private void OnBulletExpired(BulletExpiredEvent evt)

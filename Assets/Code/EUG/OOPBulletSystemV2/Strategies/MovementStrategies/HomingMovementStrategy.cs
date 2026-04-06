@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class HomingMovementStrategy : IMovementStrategy
+    public sealed class HomingMovementStrategy : MovementStrategyBase
     {
         private readonly float _turnSpeed;       // 轉向速度（度/秒）
         private readonly float _maxHomingRange;  // 超過此距離放棄追蹤
@@ -20,12 +20,12 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _maxHomingRange = maxHomingRange;
         }
 
-        public void OnInitialize(BulletState state)
+        public override void OnInitialize(BulletState state)
         {
             state.Velocity = state.Direction * state.Speed;
         }
 
-        public void Update(BulletState state, float deltaTime)
+        public override void UpdateMovement(BulletState state, float deltaTime)
         {
             if (state.Target != null && state.Target.gameObject.activeInHierarchy)
             {

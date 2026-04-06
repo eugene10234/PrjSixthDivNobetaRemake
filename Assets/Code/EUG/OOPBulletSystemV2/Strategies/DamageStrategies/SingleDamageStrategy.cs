@@ -9,30 +9,29 @@ using UnityEngine;
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class SingleDamageStrategy : IDamageStrategy
+    public sealed class SingleDamageStrategy : DamageStrategyBase
     {
         public static readonly SingleDamageStrategy Default = new();
-
-        public UniTaskVoid ExecuteAsync(
+        public override BulletHitType HitType => BulletHitType.Single;
+        public override UniTaskVoid ExecuteAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus)
+            CollisionHit hit)
         {
             // 取得 IDamageable 並套用傷害
             if (EnemyDamageSystem.TryGetTarget(hit.GameObject, out IDamageable target))
                 target.TakeDamage(state.Damage, state.Position);
 
-            // 通知 VFX / Audio（由 BulletVisualService 訂閱 BulletHitEvent）
-            eventBus.Publish(new BulletHitEvent
-            {
-                BulletState = state,
-                TargetGameObject = hit.GameObject,
-                HitPosition = state.Position,
-                HitNormal = hit.Normal,
-                Damage = state.Damage,
-                Type = state.Type,
-                HitType = BulletHitType.Single
-            });
+            //// 通知 VFX / Audio（由 BulletVisualService 訂閱 BulletHitEvent）
+            //eventBus.Publish(new BulletHitEvent
+            //{
+            //    BulletState = state,
+            //    TargetGameObject = hit.GameObject,
+            //    HitPosition = state.Position,
+            //    HitNormal = hit.Normal,
+            //    Damage = state.Damage,
+            //    Type = state.Type,
+            //    HitType = BulletHitType.Single
+            //});
 
             return default;
         }

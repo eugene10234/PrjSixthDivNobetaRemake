@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 {
-    public sealed class ParabolicMovementStrategy : IMovementStrategy
+    public sealed class ParabolicMovementStrategy : MovementStrategyBase
     {
         private readonly float _gravity;       // 重力加速度（正值 = 向下）
         private readonly float _launchPitchUp; // 初始仰角（度），讓拋物線更漂亮
@@ -20,7 +20,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _launchPitchUp = launchPitchUp;
         }
 
-        public void OnInitialize(BulletState state)
+        public override void OnInitialize(BulletState state)
         {
             state.ElapsedTime = 0f;
             state.LaunchPosition = state.Position;
@@ -31,7 +31,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             state.Velocity = adjustedDir.normalized * state.Speed;
         }
 
-        public void Update(BulletState state, float deltaTime)
+        public override void UpdateMovement(BulletState state, float deltaTime)
         {
             state.ElapsedTime += deltaTime;
 

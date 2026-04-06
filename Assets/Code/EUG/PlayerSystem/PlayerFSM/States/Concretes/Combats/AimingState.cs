@@ -1,11 +1,13 @@
 ﻿
-using System;
 using Nobeta.EUG.AANEW.MBbulletsystems;
 using Nobeta.EUG.BulletSystemV1.OOP.UnityBridge;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
+using Nobeta.EUG.MBFunctions.PlayerUI;
+using System;
+using TMPro;
 using UnityEngine;
 using VContainer;
 
@@ -88,6 +90,7 @@ namespace Nobeta.EUG.FSM.States
         public override void Update()
         {
             base.Update();
+            (var targetPosition, var targetNormal) = ctx.CameraService.GetAimPosition();
             //if (Input.GetMouseButtonDown(0))
             //{
             //    //Debug.Log("開始攻擊");
@@ -109,6 +112,7 @@ namespace Nobeta.EUG.FSM.States
             // 瞄準時可以緩慢移動
             _movement = ctx.InputService.MoveInput;
             //Debug.LogWarning($"MoveInput: {_movement}:{DateTime.Now}");
+
             if (!ctx.InputService.IsAimPressed) stateMachine.ChangeStateByParent<GroundedState>(_speedType);
             if (_movement.magnitude > 0.1f)
             {
@@ -256,5 +260,6 @@ namespace Nobeta.EUG.FSM.States
                 ctx.CurrentSpeedType = typeof(RunningState);
             }
         }
+
     }
 }

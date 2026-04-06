@@ -12,5 +12,6 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         Single,  // 單體命中
         Aoe,     // 範圍爆炸
         Dot,     // DoT 開始（播上毒/燃燒貼圖）
+        Composite,
     } 
 }

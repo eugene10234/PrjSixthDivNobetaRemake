@@ -9,8 +9,9 @@ using UnityEngine;
 // ─────────────────────────────────────────────────────────────────────────
 namespace Nobeta.EUG.BulletSystemV2.OOP
 { 
-    public sealed class CompositeDamageStrategy : IDamageStrategy
+    public sealed class CompositeDamageStrategy : DamageStrategyBase
     {
+        public override BulletHitType HitType => BulletHitType.Composite;
         private readonly IDamageStrategy[] _strategies;
 
         public CompositeDamageStrategy(params IDamageStrategy[] strategies)
@@ -18,22 +19,20 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             _strategies = strategies;
         }
 
-        public UniTaskVoid ExecuteAsync(
+        public override UniTaskVoid ExecuteAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus)
+            CollisionHit hit)
         {
-            RunAllAsync(state, hit, eventBus).Forget();
+            RunAllAsync(state, hit).Forget();
             return default;
         }
 
         private async UniTaskVoid RunAllAsync(
             BulletState state,
-            CollisionHit hit,
-            IEventBus eventBus)
+            CollisionHit hit)
         {
             foreach (var strategy in _strategies)
-                strategy.ExecuteAsync(state, hit, eventBus);
+                strategy.ExecuteAsync(state, hit);
 
             await UniTask.CompletedTask;
         }
