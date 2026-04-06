@@ -207,8 +207,8 @@ namespace Nobeta.EUG.FSM
         private void HealthManaTimeRecoveryAPI()
         {
             _timeService.TaskDelayLock(HMStartUp_DURATION, (b) => HMStartUpLock = b);
-            RestoreMana(6);
-            Heal(1);
+            RestoreMana(10);
+            Heal(2);
         }
         private bool STStartUpLock = false;
         private const float STStartUp_DURATION = 0.05f;
@@ -236,7 +236,6 @@ namespace Nobeta.EUG.FSM
         #region Public API（公共接口）
         private void OnTakeDamage(PlayerDamagedEvent evt)
         {
-            return;
             TakeDamage(evt.Damage);
         }
         /// <summary>

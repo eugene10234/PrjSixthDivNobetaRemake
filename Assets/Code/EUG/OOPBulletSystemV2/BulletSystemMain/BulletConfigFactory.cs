@@ -27,8 +27,8 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             Lifetime = 5f,
             ColliderRadius = 0.2f,
             Type = BulletType.Normal,
-            ChantManaCost = 100,
-            ChantDuration = 3f,
+            ChantManaCost = 20,
+            ChantDuration = 1.5f,
             // Strategy：預設單顆直線單體（可省略，此處明確寫出）
             SpawnStrategy = SingleSpawnStrategy.Default,
             MovementStrategy = ForwardMovementStrategy.Default,
@@ -79,19 +79,19 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             ColliderRadius = 0.15f,
             Type = BulletType.Lightning,
             ChantManaCost = 20,
-            ChantDuration = 5f,
+            ChantDuration = 3f,
             SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f),
             MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
             DamageStrategy = SingleDamageStrategy.Default,
         };
         public BulletConfig SpecialNormal() => new BulletConfig
         {
-            Speed = 35f,
+            Speed = 100f,
             Damage = 40,
             ManaCost = 0,
             CoolTime = 0.1f,
             Lifetime = 5f,
-            ColliderRadius = 0.5f,
+            ColliderRadius = 0.15f,
             Type = BulletType.SpecialNormal,
             ChantManaCost = 100,
             ChantDuration = 3f,

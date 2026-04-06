@@ -100,11 +100,15 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         public void StartAutoFireball()
         {
             if (_intervalFireBallHandle >= 0) return;
+            //int gravity = 0;
 
-            // 建立一個 IntervalSpawnStrategy 的設定
-            var intervalConfig = new BulletConfig
+            //DOTween.To(() => gravity, x => gravity = x, 1000, 2f).
+
+
+                    // 建立一個 IntervalSpawnStrategy 的設定
+                    var intervalConfig = new BulletConfig
             {
-                Speed = 15f,
+                Speed = 7f,
                 Damage = 15,
                 Lifetime = 4f,
                 ColliderRadius = 0.15f,
