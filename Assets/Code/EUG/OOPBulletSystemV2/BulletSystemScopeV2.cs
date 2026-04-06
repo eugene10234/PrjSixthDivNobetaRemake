@@ -1,6 +1,7 @@
 ﻿
 using Nobeta.EUG.BulletSystemV2.OOP;
 using Nobeta.EUG.BulletSystemV2.OOP.UnityBridge;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -23,8 +24,8 @@ namespace Nobeta.EUG.BulletSystemV2
             // 子彈工廠（Transient Bullet + Singleton Factory）
             builder.Register<Bullet>(Lifetime.Transient);
             builder.Register<BulletFactory>(Lifetime.Singleton);
-            builder.Register<BulletConfigFactory>(Lifetime.Singleton);
-            // 子彈管理器
+            //builder.Register<BulletConfigFactory>(Lifetime.Singleton);
+            //builder.Register<BulletConfigRegistry>(Lifetime.Singleton);
             builder.Register<BulletManager>(Lifetime.Singleton);
 
             // Unity Bridge

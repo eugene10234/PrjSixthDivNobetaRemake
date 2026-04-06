@@ -45,7 +45,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         public bool ChantFlag { get; set; }
         public bool IsChantComplete { get; set; }
         public float ChantRatio { get; set; }
-        public float NextFireTime { get; private set; }
+        public float NextFireTime { get; protected set; } = 0f;
 
         // ── v2 新增：Strategy 插槽（null = 使用預設） ─────────────────────
 
@@ -167,131 +167,132 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                        completeAct?.Invoke(new PlayerChantCompleteEvent { });
                    });
         }
-
-        // ── 預定義配置（v2：加入 Strategy）──────────────────────────────────
-
-        public static BulletConfig Normal => new BulletConfig
-        {
-            Speed = 35f,
-            Damage = 40,
-            ManaCost = 0,
-            CoolTime = 0.5f,
-            Lifetime = 5f,
-            ColliderRadius = 0.2f,
-            Type = BulletType.Normal,
-            NextFireTime = Time.time,
-            ChantManaCost = 100,
-            ChantDuration = 3f,
-            // Strategy：預設單顆直線單體（可省略，此處明確寫出）
-            SpawnStrategy = SingleSpawnStrategy.Default,
-            MovementStrategy = ForwardMovementStrategy.Default,
-            DamageStrategy = SingleDamageStrategy.Default,
-        };
-
-        public static BulletConfig IceBall => new BulletConfig
-        {
-            Speed = 45f,
-            Damage = 25,
-            ManaCost = 4,
-            CoolTime = 0.15f,
-            Lifetime = 5f,
-            ColliderRadius = 0.15f,
-            Type = BulletType.Ice,
-            NextFireTime = Time.time,
-            ChantManaCost = 20,
-            ChantDuration = 5f,
-            SpawnStrategy = SingleSpawnStrategy.Default,
-            MovementStrategy = ForwardMovementStrategy.Default,
-            // 冰矢：單體 + DoT（凍傷每秒8點，持續3秒）
-            DamageStrategy = new CompositeDamageStrategy(
-                SingleDamageStrategy.Default,
-                new DotDamageStrategy(_eventBus,tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
-        };
-
-        public static BulletConfig FireBall => new BulletConfig
-        {
-            Speed = 15f,
-            Damage = 30,
-            ManaCost = 40,
-            CoolTime = 1f,
-            Lifetime = 4f,
-            ColliderRadius = 0.3f,
-            Type = BulletType.Fire,
-            NextFireTime = Time.time,
-            ChantManaCost = 20,
-            ChantDuration = 5f,
-            // 火球：一次5顆散射 + 拋物線 + 範圍爆炸
-            SpawnStrategy = new ShotgunSpawnStrategy(pellets: 9, spreadAngle: 16f),
-            MovementStrategy = new ParabolicMovementStrategy(gravity: 0f, launchPitchUp: 0f),
-            DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
-        };
-
-        public static BulletConfig LightningStrike => new BulletConfig
-        {
-            Speed = 80f,
-            Damage = 80,
-            ManaCost = 50,
-            CoolTime = 1.25f,
-            Lifetime = 4f,
-            ColliderRadius = 0.15f,
-            Type = BulletType.Lightning,
-            NextFireTime = Time.time,
-            ChantManaCost = 20,
-            ChantDuration = 5f,
-            SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f), 
-            MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
-            DamageStrategy = SingleDamageStrategy.Default,
-        };
-
-        public static BulletConfig GrenadeBullet => new BulletConfig
-        {
-            Speed = 18f,
-            Damage = 80,
-            ManaCost = 30,
-            CoolTime = 2f,
-            Lifetime = 3f,
-            ColliderRadius = 0.25f,
-            Type = BulletType.Normal,
-            NextFireTime = Time.time,
-            SpawnStrategy = SingleSpawnStrategy.Default,
-            MovementStrategy = new ParabolicMovementStrategy(gravity: 9.8f, launchPitchUp: 35f),
-            DamageStrategy = new AoeDamageStrategy(radius: 5f, falloff: 0.4f),
-        };
-
-        public static BulletConfig BurnBomb => new BulletConfig
-        {
-            Speed = 12f,
-            Damage = 20,
-            ManaCost = 35,
-            CoolTime = 1.5f,
-            Lifetime = 4f,
-            ColliderRadius = 0.3f,
-            Type = BulletType.Fire,
-            NextFireTime = Time.time,
-            SpawnStrategy = SingleSpawnStrategy.Default,
-            MovementStrategy = new ParabolicMovementStrategy(gravity: 11f, launchPitchUp: 30f),
-            // 燃燒彈：範圍 + 持續燃燒 DoT（每0.5秒10點，共10次）
-            DamageStrategy = new CompositeDamageStrategy(
-                new AoeDamageStrategy(radius: 4f, falloff: 0.3f),
-                new DotDamageStrategy(_eventBus, tickCount: 10, tickInterval: 0.5f, damagePerTick: 10f)),
-        };
-    }
-
-    // ── BulletType（不動）───────────────────────────────────────────────────
-
-    public enum BulletType
-    {
-        Normal, Ice, Fire, Lightning, SpecialNormal,
-    }
-
-    // ── DoT Tick 事件（v2 新增）──────────────────────────────────────────────
-
-    public struct BulletDotTickEvent
-    {
-        public GameObject TargetGameObject;
-        public int Damage;
-        public int TickIndex;
-        public int TotalTicks;
-        public BulletType Type;
     }
 }
+        // ── 預定義配置（v2：加入 Strategy）──────────────────────────────────
+
+//        public static BulletConfig Normal => new BulletConfig
+//        {
+//            Speed = 35f,
+//            Damage = 40,
+//            ManaCost = 0,
+//            CoolTime = 0.5f,
+//            Lifetime = 5f,
+//            ColliderRadius = 0.2f,
+//            Type = BulletType.Normal,
+//            NextFireTime = Time.time,
+//            ChantManaCost = 100,
+//            ChantDuration = 3f,
+//            // Strategy：預設單顆直線單體（可省略，此處明確寫出）
+//            SpawnStrategy = SingleSpawnStrategy.Default,
+//            MovementStrategy = ForwardMovementStrategy.Default,
+//            DamageStrategy = SingleDamageStrategy.Default,
+//        };
+
+//        public static BulletConfig IceBall => new BulletConfig
+//        {
+//            Speed = 45f,
+//            Damage = 25,
+//            ManaCost = 4,
+//            CoolTime = 0.15f,
+//            Lifetime = 5f,
+//            ColliderRadius = 0.15f,
+//            Type = BulletType.Ice,
+//            NextFireTime = Time.time,
+//            ChantManaCost = 20,
+//            ChantDuration = 5f,
+//            SpawnStrategy = SingleSpawnStrategy.Default,
+//            MovementStrategy = ForwardMovementStrategy.Default,
+//            // 冰矢：單體 + DoT（凍傷每秒8點，持續3秒）
+//            DamageStrategy = new CompositeDamageStrategy(
+//                SingleDamageStrategy.Default,
+//                new DotDamageStrategy(_eventBus,tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
+//        };
+
+//        public static BulletConfig FireBall => new BulletConfig
+//        {
+//            Speed = 15f,
+//            Damage = 30,
+//            ManaCost = 40,
+//            CoolTime = 1f,
+//            Lifetime = 4f,
+//            ColliderRadius = 0.3f,
+//            Type = BulletType.Fire,
+//            NextFireTime = Time.time,
+//            ChantManaCost = 20,
+//            ChantDuration = 5f,
+//            // 火球：一次5顆散射 + 拋物線 + 範圍爆炸
+//            SpawnStrategy = new ShotgunSpawnStrategy(pellets: 9, spreadAngle: 16f),
+//            MovementStrategy = new ParabolicMovementStrategy(gravity: 0f, launchPitchUp: 0f),
+//            DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
+//        };
+
+//        public static BulletConfig LightningStrike => new BulletConfig
+//        {
+//            Speed = 80f,
+//            Damage = 80,
+//            ManaCost = 50,
+//            CoolTime = 1.25f,
+//            Lifetime = 4f,
+//            ColliderRadius = 0.15f,
+//            Type = BulletType.Lightning,
+//            NextFireTime = Time.time,
+//            ChantManaCost = 20,
+//            ChantDuration = 5f,
+//            SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f), 
+//            MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
+//            DamageStrategy = SingleDamageStrategy.Default,
+//        };
+
+//        public static BulletConfig GrenadeBullet => new BulletConfig
+//        {
+//            Speed = 18f,
+//            Damage = 80,
+//            ManaCost = 30,
+//            CoolTime = 2f,
+//            Lifetime = 3f,
+//            ColliderRadius = 0.25f,
+//            Type = BulletType.Normal,
+//            NextFireTime = Time.time,
+//            SpawnStrategy = SingleSpawnStrategy.Default,
+//            MovementStrategy = new ParabolicMovementStrategy(gravity: 9.8f, launchPitchUp: 35f),
+//            DamageStrategy = new AoeDamageStrategy(radius: 5f, falloff: 0.4f),
+//        };
+
+//        public static BulletConfig BurnBomb => new BulletConfig
+//        {
+//            Speed = 12f,
+//            Damage = 20,
+//            ManaCost = 35,
+//            CoolTime = 1.5f,
+//            Lifetime = 4f,
+//            ColliderRadius = 0.3f,
+//            Type = BulletType.Fire,
+//            NextFireTime = Time.time,
+//            SpawnStrategy = SingleSpawnStrategy.Default,
+//            MovementStrategy = new ParabolicMovementStrategy(gravity: 11f, launchPitchUp: 30f),
+//            // 燃燒彈：範圍 + 持續燃燒 DoT（每0.5秒10點，共10次）
+//            DamageStrategy = new CompositeDamageStrategy(
+//                new AoeDamageStrategy(radius: 4f, falloff: 0.3f),
+//                new DotDamageStrategy(_eventBus, tickCount: 10, tickInterval: 0.5f, damagePerTick: 10f)),
+//        };
+//    }
+
+//    // ── BulletType（不動）───────────────────────────────────────────────────
+
+//    public enum BulletType
+//    {
+//        Normal, Ice, Fire, Lightning, SpecialNormal,
+//    }
+
+//    // ── DoT Tick 事件（v2 新增）──────────────────────────────────────────────
+
+//    public struct BulletDotTickEvent
+//    {
+//        public GameObject TargetGameObject;
+//        public int Damage;
+//        public int TickIndex;
+//        public int TotalTicks;
+//        public BulletType Type;
+//    }
+//}

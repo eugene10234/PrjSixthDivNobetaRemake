@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 // ============================================================================
@@ -16,7 +17,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         [Inject] private IPlayerInputService _inputService;
         [Inject] private ICameraService _cameraService;
         [Inject] private IEventBus _eventBus;
-
+        [Inject] private BulletConfigRegistry _bulletConfigs;
         // ── 定時發射的 handle（取消用）────────────────────────────────────
         private int _intervalIceBallHandle = -1;
         private Vector3 _tpos;
@@ -58,7 +59,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
             if (!evt.IsSpecial)
-                _bulletSystem.Fire(BulletConfig.Normal, _firePoint.position, GetAimDirection());
+                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.Normal), _firePoint.position, GetAimDirection());
             else
                 StartAutoLightning();
         }
@@ -67,7 +68,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         {
             // 冰矢：直線 + 冰凍 DoT
             if (!evt.IsSpecial)
-                _bulletSystem.Fire(BulletConfig.IceBall, _firePoint.position, GetAimDirection());
+                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.IceBall), _firePoint.position, GetAimDirection());
             else
                 StartAutoIceball();
         }
@@ -75,13 +76,13 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnFireBallFire(PlayerWeaponFireEvent evt)
         {
             // 火球：BurstSpawn(5顆) + Parabolic + AoeDamage（全在 BulletConfig.FireBall 設定好）
-            _bulletSystem.Fire(BulletConfig.FireBall, _firePoint.position, GetAimDirection());
+            _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.FireBall), _firePoint.position, GetAimDirection());
         }
 
         private void OnSniperFire(PlayerWeaponFireEvent evt)
         {
             // 閃電：單顆追尾導彈
-            _bulletSystem.Fire(BulletConfig.LightningStrike, _firePoint.position, GetAimDirection());
+            _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.LightningStrike), _firePoint.position, GetAimDirection());
         }
 
         // ── 定時發射範例：每 2 秒自動射出一顆火球 ───────────────────────
@@ -158,7 +159,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         public void FireBurnBomb()
         {
             // 範圍傷害 + 持續燃燒 DoT（BulletConfig.BurnBomb 已配置）
-            _bulletSystem.Fire(BulletConfig.BurnBomb, _firePoint.position, GetAimDirection());
+            _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.BurnBomb), _firePoint.position, GetAimDirection());
         }
 
         // ── 瞄準方向（原版邏輯不動）──────────────────────────────────────

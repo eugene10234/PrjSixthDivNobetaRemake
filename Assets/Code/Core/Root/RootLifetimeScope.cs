@@ -1,3 +1,4 @@
+using Nobeta.EUG.BulletSystemV2.OOP;
 using Nobeta.EUG.FSM;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
@@ -47,17 +48,21 @@ namespace Nobeta.Root
             builder.Register<SceneLoader>(Lifetime.Singleton).As<ISceneLoader>();
             builder.Register<GameManager>(Lifetime.Singleton).As<IGameManager>();
 
+            builder.Register<BulletConfigFactory>(Lifetime.Singleton);
+            builder.Register<BulletConfigRegistry>(Lifetime.Singleton);
             //  EntryPoint 注入 IGameManager，強制 GameManager 立即被建構
             builder.UseEntryPoints(config =>
             {
                 config.Add<AppInitializer>();
-                config.Add<TimeService>().As<ITimeService>();                
+                config.Add<TimeService>().As<ITimeService>();
             });
             //builder.RegisterEntryPoint<AppInitializer>();
             //builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton).AsSelf();
             builder.RegisterComponentInHierarchy<DebugServiceMb>();
             builder.RegisterComponentInHierarchy<EventBusProvider>();
-            Debug.Log("Root LifetimeScope 配置完成");           
+            //builder.RegisterComponentInHierarchy<GameProvider>();
+            //builder.RegisterComponentInHierarchy<ServiceManager>();
+            Debug.Log("Root LifetimeScope 配置完成");
         }
     }
 }

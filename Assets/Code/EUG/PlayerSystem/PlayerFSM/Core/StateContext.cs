@@ -47,6 +47,7 @@ namespace Nobeta.EUG.FSM.Core
         public IDetectionService Detection { get; }
         public IAudioService AudioService { get; }
         public IEventBus EventBus { get; }
+        public BulletConfigRegistry _bulletsDiction { get; }//_bulletConfigs
         public DebugServiceMb DebugService { get; }
         public ITimeService TimeService { get; }
 
@@ -91,14 +92,15 @@ namespace Nobeta.EUG.FSM.Core
         public float LastAttackTime { get; set; }
         public bool StaminaFlag { get; set; }
 
-        public Dictionary<BulletType, BulletConfig> _bulletsDiction;
+
         #endregion
 
         #region Constructor（構造函數 - VContainer 注入）
 
-        [Inject]
+        //[Inject]
         public StateContext(
             DebugServiceMb debugServiceMb,
+            BulletConfigRegistry bulletsDiction,
             ITimeService timeService,
             IMovementService movementService,
             IPlayerInputService inputService,
@@ -111,6 +113,7 @@ namespace Nobeta.EUG.FSM.Core
             Transform transform)
         {
             // 注入服務
+            _bulletsDiction = bulletsDiction;
             DebugService = debugServiceMb;
             TimeService = timeService;
             MovementService = movementService;
@@ -150,7 +153,7 @@ namespace Nobeta.EUG.FSM.Core
             AirJumpCharges = 1;
             LastAirJumpTime = 0f;
             // 魔法
-            CurrentBulletConfig = BulletConfig.Normal;
+            
             ChargeRatio = 0f;
             ChargeStartTime = 0f;
 
@@ -158,12 +161,14 @@ namespace Nobeta.EUG.FSM.Core
             ComboCounter = 0;
             LastAttackTime = 0f;
             StaminaFlag = false;
+            BulletConfigFactory bulletConfigFactory = new BulletConfigFactory(EventBus);
+            //_bulletsDiction = new Dictionary<BulletType, BulletConfig>();
+            //_bulletsDiction[BulletType.Normal] = bulletConfigFactory.Normal();
+            //_bulletsDiction[BulletType.Ice] = bulletConfigFactory.IceBall();
+            //_bulletsDiction[BulletType.Fire] = bulletConfigFactory.FireBall();
+            //_bulletsDiction[BulletType.Lightning] = bulletConfigFactory.LightningStrike();
 
-            _bulletsDiction = new Dictionary<BulletType, BulletConfig>();
-            _bulletsDiction.Add(BulletType.Normal, BulletConfig.Normal);
-            _bulletsDiction.Add(BulletType.Ice, BulletConfig.IceBall);
-            _bulletsDiction.Add(BulletType.Fire, BulletConfig.FireBall);
-            _bulletsDiction.Add(BulletType.Lightning, BulletConfig.LightningStrike);
+            CurrentBulletConfig = _bulletsDiction.Get(WeaponConfigType.Normal);
 
             //CurrentBulletConfig.SetChantCompleteAction(() =>
             //{
@@ -334,9 +339,9 @@ namespace Nobeta.EUG.FSM.Core
             }
         }
 
-        public void ChangeBullet(BulletType bulletType)
+        public void ChangeBullet(WeaponConfigType bulletType)
         {
-            CurrentBulletConfig = _bulletsDiction[bulletType];
+            CurrentBulletConfig = _bulletsDiction.Get(bulletType);
         }
         float lastNotifyTime = 0;
         float interval = 0.05f; // 你想要的 0.05 秒

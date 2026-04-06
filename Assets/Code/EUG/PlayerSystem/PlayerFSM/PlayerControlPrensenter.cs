@@ -1,5 +1,4 @@
-﻿using Nobeta.EUG.BulletSystemV2.OOP.UnityBridge;
-using Nobeta.EUG.Events;
+﻿using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Interfaces;
 using Nobeta.EUG.FSM.Services;
@@ -7,13 +6,10 @@ using Nobeta.EUG.FSM.States;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.Events;
 using Nobeta.EUG.MBFunctions.PlayerUI;
-using Nobeta.EUG.Services;
 using System;
-using UnityEditor;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using static UnityEditor.Rendering.InspectorCurveEditor;
 
 namespace Nobeta.EUG.FSM
 {
@@ -94,7 +90,7 @@ namespace Nobeta.EUG.FSM
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
             SyncStatusToGUI();
-            
+
         }
 
         private void SyncStatusToGUI()
@@ -118,7 +114,7 @@ namespace Nobeta.EUG.FSM
                 stateMachine.ChangeState<DyingState>();
                 return;
             }
-            if(!stateMachine.IsInState<DyingState>())
+            if (!stateMachine.IsInState<DyingState>())
             {
                 ManaStateChecks();
                 StaminaStateChecks();
@@ -128,8 +124,8 @@ namespace Nobeta.EUG.FSM
             }
             else
             {
-                _context.CurrentHealth = 0;        
-                 _context.CurrentMana = 0;
+                _context.CurrentHealth = 0;
+                _context.CurrentMana = 0;
                 _context.CurrentStamina = 0;
             }
 
@@ -222,7 +218,7 @@ namespace Nobeta.EUG.FSM
             if (IsSpecialState(CurrState)) return;
             _timeService.TaskDelayLock(STStartUp_DURATION, (b) => STStartUpLock = b);
             if (_context.CurrentSpeedType == typeof(RunningState))
-            {                
+            {
                 _context.ConsumeStamina(1);
             }
             else
@@ -248,7 +244,7 @@ namespace Nobeta.EUG.FSM
         /// </summary>
         public void TakeDamage(int damage)
         {
-            if(stateMachine.IsInState<DodgingState>())return;
+            if (stateMachine.IsInState<DodgingState>()) return;
             _context.CurrentHealth -= damage;
 
             if (_context.CurrentHealth <= 0)

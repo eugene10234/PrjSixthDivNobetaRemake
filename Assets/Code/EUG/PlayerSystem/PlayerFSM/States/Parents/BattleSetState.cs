@@ -93,22 +93,22 @@ namespace Nobeta.EUG.FSM.States
             switch (msNum)
             {
                 case 1:
-                    ctx.ChangeBullet(BulletType.Normal);
+                    ctx.ChangeBullet(WeaponConfigType.Normal);
                     ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypePT();
                     break;
                 case 2:
-                    ctx.ChangeBullet(BulletType.Ice);
+                    ctx.ChangeBullet(WeaponConfigType.IceBall);
                     ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeAR();
                     break;
                 case 3:
-                    ctx.ChangeBullet(BulletType.Fire);
+                    ctx.ChangeBullet(WeaponConfigType.FireBall);
                     ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSG();
                     break;
                 case 4:
-                    ctx.ChangeBullet(BulletType.Lightning);
+                    ctx.ChangeBullet(WeaponConfigType.LightningStrike);
                     ctx.EventBus.Publish(new PlayerWeaponChangeEvent { bulletConfig = ctx.CurrentBulletConfig });
                     TypeSR();
                     break;

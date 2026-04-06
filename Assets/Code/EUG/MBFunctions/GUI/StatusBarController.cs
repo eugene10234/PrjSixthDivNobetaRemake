@@ -1,12 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using UnityEditor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +12,7 @@ namespace Assets.Code.EUG.MBFunctions.GUI
         private Image _bufferImage;
         private RectTransform _bufferRectScaler;
         private Action<float> _floatAction;
-        public float floatSetHelper { set => _floatAction?.Invoke(value);  }
+        public float floatSetHelper { set => _floatAction?.Invoke(value); }
         private CancellationTokenSource _cts;
         private CancellationTokenSource _animCts;
 
