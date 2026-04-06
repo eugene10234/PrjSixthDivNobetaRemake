@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Nobeta.EUG.Events
 {
-    public struct ChaseAimEndEvent
+    public struct MageAimCloseEvent
     {     
     }
 }

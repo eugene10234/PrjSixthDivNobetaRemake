@@ -236,7 +236,7 @@ namespace Nobeta.EUG.Services
             Vector3 target = Camera.main.transform.position + Camera.main.transform.forward * 75f;
             Vector3 normal = Vector3.up;
             if (TryGetCameraSphereHit(0.1f, Mathf.Infinity, out RaycastHit hit,
-                LayerMask.GetMask("Ground", "Obstacle")))
+                LayerMask.GetMask("Ground")))
             {
                 target = hit.point;
                 normal = hit.normal;

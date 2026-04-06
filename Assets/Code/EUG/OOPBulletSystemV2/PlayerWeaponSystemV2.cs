@@ -22,17 +22,21 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private int _intervalIceBallHandle = -1;
         private Vector3 _tpos;
         private int _intervalLightHandle = -1;
-
+        private int _intervalFireBallHandle = -1;
         private void OnEnable()
         {
             _eventBus.Subscribe<PlayerWeaponFireEvent>(OnFire);
             _eventBus.Subscribe<PlayerWeaponChangeEvent>(OnChange);
+
+            _eventBus.Subscribe<MageAimUpdateEvent>(OnGetMageAimPos);
         }
 
         private void OnDisable()
         {
             _eventBus.Unsubscribe<PlayerWeaponFireEvent>(OnFire);
             _eventBus.Unsubscribe<PlayerWeaponChangeEvent>(OnChange);
+
+            _eventBus.Unsubscribe<MageAimUpdateEvent>(OnGetMageAimPos);
 
             // 取消任何進行中的定時發射
             if (_intervalIceBallHandle >= 0)
@@ -56,13 +60,13 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnChange(PlayerWeaponChangeEvent evt) { }
 
         // ── 各武器實作 ────────────────────────────────────────────────────
-     
+
         private void OnNormalFire(PlayerWeaponFireEvent evt)
         {
             if (!evt.IsSpecial)
                 _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.Normal), _firePoint.position, GetAimDirection());
             else
-                StartAutoLightning();
+                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.SpecialNormal), _firePoint.position, GetAimDirection());
         }
 
         private void OnIceFire(PlayerWeaponFireEvent evt)
@@ -77,20 +81,58 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnFireBallFire(PlayerWeaponFireEvent evt)
         {
             // 火球：BurstSpawn(5顆) + Parabolic + AoeDamage（全在 BulletConfig.FireBall 設定好）
-            _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.FireBall), _firePoint.position, GetAimDirection());
+            if (!evt.IsSpecial)
+                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.FireBall), _firePoint.position, GetAimDirection());
+            else
+                StartAutoFireball();
         }
 
         private void OnSniperFire(PlayerWeaponFireEvent evt)
         {
             // 閃電：單顆追尾導彈
-            if (!evt.IsSpecial)
+            if (evt.IsSpecial)
                 _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.LightningStrike), _firePoint.position, GetAimDirection());
-                   else
+            else
                 StartAutoLightning();
         }
 
         // ── 定時發射範例：每 2 秒自動射出一顆火球 ───────────────────────
+        public void StartAutoFireball()
+        {
+            if (_intervalFireBallHandle >= 0) return;
 
+            // 建立一個 IntervalSpawnStrategy 的設定
+            var intervalConfig = new BulletConfig
+            {
+                Speed = 15f,
+                Damage = 15,
+                Lifetime = 4f,
+                ColliderRadius = 0.15f,
+                Type = BulletType.Fire,
+                SpawnStrategy = new IntervalSpawnStrategy(
+                    interval: 1f,
+                    inner: new CircleSpawnStrategy(count:12, pitchAngle:180)),   // 每 2 秒 1 顆
+                MovementStrategy = new ParabolicMovementStrategy(gravity: -1f, launchPitchUp: 0),
+                DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
+            };
+
+        _intervalFireBallHandle = _bulletSystem.RegisterIntervalFire(
+                intervalConfig,
+                originGetter: () => _firePoint.position,
+                forwardGetter: () => GetAimDirection()
+            );
+            DOVirtual.DelayedCall(5f, () =>
+            {
+                StopAutoFireball();
+            }).SetUpdate(UpdateType.Normal, false);
+        }
+
+        public void StopAutoFireball()
+        {
+            if (_intervalFireBallHandle < 0) return;
+            _bulletSystem.CancelIntervalFire(_intervalFireBallHandle);
+            _intervalFireBallHandle = -1;
+        }
         public void StartAutoIceball()
         {
             if (_intervalIceBallHandle >= 0) return;
@@ -109,7 +151,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
                 MovementStrategy = new AutoHomingMovementStrategy(),
                 DamageStrategy = new CompositeDamageStrategy(
                 SingleDamageStrategy.Default,
-                new DotDamageStrategy(_eventBus,tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
+                new DotDamageStrategy(_eventBus, tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
             };
 
             _intervalIceBallHandle = _bulletSystem.RegisterIntervalFire(
@@ -143,11 +185,16 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
                 Type = BulletType.Lightning,
                 SpawnStrategy = new IntervalSpawnStrategy(
                     interval: 0.1f,
-                    inner: new SkyRadiusSpawnStrategy2(pellets: 1, radius: 1.1f, height: 16)),   
+                    inner: new SkyRadiusSpawnStrategy2(pellets: 1, radius: 1.1f, height: 16)),
                 MovementStrategy = new SinWaveMovementStrategy(amplitude: 500f, frequency: 10f),
                 DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f)
             };
-            _tpos = _firePoint.position;
+            if (MageAimData.TargetFlag)
+                _tpos = MageAimData.TargetPosition + MageAimData.TargetNormal * 0.5f;
+            else
+                _tpos = _firePoint.position + GetAimDirection().normalized * 2;
+            MageAimData.TargetFlag = false;
+            _eventBus.Publish(new MageAimCloseEvent());
             _intervalLightHandle = _bulletSystem.RegisterIntervalFire(
                 intervalConfig,
                 originGetter: () => _tpos,
@@ -184,6 +231,24 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             }
 
             return (target - _firePoint.position).normalized;
+        }
+        private Vector3 _targetPosition;
+        private Vector3 _targetNormal;
+        private bool _targetFlag;
+        private MageAimUpdateEvent MageAimData;
+
+
+        private void OnGetMageAimPos(MageAimUpdateEvent evt)
+        {
+            _targetPosition = evt.TargetPosition;
+            _targetNormal = evt.TargetNormal;
+            evt.TargetFlag = true;
+            MageAimData = SaveMageAimData(evt);
+        }
+
+        private MageAimUpdateEvent SaveMageAimData(MageAimUpdateEvent evt)
+        {
+            return evt;
         }
     }
 }

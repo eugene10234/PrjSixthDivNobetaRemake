@@ -84,6 +84,22 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
             DamageStrategy = SingleDamageStrategy.Default,
         };
+        public BulletConfig SpecialNormal() => new BulletConfig
+        {
+            Speed = 35f,
+            Damage = 40,
+            ManaCost = 0,
+            CoolTime = 0.5f,
+            Lifetime = 5f,
+            ColliderRadius = 0.5f,
+            Type = BulletType.SpecialNormal,
+            ChantManaCost = 100,
+            ChantDuration = 3f,
+            // Strategy：預設單顆直線單體（可省略，此處明確寫出）
+            SpawnStrategy = SingleSpawnStrategy.Default,
+            MovementStrategy = ForwardMovementStrategy.Default,
+            DamageStrategy = SingleDamageStrategy.Default,
+        };
         public BulletConfig GrenadeBullet() => new BulletConfig
         {
             Speed = 18f,
@@ -121,5 +137,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         FireBall,
         BurnBomb,       // ✅ 獨立，不跟 BulletType 衝突
         LightningStrike,
+        SpecialNormal
+
     }
 }

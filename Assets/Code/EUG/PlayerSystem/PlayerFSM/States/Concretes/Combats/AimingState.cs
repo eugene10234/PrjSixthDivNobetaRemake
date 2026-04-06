@@ -1,6 +1,5 @@
 ﻿
-using Nobeta.EUG.AANEW.MBbulletsystems;
-using Nobeta.EUG.BulletSystemV1.OOP.UnityBridge;
+using Nobeta.EUG.BulletSystemV2.OOP;
 using Nobeta.EUG.Events;
 using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
@@ -107,8 +106,9 @@ namespace Nobeta.EUG.FSM.States
         }
         protected void MageAimDection()
         {
-            //if(!ctx.CurrentBulletConfig.IsChantComplete) return;
-            var(a, b) = ctx.CameraService.GetAimPosition();
+            if(!ctx.CurrentBulletConfig.IsChantComplete) return;
+            if (!(ctx.CurrentBulletConfig.Type == BulletType.Lightning) ) return;
+            var (a, b) = ctx.CameraService.GetAimPosition();
             PublishEvent(new MageAimUpdateEvent
             {
                 TargetPosition = a,

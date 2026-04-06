@@ -97,7 +97,7 @@ public class MageAim : MonoBehaviour
         GameObjectActive.SetActive(true);
         ChaseStart(evt.TargetPosition,evt.TargetNormal);
     }
-    private void OnChaseEnd(ChaseAimEndEvent evt)
+    private void OnMageAimClose(MageAimCloseEvent evt)
     {
         GameObjectActive.SetActive(false);
     }
@@ -113,13 +113,13 @@ public class MageAim : MonoBehaviour
     {
         _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         _eventBus.Subscribe<MageAimUpdateEvent>(OnMageAimUpdateStart);
-        _eventBus.Subscribe<ChaseAimEndEvent>(OnChaseEnd);
+        _eventBus.Subscribe<MageAimCloseEvent>(OnMageAimClose);
     }
     private void UnsubscribeEvents()
     {
         _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
         _eventBus.Unsubscribe<MageAimUpdateEvent>(OnMageAimUpdateStart);
-        _eventBus.Unsubscribe<ChaseAimEndEvent>(OnChaseEnd);
+        _eventBus.Unsubscribe<MageAimCloseEvent>(OnMageAimClose);
     }
     //public void SetGround(Vector3 targetPosition)
     //{

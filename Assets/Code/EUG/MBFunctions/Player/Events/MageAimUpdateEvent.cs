@@ -13,5 +13,6 @@ namespace Nobeta.EUG.Events
     {
         public Vector3 TargetPosition;
         public Vector3 TargetNormal;
+        public bool TargetFlag;
     }
 }

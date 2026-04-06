@@ -20,6 +20,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
                 [WeaponConfigType.FireBall] = factory.FireBall(),
                 [WeaponConfigType.LightningStrike] = factory.LightningStrike(),
                 [WeaponConfigType.BurnBomb] = factory.BurnBomb(),
+                [WeaponConfigType.SpecialNormal] = factory.SpecialNormal(),
             };
         }
 

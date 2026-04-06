@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Nobeta.EUG.Events;
 using Nobeta.EUG.Interfaces;
+using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using VContainer;
 
@@ -41,6 +44,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             _eventBus.Subscribe<BulletHitEvent>(OnBulletHit);
             _eventBus.Subscribe<BulletExpiredEvent>(OnBulletExpired);
         }
+
 
         private void Update()
         {
