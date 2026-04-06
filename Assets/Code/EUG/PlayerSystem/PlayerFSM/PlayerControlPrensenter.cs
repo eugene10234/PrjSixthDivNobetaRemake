@@ -83,14 +83,12 @@ namespace Nobeta.EUG.FSM
         {
             // 更新檢測
             _detectionService.UpdateGlobalDetection(_context);
-
             // 更新狀態機
             _stateMachine.Update();
-
             // 檢查全局狀態轉換
             CheckGlobalTransitions();
+            // 同步戰鬥狀態到GUI
             SyncStatusToGUI();
-
         }
 
         private void SyncStatusToGUI()
