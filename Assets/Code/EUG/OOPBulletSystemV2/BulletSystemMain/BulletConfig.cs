@@ -169,7 +169,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         }
     }
 }
-        // ── 預定義配置（v2：加入 Strategy）──────────────────────────────────
+// ── 預定義配置（v2：加入 Strategy）──────────────────────────────────
 
 //        public static BulletConfig Normal => new BulletConfig
 //        {

@@ -10,12 +10,12 @@ using UnityEngine.Animations.Rigging;
 using VContainer;
 
 
-public class ChaseAim : MonoBehaviour
+public class MageAim : MonoBehaviour
 {
     //[Header("目標設定")]
     //public Transform target; // 想要看的目標
 
-
+    [SerializeField] GameObject GameObjectActive;
     private Animator _playerAnimator;
     private readonly float HandChant_Duration = 0.5f;
     private bool isPlayerLive = true;
@@ -25,7 +25,7 @@ public class ChaseAim : MonoBehaviour
     private void Awake()
     {
         _eventBus = EventBusProvider.GetEventBus();
-        gameObject.SetActive(false);
+        GameObjectActive.SetActive(false);
     }
     private void OnEnable()
     {
@@ -92,14 +92,14 @@ public class ChaseAim : MonoBehaviour
             chaseTween = null;
         }
     }
-    private void OnChaseStart(ChaseAimStartEvent evt)
+    private void OnMageAimUpdateStart(MageAimUpdateEvent evt)
     {
-        gameObject.SetActive(true);
+        GameObjectActive.SetActive(true);
         ChaseStart(evt.TargetPosition,evt.TargetNormal);
     }
     private void OnChaseEnd(ChaseAimEndEvent evt)
     {
-        gameObject.SetActive(false);
+        GameObjectActive.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -112,13 +112,13 @@ public class ChaseAim : MonoBehaviour
     private void SubscribeEvents()
     {
         _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
-        _eventBus.Subscribe<ChaseAimStartEvent>(OnChaseStart);
+        _eventBus.Subscribe<MageAimUpdateEvent>(OnMageAimUpdateStart);
         _eventBus.Subscribe<ChaseAimEndEvent>(OnChaseEnd);
     }
     private void UnsubscribeEvents()
     {
         _eventBus.Unsubscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
-        _eventBus.Unsubscribe<ChaseAimStartEvent>(OnChaseStart);
+        _eventBus.Unsubscribe<MageAimUpdateEvent>(OnMageAimUpdateStart);
         _eventBus.Unsubscribe<ChaseAimEndEvent>(OnChaseEnd);
     }
     //public void SetGround(Vector3 targetPosition)

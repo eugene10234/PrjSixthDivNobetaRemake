@@ -29,7 +29,6 @@ namespace Nobeta.EUG.FSM.States
         private Vector2 _movement;
         DebugServiceMb _debugServiceMb;
         private float _turnAngle;
-        [Inject] IEventBus _eventBus;
         public AimingState(StateContext context, StateMachine stateMachine, DebugServiceMb debugServiceMb)
             : base(context, stateMachine)
         {
@@ -90,7 +89,8 @@ namespace Nobeta.EUG.FSM.States
         public override void Update()
         {
             base.Update();
-            (var targetPosition, var targetNormal) = ctx.CameraService.GetAimPosition();
+            MageAimDection();
+            //(var targetPosition, var targetNormal) = ctx.CameraService.GetAimPosition();
             //if (Input.GetMouseButtonDown(0))
             //{
             //    //Debug.Log("開始攻擊");
@@ -105,7 +105,16 @@ namespace Nobeta.EUG.FSM.States
             SetTargetSpeed(_speedType);
             AnimatorSetting();
         }
-
+        protected void MageAimDection()
+        {
+            //if(!ctx.CurrentBulletConfig.IsChantComplete) return;
+            var(a, b) = ctx.CameraService.GetAimPosition();
+            PublishEvent(new MageAimUpdateEvent
+            {
+                TargetPosition = a,
+                TargetNormal = b
+            });
+        }
         public void FixedUpdate()
         {
             //Debug.LogWarning($"111111111111111111111111111:{DateTime.Now}");

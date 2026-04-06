@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Nobeta.EUG.Events
 {
-    public struct ChaseAimStartEvent
+    public struct MageAimUpdateEvent
     {
         public Vector3 TargetPosition;
         public Vector3 TargetNormal;

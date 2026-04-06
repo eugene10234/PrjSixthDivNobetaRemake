@@ -43,6 +43,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 
         private void OnFire(PlayerWeaponFireEvent evt)
         {
+
             switch (evt.bulletConfig.Type)
             {
                 case BulletType.Normal: OnNormalFire(evt); break;
@@ -82,7 +83,10 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnSniperFire(PlayerWeaponFireEvent evt)
         {
             // 閃電：單顆追尾導彈
-            _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.LightningStrike), _firePoint.position, GetAimDirection());
+            if (!evt.IsSpecial)
+                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.LightningStrike), _firePoint.position, GetAimDirection());
+                   else
+                StartAutoLightning();
         }
 
         // ── 定時發射範例：每 2 秒自動射出一顆火球 ───────────────────────

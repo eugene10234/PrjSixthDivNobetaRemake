@@ -52,7 +52,7 @@ Material:
     - _DrawOrder: 0
     m_Colors:
     - _Color: {r: 1, g: 0.9960785, b: 0, a: 0.18039216}
-    - _Color_2: {r: 0.381132, g: 0.3804806, b: 0.21501598, a: 0}
+    - _Color_2: {r: 0.5924529, g: 0.5924529, b: 0.39683163, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5064504533676504435
