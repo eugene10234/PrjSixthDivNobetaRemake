@@ -149,13 +149,18 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
                 originGetter: () => _tpos,
                 forwardGetter: () => GetAimDirection()
             );
-            //DOVirtual.DelayedCall(7f, () =>
-            //{
-            //    StopAutoIceball();
-            //}).SetUpdate(UpdateType.Normal, false);
+            DOVirtual.DelayedCall(7f, () =>
+            {
+                StopAutoLightning();
+            }).SetUpdate(UpdateType.Normal, false);
         }
         // ── 燃燒彈範例（手動調用）────────────────────────────────────────
-
+        public void StopAutoLightning()
+        {
+            if (_intervalLightHandle < 0) return;
+            _bulletSystem.CancelIntervalFire(_intervalLightHandle);
+            _intervalLightHandle = -1;
+        }
         public void FireBurnBomb()
         {
             // 範圍傷害 + 持續燃燒 DoT（BulletConfig.BurnBomb 已配置）
