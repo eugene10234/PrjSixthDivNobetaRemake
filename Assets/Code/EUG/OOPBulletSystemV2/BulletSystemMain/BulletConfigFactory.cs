@@ -89,7 +89,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             Speed = 35f,
             Damage = 40,
             ManaCost = 0,
-            CoolTime = 0.5f,
+            CoolTime = 0.1f,
             Lifetime = 5f,
             ColliderRadius = 0.5f,
             Type = BulletType.SpecialNormal,

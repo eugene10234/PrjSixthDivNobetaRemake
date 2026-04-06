@@ -90,7 +90,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnSniperFire(PlayerWeaponFireEvent evt)
         {
             // 閃電：單顆追尾導彈
-            if (evt.IsSpecial)
+            if (!evt.IsSpecial)
                 _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.LightningStrike), _firePoint.position, GetAimDirection());
             else
                 StartAutoLightning();
