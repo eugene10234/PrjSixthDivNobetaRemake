@@ -1,8 +1,5 @@
 using Cysharp.Threading.Tasks;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
-using VContainer;
 
 namespace Nobeta.Sam.Enemy
 {
@@ -17,7 +14,7 @@ namespace Nobeta.Sam.Enemy
         private Animator _animator;
         private SkinnedMeshRenderer _smr;
         private MaterialPropertyBlock _propBlock;
-        
+
         private MGRune _mgRune;
 
         private static readonly int DissolveAmountId = Shader.PropertyToID("_Dissolve");
@@ -26,7 +23,7 @@ namespace Nobeta.Sam.Enemy
         {
             _animator = GetComponent<Animator>();
             _smr = GetComponentInChildren<SkinnedMeshRenderer>();
-            
+
             _mgRune = GetComponentInChildren<MGRune>();
         }
 
@@ -49,7 +46,7 @@ namespace Nobeta.Sam.Enemy
 
         public void PlaySummon()
         {
-            _animator.SetBool("isSummoning", true); 
+            _animator.SetBool("isSummoning", true);
         }
 
         public void AE_PlayFinsihSummon()
@@ -70,13 +67,13 @@ namespace Nobeta.Sam.Enemy
 
         public async UniTask StartLaser()
         {
-            
+
             await UniTask.Delay(3000);
         }
 
         public void HideRune()
         {
-            _mgRune.Hide();  
+            _mgRune.Hide();
         }
 
         public void PlayVictory()

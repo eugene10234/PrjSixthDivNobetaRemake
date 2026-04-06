@@ -127,6 +127,10 @@ namespace Nobeta.EUG.FSM.Core
         {
             // 默認不處理，子類覆寫
         }
+        public virtual void OnInteractInput()
+        {
+
+        }
         #endregion
 
         #region Transition Control
@@ -170,6 +174,8 @@ namespace Nobeta.EUG.FSM.Core
         {
             ctx.EventBus.Publish(gameEvent);
         }
+
+
 
 
 

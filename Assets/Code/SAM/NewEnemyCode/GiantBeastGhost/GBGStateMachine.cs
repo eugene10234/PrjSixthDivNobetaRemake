@@ -106,7 +106,7 @@ namespace Nobeta.Sam.Enemy
                 HealthRatio = _data.HealthPercent,
                 BossName = _data.Name,
             });
-            if (CurrentState == _stagger) return;
+            if (CurrentState == _stagger || _data.isImmuneStagger) return;
             TransitionTo<StaggerState>();
         }
 

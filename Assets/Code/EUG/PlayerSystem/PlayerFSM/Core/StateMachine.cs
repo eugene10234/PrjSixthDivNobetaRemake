@@ -261,6 +261,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAttack += HandleAttackStartInput;
             _inputService.OnChant += HandleChantStartInput;
             _inputService.OnNumSwitch += HandleNumSwitchInput;
+            _inputService.OnInteract += HandleInteractInput;
             Debug.Log("已訂閱輸入事件");
         }
         private void UnsubscribeInputEvents()
@@ -277,6 +278,7 @@ namespace Nobeta.EUG.FSM.Core
             _inputService.OnAttack -= HandleAttackStartInput;
             _inputService.OnChant -= HandleChantStartInput;
             _inputService.OnNumSwitch -= HandleNumSwitchInput;
+            _inputService.OnInteract -= HandleInteractInput;
             Debug.Log("已取消訂閱輸入事件");
         }
         private StateMachine stateMachine => this;
@@ -292,6 +294,7 @@ namespace Nobeta.EUG.FSM.Core
         private void HandleAttackStartInput() => stateMachine.CurrentState?.OnAttackInput();
         private void HandleChantStartInput() => stateMachine.CurrentState?.OnChantInput();
         private void HandleNumSwitchInput() => stateMachine.CurrentState?.OnNumSwitchInput();
+        private void HandleInteractInput() => stateMachine.CurrentState?.OnInteractInput();
         // ========================================================================
         //private void HandleTakeDamageAPI(PlayerDamagedEvent evt) => stateMachine.CurrentState?.OnTakeDamge(evt);
         private void SubscribeAPIEvents()

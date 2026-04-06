@@ -3,6 +3,7 @@ using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.FSM.Services;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.MBFunctions.PlayerUI;
+using Nobeta.Sam.Events;
 using UnityEngine;
 // ========================================================================
 // GroundedState - 地面狀態父類（更新版）
@@ -114,7 +115,14 @@ namespace Nobeta.EUG.FSM.States
         //{
         //    ctx.FireMagic();
         //}
-
+        public override void OnInteractInput()
+        {
+            PublishEvent(new DialogNextEvent
+            {
+                //InteractableType = "Generic",
+                //Position = ctx.Transform.position
+            });
+        }
         #endregion
 
         #region Helper Methods

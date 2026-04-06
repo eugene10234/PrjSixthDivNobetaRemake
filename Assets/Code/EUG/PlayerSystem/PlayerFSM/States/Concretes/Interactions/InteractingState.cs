@@ -1,5 +1,6 @@
 ﻿using Nobeta.EUG.FSM.Core;
 using Nobeta.EUG.Interfaces;
+using Nobeta.Sam.Events;
 using System;
 using System.Net;
 using Unity.Mathematics;
@@ -41,12 +42,12 @@ namespace Nobeta.EUG.FSM.States
             Debug.Log("互動完成！");
 
             // 發布互動完成事件
-            PublishEvent(new InteractionCompletedEvent
+            PublishEvent(new DialogNextEvent
             {
-                InteractableType = "Generic",
-                Position = ctx.Transform.position
+                //InteractableType = "Generic",
+                //Position = ctx.Transform.position
             });
-
+            
             base.OnInteractionComplete();
         }
 

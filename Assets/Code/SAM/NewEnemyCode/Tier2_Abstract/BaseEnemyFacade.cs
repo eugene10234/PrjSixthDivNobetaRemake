@@ -43,7 +43,6 @@ namespace Nobeta.Sam.Enemy
             else if (!Data.isInVinsible)
             { 
                 Data.TakeDamage(amount);
-                if (!Data.isImmuneStagger)
                 StateMachine.OnHit(hitPosition);
             }
         }

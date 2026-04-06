@@ -38,20 +38,20 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
         public BulletConfig IceBall() => new BulletConfig
         {
             Speed = 45f,
-            Damage = 25,
+            Damage = 15,
             ManaCost = 4,
             CoolTime = 0.15f,
             Lifetime = 5f,
             ColliderRadius = 0.15f,
             Type = BulletType.Ice,
-            ChantManaCost = 20,
-            ChantDuration = 5f,
+            ChantManaCost = 100,
+            ChantDuration = 4f,
             SpawnStrategy = SingleSpawnStrategy.Default,
             MovementStrategy = ForwardMovementStrategy.Default,
             // 冰矢：單體 + DoT（凍傷每秒8點，持續3秒）
             DamageStrategy = new CompositeDamageStrategy(
                             SingleDamageStrategy.Default,
-                            new DotDamageStrategy(_eventBus, tickCount: 3, tickInterval: 1f, damagePerTick: 8f)),
+                            new DotDamageStrategy(_eventBus, tickCount: 3, tickInterval: 1f, damagePerTick: 4f)),
         };
         public BulletConfig FireBall() => new BulletConfig
         {
@@ -63,26 +63,26 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             ColliderRadius = 0.3f,
             Type = BulletType.Fire,
             ChantManaCost = 20,
-            ChantDuration = 5f,
+            ChantDuration = 2f,
             // 火球：一次5顆散射 + 拋物線 + 範圍爆炸
             SpawnStrategy = new ShotgunSpawnStrategy(pellets: 9, spreadAngle: 16f),
             MovementStrategy = new ParabolicMovementStrategy(gravity: 0f, launchPitchUp: 0f),
-            DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
+            DamageStrategy = new AoeDamageStrategy(radius: 2f, falloff: 0.6f),
         };
         public BulletConfig LightningStrike() => new BulletConfig
         {
             Speed = 80f,
             Damage = 80,
             ManaCost = 50,
-            CoolTime = 1.25f,
+            CoolTime = 1.15f,
             Lifetime = 4f,
             ColliderRadius = 0.15f,
             Type = BulletType.Lightning,
-            ChantManaCost = 20,
-            ChantDuration = 3f,
+            ChantManaCost = 80,
+            ChantDuration = 2f,
             SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f),
             MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
-            DamageStrategy = SingleDamageStrategy.Default,
+            DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
         };
         public BulletConfig SpecialNormal() => new BulletConfig
         {

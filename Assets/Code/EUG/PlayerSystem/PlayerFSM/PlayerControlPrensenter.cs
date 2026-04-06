@@ -207,7 +207,7 @@ namespace Nobeta.EUG.FSM
         private void HealthManaTimeRecoveryAPI()
         {
             _timeService.TaskDelayLock(HMStartUp_DURATION, (b) => HMStartUpLock = b);
-            RestoreMana(10);
+            RestoreMana(8);
             Heal(2);
         }
         private bool STStartUpLock = false;
@@ -219,11 +219,11 @@ namespace Nobeta.EUG.FSM
             _timeService.TaskDelayLock(STStartUp_DURATION, (b) => STStartUpLock = b);
             if (_context.CurrentSpeedType == typeof(RunningState))
             {
-                _context.ConsumeStamina(1);
+                _context.ConsumeStamina(2);
             }
             else
             {
-                RestoreStamina(6);
+                RestoreStamina(9);
             }
         }
 

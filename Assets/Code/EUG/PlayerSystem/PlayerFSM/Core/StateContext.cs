@@ -139,11 +139,11 @@ namespace Nobeta.EUG.FSM.Core
         private void InitializePlayerStats()
         {
             // 健康和魔力
-            MaxHealth = 500;
+            MaxHealth = 300;
             CurrentHealth = MaxHealth;
             MaxMana = 800;
             CurrentMana = MaxMana;
-            MaxStamina = 400;
+            MaxStamina = 600;
             CurrentStamina = MaxMana;
             // 狀態標記
             CurrentSpeedType = typeof(IdleState);

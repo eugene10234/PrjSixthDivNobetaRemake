@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: gkShield
+  m_Shader: {fileID: 4800000, guid: 11ee9791cccb7b4458f8975889f64f8f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DissolveTex:
+        m_Texture: {fileID: 2800000, guid: ddb7a48c331a2e54c880f46455ec878f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScanlineTex:
+        m_Texture: {fileID: 2800000, guid: ff0f93c8fd7caf24fb1790a295aa30ee, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Alpha: 0.5
+    - _Dissolve: 0
+    - _DissolveEdgeBrightness: 4
+    - _DissolveEdgeWidth: 0.0312
+    - _FadeBias: 0
+    - _FadeStrength: 0
+    - _FresnelIntensity: 4
+    - _FresnelPower: 4.103
+    - _IntersectWidth: 0.3
+    - _InvertFresnel: 0
+    - _PulseIntensity: 1
+    - _PulseSpeed: 5
+    - _ScanlineIntensity: 0.3
+    - _ScanlineScale: 1
+    - _ScanlineSpeed: 0.219
+    - _Visibility: 1
+    m_Colors:
+    - _Color: {r: 0.2776857, g: 0.4316025, b: 2.3547752, a: 1}
+    - _DissolveEdgeColor: {r: 0.831126, g: 11.742672, b: 31.749022, a: 1}
+    - _FadeAxis: {r: 0, g: 1, b: 0, a: 0}
+    - _IntersectColor: {r: 0.31933072, g: 0.76053184, b: 0.9811321, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

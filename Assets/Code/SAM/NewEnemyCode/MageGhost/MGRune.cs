@@ -10,6 +10,7 @@ public class MGRune : MonoBehaviour
     private static readonly int DissolveId = Shader.PropertyToID("_Dissolve");
     private static readonly int SpinSpeedID = Shader.PropertyToID("_RotationSpeed");
     private CancellationTokenSource _cts;
+    private bool isTransparent;
     private float deathduration = 0.8f;
     private void Awake()
     {
@@ -21,70 +22,53 @@ public class MGRune : MonoBehaviour
     {
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
-        PlayActivation(3f).Forget();
+        PlayActivation(3f, _cts.Token).Forget();
     }
 
     public void Hide()
     {
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
-        PlayDeActivation(0.3f).Forget();
+        PlayDeActivation(0.3f, _cts.Token).Forget();
     }
 
-    public async UniTaskVoid PlayDeathSequence()
+    public async UniTaskVoid PlayActivation(float duration, CancellationToken token)
     {
-        if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
-        float elapsed = 0f;
-        while (elapsed < deathduration)
-        {
-            elapsed += Time.deltaTime;
-            float progress = Mathf.Clamp01(elapsed / deathduration);
-            _mr.GetPropertyBlock(_propBlock);
-            _propBlock.SetFloat(DissolveId, progress);
-            _mr.SetPropertyBlock(_propBlock);
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-        }
-    }
-
-    public async UniTaskVoid PlayActivation(float duration)
-    {
+        isTransparent = false;
         if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
         float elapsed = 0f;
         while (elapsed < duration)
         {
+            if (token.IsCancellationRequested) return;
             elapsed += Time.deltaTime;
             float progress = Mathf.Clamp01(elapsed / duration);
             _mr.GetPropertyBlock(_propBlock);
             _propBlock.SetFloat(SpinSpeedID, elapsed);
             _propBlock.SetFloat(AlphaId, progress);
             _mr.SetPropertyBlock(_propBlock);
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
         }
-        isTransparent = false;
     }
 
-    private bool isTransparent;
-    public async UniTaskVoid PlayDeActivation(float duration)
+    public async UniTaskVoid PlayDeActivation(float duration, CancellationToken token)
     {
+        if (isTransparent) return;
         if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
         float elapsed = 0f;
-        if (isTransparent) return;
         while (elapsed < duration)
         {
+            if (token.IsCancellationRequested) return;
             elapsed += Time.deltaTime;
             float progress = Mathf.Clamp01(1 - (elapsed / duration));
-
             _mr.GetPropertyBlock(_propBlock);
-            _propBlock.SetFloat(SpinSpeedID, (3-elapsed));
+            _propBlock.SetFloat(SpinSpeedID, (3 - elapsed));
             _propBlock.SetFloat(AlphaId, progress);
             _mr.SetPropertyBlock(_propBlock);
-
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
         }
-        // Ensure it lands exactly at 0
         _mr.GetPropertyBlock(_propBlock);
         _propBlock.SetFloat(AlphaId, 0f);
-        isTransparent = true;
         _mr.SetPropertyBlock(_propBlock);
+        isTransparent = true;
     }
 }

@@ -15,7 +15,7 @@ namespace Nobeta.Sam.Enemy
     /// </summary>
     public class MageGhostData : BaseEnemyData
     {
-        public string Name = "妒忌的黑夜生骸";
+        public string Name = "憎恨的黑夜生魂";
         public string Reward = "雷擊魔法";
 
         [Inject]

@@ -6,7 +6,7 @@ namespace Nobeta.Sam.Enemy
 
     public class FDData : BaseEnemyData
     {
-        public string Name = "憤怒的烈焰生骸";
+        public string Name = "憤怒的烈焰生魂";
         public string Reward = "烈火魔法";
         
         [Inject]

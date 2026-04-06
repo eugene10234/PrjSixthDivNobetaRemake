@@ -8,25 +8,27 @@ public class SGRune : MonoBehaviour
     private MaterialPropertyBlock _propBlock;
     private static readonly int AlphaId = Shader.PropertyToID("_Alpha");
     private static readonly int DissolveId = Shader.PropertyToID("_Dissolve");
+    private static readonly int SpinSpeedID = Shader.PropertyToID("_RotationSpeed");
     private CancellationTokenSource _cts;
     private float deathduration = 0.8f;
     private void Awake()
     {
         _mr = GetComponent<MeshRenderer>();
+        Hide();
     }
 
     public void Show()
     {
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
-        PlayActivation(0.3f).Forget();
+        PlayActivation(0.3f, _cts.Token).Forget();
     }
 
     public void Hide()
     {
         _cts?.Cancel();
         _cts = new CancellationTokenSource();
-        PlayDeActivation(0.3f).Forget();
+        PlayDeActivation(0.3f, _cts.Token).Forget();
     }
 
     public async UniTaskVoid PlayDeathSequence()
@@ -44,7 +46,7 @@ public class SGRune : MonoBehaviour
         }
     }
 
-    public async UniTaskVoid PlayActivation(float duration)
+    public async UniTaskVoid PlayActivation(float duration, CancellationToken token)
     {
         if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
         float elapsed = 0f;
@@ -54,12 +56,13 @@ public class SGRune : MonoBehaviour
             float progress = Mathf.Clamp01(elapsed / duration); 
             _mr.GetPropertyBlock(_propBlock);
             _propBlock.SetFloat(AlphaId, progress);
+            _propBlock.SetFloat(SpinSpeedID, elapsed);
             _mr.SetPropertyBlock(_propBlock);
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
         }
     }
 
-    public async UniTaskVoid PlayDeActivation(float duration)
+    public async UniTaskVoid PlayDeActivation(float duration, CancellationToken token)
     {
         if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
 
@@ -71,9 +74,10 @@ public class SGRune : MonoBehaviour
 
             _mr.GetPropertyBlock(_propBlock);
             _propBlock.SetFloat(AlphaId, progress);
+            _propBlock.SetFloat(SpinSpeedID, (3 - elapsed));
             _mr.SetPropertyBlock(_propBlock);
 
-            await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
         }
         // Ensure it lands exactly at 0
         _mr.GetPropertyBlock(_propBlock);

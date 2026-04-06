@@ -55,6 +55,10 @@ namespace Nobeta.Sam.Enemy
         [SerializeField] private SGLifetimeScope _sgScopePrefab;
         [SerializeField] private SmallGhostSpawner _sgspawner;
 
+        [Header("Ghost King")]
+        [SerializeField] private GKLifetimeScope _gkScopePrefab;
+        [SerializeField] private GKSpawner _gkSpawner;
+
         [Header("EnemyBulletSystemRoot")]
         [SerializeField] private EnemyBulletSystemRoot _enemyBulletSystemRoot;
 
@@ -111,6 +115,10 @@ namespace Nobeta.Sam.Enemy
                 .WithParameter(_sgScopePrefab)
                 .As<IEnemyFactory<SmallGhost>>()
                 .AsSelf();
+
+            builder.Register<GhostKingFactory>(Lifetime.Singleton)
+                .WithParameter(_gkScopePrefab)
+                .As<IEnemyFactory<GhostKing>>();
             // ── Spawner ───────────────────────────────────────────────────────
             // RegisterComponent because BigGhostSpawner is a MonoBehaviour.
             // AsImplementedInterfaces picks up IEnemySpawner or any other
@@ -130,6 +138,11 @@ namespace Nobeta.Sam.Enemy
             builder.RegisterComponent(_mgSpawner)
                   .AsSelf()
                   .AsImplementedInterfaces();
+            // GKSpawner: registered but NOT auto-started — OnReady is a no-op.
+            // Your arena interaction point calls GKSpawner.SpawnAt() directly.
+            builder.RegisterComponent(_gkSpawner)
+                   .AsSelf()
+                   .AsImplementedInterfaces();
         }
     }
 }

@@ -114,6 +114,12 @@ namespace Nobeta.Sam.Enemy
         }
         public SmallGhost Create(Vector3 position, Quaternion rotation)
         {
+            if (_prefabScope == null)
+                throw new InvalidOperationException(
+                    "[SmallGhostFactory] _prefabScope is null. " +
+                    "Check that SGLifetimeScope prefab is assigned in EnemyManager inspector.");
+            bool wasActive = _prefabScope.gameObject.activeSelf;
+            if (!wasActive) _prefabScope.gameObject.SetActive(true);
             var scopedInstance = _parentScope.CreateChildFromPrefab(_prefabScope);
             try
             {
@@ -124,6 +130,34 @@ namespace Nobeta.Sam.Enemy
             catch (Exception e)
             {
                 Debug.LogError($"Failed to resolve SmallGhost: {e}");
+                throw;
+            }
+        }
+    }
+    public class GhostKingFactory : IEnemyFactory<GhostKing>
+    {
+        private EnemyManager _parentScope;
+        private GKLifetimeScope _prefabScope;
+
+        [Inject]
+        public GhostKingFactory(EnemyManager parentScope, GKLifetimeScope prefabScope)
+        {
+            _parentScope = parentScope;
+            _prefabScope = prefabScope;
+        }
+
+        public GhostKing Create(Vector3 position, Quaternion rotation)
+        {
+            var scopedInstance = _parentScope.CreateChildFromPrefab(_prefabScope);
+            try
+            {
+                var gk = scopedInstance.Container.Resolve<GhostKing>();
+                gk.transform.SetPositionAndRotation(position, rotation);
+                return gk;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to resolve GhostKing: {e}");
                 throw;
             }
         }
