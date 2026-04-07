@@ -57,14 +57,12 @@ public class RigChantController : MonoBehaviour
 
         ChantEnd();
     }
-
     private void ChantEnd()
     {
         if (isChanting == false) return;
         isChanting = false;
         RigChantTweening(0f, Ease.Linear);
     }
-
     private void RigChantTweening(float target, Ease easeType)
     {
         if (DOTween.IsTweening(rigChant)) DOTween.Kill(rigChant);
@@ -77,15 +75,6 @@ public class RigChantController : MonoBehaviour
                    _playerAnimator.SetLayerWeight(3, rigChant.weight);
                });
     }
-
-
-    private void OnChanfsfsftStart()
-    {
-        DOTween.To(() => rigChant.weight, x => rigChant.weight = x, 1f, HandChant_Duration)
-                       .SetEase(Ease.Linear)
-                       .SetUpdate(UpdateType.Normal, false)
-                       .SetId(this);
-    }
     private void OnPlayerLiveStateChange(PlayerLiveStateEvent evt)
     {
         isPlayerLive = evt.IsLive;
@@ -96,8 +85,6 @@ public class RigChantController : MonoBehaviour
         isRigTargetLive = evt.IsRigTargetLive;
         if (isRigTargetLive) ChantEnd();
     }
-    private void OnChantStart() { isChanting = true; /*OnProgress();*/ }
-    private void OnChantEnd() { isChanting = false; /*OnProgress();*/ }
     private void SubscribeEvents()
     {
         _eventBus.Subscribe<PlayerLiveStateEvent>(OnPlayerLiveStateChange);
