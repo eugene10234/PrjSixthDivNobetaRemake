@@ -7,7 +7,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
 {
     public abstract class DamageStrategyBase : IDamageStrategy
     {
-        public IDamageStrategy Clone()
+        public virtual IDamageStrategy Clone()
         {
             return (IDamageStrategy)MemberwiseClone();
         }

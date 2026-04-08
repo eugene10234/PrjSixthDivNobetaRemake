@@ -29,6 +29,16 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             //    _eventBus = EventBusProvider.GlobalEventBus;
             //}
         }
+        public BulletConfig(IEventBus eventBus)
+        {
+            _eventBus = eventBus;
+
+            //// 預設使用全局事件總線（如果有的話）
+            //if (_eventBus == null && EventBusProvider.GetEventBus != null)
+            //{
+            //    _eventBus = EventBusProvider.GlobalEventBus;
+            //}
+        }
 
         public void SetIEventBus(IEventBus eventBus) => _eventBus = eventBus;
 

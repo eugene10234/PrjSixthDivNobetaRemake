@@ -247,8 +247,7 @@ namespace Nobeta.EUG.FSM.Core
             UnsubscribeAPIEvents();
         }
         private void SubscribeInputEvents()
-        {
-            //Debug.LogWarning("SubscribeToInputEvents");
+        {       
             _inputService.OnMove += HandleMoveInput;
             _inputService.OnStop += HandleStopInput;
             _inputService.OnJump += HandleJumpInput;

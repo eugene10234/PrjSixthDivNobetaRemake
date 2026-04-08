@@ -11,9 +11,9 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
 {
     public class PlayerWeaponSystemV2 : MonoBehaviour
     {
-        [SerializeField] private BulletSystemBridgeV2 _bulletSystem;
+        //[SerializeField] private BulletSystemBridgeV2 _bulletSystem;
         [SerializeField] private Transform _firePoint;
-
+        [Inject] private BulletSystemPresenterV2 _bulletSystem;
         [Inject] private IPlayerInputService _inputService;
         [Inject] private ICameraService _cameraService;
         [Inject] private IEventBus _eventBus;
@@ -72,10 +72,10 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         private void OnIceFire(PlayerWeaponFireEvent evt)
         {
             // 冰矢：直線 + 冰凍 DoT
-            if (!evt.IsSpecial)
-                _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.IceBall), _firePoint.position, GetAimDirection());
+            if (evt.IsSpecial)
+                StartAutoIceball(); //_bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.IceBall), _firePoint.position, GetAimDirection());
             else
-                StartAutoIceball();
+                StartArcaneSupernova(); //StartAutoIceball();
         }
 
         private void OnFireBallFire(PlayerWeaponFireEvent evt)
@@ -84,7 +84,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             if (!evt.IsSpecial)
                 _bulletSystem.Fire(_bulletConfigs.Get(WeaponConfigType.FireBall), _firePoint.position, GetAimDirection());
             else
-                StartAutoFireball();
+                StartAutoFireball(); //StartArcaneSupernova(); //StartAutoFireball();
         }
 
         private void OnSniperFire(PlayerWeaponFireEvent evt)
@@ -208,6 +208,107 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
             {
                 StopAutoLightning();
             }).SetUpdate(UpdateType.Normal, false);
+        }
+        public void StartArcaneSupernova()
+        {
+            // ═══════════════════════════════════════════
+            // 第一段：召喚「魔力核心」
+            // 1顆超慢速大球飄向目標，邊飛邊旋轉
+            // ═══════════════════════════════════════════
+            var arcaneCoreConfig = new BulletConfig(_eventBus)
+            {
+                Speed = 8f,
+                Damage = 0,           // 核心本身不傷，只是載體
+                Lifetime = 2.5f,
+                ColliderRadius = 0.8f,
+                Type = BulletType.Lightning,
+                SpawnStrategy = SingleSpawnStrategy.Default,
+                MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.5f, frequency: 2f),
+                DamageStrategy = new OnExpireSpawnStrategy(  // ✨ 到期時爆炸生成下一波
+                    _bulletSystem,
+                    originGetter: self => self.Position,
+                    configGetter: self => CreateNovaRingConfig(self.Position)
+                ),
+            };
+
+            _bulletSystem.Fire(arcaneCoreConfig, _firePoint.position, GetAimDirection());
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // 第二段：核心爆炸 → 12顆追蹤冰矢放射狀散開
+        // ═══════════════════════════════════════════════════════
+        private BulletConfig CreateNovaRingConfig(Vector3 origin)
+        {
+            return new BulletConfig(_eventBus)
+            {
+                Speed = 30f,
+                Damage = 20,
+                Lifetime = 3f,
+                ColliderRadius = 0.2f,
+                Type = BulletType.Ice,
+                SpawnStrategy = new CircleSpawnStrategy(count: 12, pitchAngle: 180f), // 12顆圓形散開
+                MovementStrategy = new CompositeMovementStrategy(
+                    new AutoHomingMovementStrategy(turnSpeed: 180f),  // 先追蹤
+                    new SinWaveMovementStrategy(amplitude: 0.3f, frequency: 6f) // 加上波動
+                ),
+                DamageStrategy = new CompositeDamageStrategy(
+                    new SingleDamageStrategy(),
+                    new DotDamageStrategy(_eventBus, tickCount: 4, tickInterval: 0.5f, damagePerTick: 5f),
+                    new OnHitSpawnStrategy(          // ✨ 擊中時生成下一波
+                        _bulletSystem,
+                        configGetter: hit => CreateLightningChainConfig(hit.Point)
+                    )
+                ),
+            };
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // 第三段：冰矢命中 → 每個命中點爆出3顆閃電鏈
+        // ═══════════════════════════════════════════════════════
+        private BulletConfig CreateLightningChainConfig(Vector3 origin)
+        {
+            return new BulletConfig(_eventBus)
+            {
+                Speed = 60f,
+                Damage = 35,
+                Lifetime = 1.5f,
+                ColliderRadius = 0.15f,
+                Type = BulletType.Lightning,
+                SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 45f),
+                MovementStrategy = new CompositeMovementStrategy(
+                    new AutoHomingMovementStrategy(turnSpeed: 360f),   // 強力追蹤
+                    new ZigZagMovementStrategy(angle: 30f, interval: 0.1f) // 閃電折射感
+                ),
+                DamageStrategy = new CompositeDamageStrategy(
+                    new AoeDamageStrategy(radius: 2f, falloff: 0.5f),  // 小範圍電擊
+                    new OnHitSpawnStrategy(
+                        _bulletSystem,
+                        maxChainDepth: 2,            // ✨ 最多再連鎖2次，防止無限遞迴
+                        configGetter: hit => CreateFinalBlastConfig(hit.Point)
+                    )
+                ),
+            };
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // 第四段（終）：閃電鏈終點 → 小型火焰爆炸收尾
+        // ═══════════════════════════════════════════════════════
+        private BulletConfig CreateFinalBlastConfig(Vector3 origin)
+        {
+            return new BulletConfig(_eventBus)
+            {
+                Speed = 0.1f,
+                Damage = 15,
+                Lifetime = 0.1f,     // 幾乎瞬間爆炸
+                ColliderRadius = 3f, // 大碰撞範圍
+                Type = BulletType.Fire,
+                SpawnStrategy = new SkyRadiusSpawnStrategy(pellets: 6, radius: 2f, height: 0f),
+                MovementStrategy = ForwardMovementStrategy.Default,
+                DamageStrategy = new CompositeDamageStrategy(
+                    new AoeDamageStrategy(radius: 3f, falloff: 0.3f),
+                    new DotDamageStrategy(_eventBus, tickCount: 3, tickInterval: 1f, damagePerTick: 10f)
+                ),
+            };
         }
         // ── 燃燒彈範例（手動調用）────────────────────────────────────────
         public void StopAutoLightning()

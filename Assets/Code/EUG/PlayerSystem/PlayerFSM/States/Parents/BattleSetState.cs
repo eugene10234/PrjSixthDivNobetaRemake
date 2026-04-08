@@ -23,8 +23,6 @@ namespace Nobeta.EUG.FSM.States
         {
             base.Enter();
             SetBulletFunc((int)ctx.CurrentBulletConfig.Type + 1);
-            //TypePT();
-            //TypeAR();
         }
 
         public virtual void Update()
@@ -34,22 +32,41 @@ namespace Nobeta.EUG.FSM.States
 
         public virtual void DetectionHandler()
         {
+            WeaponDetectionRoutine();
+            GroundDectionRoutine();
+        }
+        private void WeaponDetectionRoutine()
+        {
             if (IsAutoFiring) _isTriggeringAttack = ctx.InputService.IsFirePressed;
             else _isTriggeringAttack = false;
-            if (IsAutoFiring && _isTriggeringAttack)
-            {
-                ctx.CommandFire();
-            }
-            GroundDectionRoutine();
-
+            if (IsAutoFiring && _isTriggeringAttack) { ctx.CommandFire(); }
         }
-        //private void MagicHandler()
-        //{
-        //    _isTriggeringAttack = ctx.InputService.IsFirePressed;
-        //    if (!_isTriggeringAttack) return;
-        //    ctx.FireMagic();
+        private void GroundDectionRoutine()
+        {
+            BaseState CurState = stateMachine.CurrentState;
+            if (typeof(AerialState).IsAssignableFrom(CurState.GetType())) return;
+            if (ctx.Detection.IsGrounded)
+            {
+                // 給予一個微小的向下力，確保檢測器能持續觸碰地面
+                ctx.MovementService.SetVerticalVelocity(-2f);
+            }
+            else
+            {
+                float timeSinceGrounded = Time.time - ctx.Detection.LastGroundedTime;
 
-        //}
+                // 關鍵：除了時間，還要檢查下方是否真的「空無一物」
+                bool isFarFromGround = !ctx.Detection.CheckGroundBelow(1f);
+                // 2. 如果不在地面，判斷是「真的在掉落」還是「只是下坡」
+                if (timeSinceGrounded > 0.15f && isFarFromGround)
+                {
+                    // 只有當垂直速度明顯向下，且下方沒有近距離地面時，才進入 FallingState
+                    if (ctx.MovementService.CurrentVelocity.y < -2.5f)
+                    {
+                        stateMachine.ChangeState<FallingState>();
+                    }
+                }
+            }
+        }
         #region Common Input Handlers
         private bool _isTriggeringAttack = false;
         private Action? _inOnFireStart;
@@ -118,38 +135,7 @@ namespace Nobeta.EUG.FSM.States
             }
         }
         #endregion
-        private void GroundDectionRoutine()
-        {
-            BaseState CurState = stateMachine.CurrentState;
-            if (typeof(AerialState).IsAssignableFrom(CurState.GetType())) return;
-            //PublishEvent(new InteractEreaEnterEvent
-            //{
-            //    //InteractObj = this,
-            //    Message = $"timeSinceG{timeSinceGrounded>0.15} || isFFGrd{isFarFromGround}"
-            //});
-            if (ctx.Detection.IsGrounded)
-            {
-                // 給予一個微小的向下力，確保檢測器能持續觸碰地面
-                ctx.MovementService.SetVerticalVelocity(-2f);
-            }
-            else
-            {
-                float timeSinceGrounded = Time.time - ctx.Detection.LastGroundedTime;
-
-                // 關鍵：除了時間，還要檢查下方是否真的「空無一物」
-                bool isFarFromGround = !ctx.Detection.CheckGroundBelow(1f);
-                // 2. 如果不在地面，判斷是「真的在掉落」還是「只是下坡」
-
-                if (timeSinceGrounded > 0.15f && isFarFromGround)
-                {
-                    // 只有當垂直速度明顯向下，且下方沒有近距離地面時，才進入 FallingState
-                    if (ctx.MovementService.CurrentVelocity.y < -2.5f)
-                    {
-                        stateMachine.ChangeState<FallingState>();
-                    }
-                }
-            }
-        }
+        
 
         #region Helper Methods
 

@@ -17,12 +17,11 @@ namespace Nobeta.EUG.MBFunctions.Interacts
         private IEventBus _eventBus;
         private bool _canInteract;
         private Collider _collider;
-        protected IEventBus EventBus { get => _eventBus; }
-        protected Collider Collider { get => _collider; }
-
         protected LayerMask layerMask;
         protected bool CanAttack;
         protected bool IsWeaponInteracted;
+        protected IEventBus EventBus { get => _eventBus; }
+        protected Collider Collider { get => _collider; }
         public abstract string InteractableName { get; }
         public abstract float InteractionDuration { get; }
         public abstract bool ReInteractable { get; }

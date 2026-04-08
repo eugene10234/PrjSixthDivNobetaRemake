@@ -116,7 +116,7 @@ public class RigHeadTargetController : MonoBehaviour
 
             targetYaw = Mathf.Clamp(targetYaw, minYaw, maxYaw);
             targetPitch = Mathf.Clamp(targetPitch, minPitch, maxPitch);
-            target2222.localPosition = GetCustomTwoBoneIKValue(targetYaw);
+            target2222.localPosition = GetCustomValue(targetYaw);
             targetYaw = targetYaw * 1.28f;
             currentSmooth = smoothTime;
         }
@@ -162,7 +162,7 @@ public class RigHeadTargetController : MonoBehaviour
     /// </summary>
     /// <param name="yaw">輸入的角度 (-180 到 180)</param>
     /// <returns>輸出的數值 (-0.36 到 0.36)</returns>
-    public Vector3 GetCustomTwoBoneIKValue(float yaw)
+    public Vector3 GetCustomValue(float yaw)
     {
         //Debug.Log($"GetCustomValue called with yaw: {yaw}");
         // 確保輸入在 -180 到 180 之間

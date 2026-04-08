@@ -67,7 +67,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             // 火球：一次5顆散射 + 拋物線 + 範圍爆炸
             SpawnStrategy = new ShotgunSpawnStrategy(pellets: 9, spreadAngle: 16f),
             MovementStrategy = new ParabolicMovementStrategy(gravity: 0f, launchPitchUp: 0f),
-            DamageStrategy = new AoeDamageStrategy(radius: 2f, falloff: 0.6f),
+            DamageStrategy = new AoeDamageStrategy(radius: 4f, falloff: 0.6f),
         };
         public BulletConfig LightningStrike() => new BulletConfig
         {
@@ -82,7 +82,7 @@ namespace Nobeta.EUG.BulletSystemV2.OOP
             ChantDuration = 2f,
             SpawnStrategy = new BurstSpawnStrategy(count: 3, spreadAngle: 0.2f),
             MovementStrategy = new SinWaveMovementStrategy(amplitude: 0.35f, frequency: 5f),   // 閃電帶點波動
-            DamageStrategy = new AoeDamageStrategy(radius: 3f, falloff: 0.6f),
+            DamageStrategy = new AoeDamageStrategy(radius: 6f, falloff: 0.6f),
         };
         public BulletConfig SpecialNormal() => new BulletConfig
         {

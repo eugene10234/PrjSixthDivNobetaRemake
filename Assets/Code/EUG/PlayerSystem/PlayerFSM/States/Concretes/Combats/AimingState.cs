@@ -60,7 +60,7 @@ namespace Nobeta.EUG.FSM.States
             //        context.Transform.position + context.Transform.forward);
             //    //_debugServiceMb.ClearGiz();
             //});
-            Vector3 currentVelocity = ctx.MovementService.CurrentVelocity;
+            //Vector3 currentVelocity = ctx.MovementService.CurrentVelocity;
             //_debugServiceMb.Add(DrawDebugInfo);
         }
         private void DrawDebugInfo()

@@ -26,12 +26,6 @@ namespace Nobeta.EUG.BulletSystemV2.OOP.UnityBridge
         public Stack<GameObject> TrailRender = new Stack<GameObject>();
         public Stack<GameObject> HitEffect = new Stack<GameObject>();
         
-        //public BulletVisualPoolData()
-        //{
-        //    BulletVisual = new Stack<GameObject>();
-        //    Muzzle = new Stack<GameObject>();
-        //    Trail = new Stack<GameObject>();
-        //}
         public BulletVisualPoolData(BulletVFXConfig cfg, Transform visualRoot)
         {
             config = cfg;
