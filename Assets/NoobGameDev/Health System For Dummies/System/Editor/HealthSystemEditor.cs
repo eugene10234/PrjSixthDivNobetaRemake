@@ -1,14 +1,14 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(HealthSystemForDummies))]
+[CustomEditor(typeof(MYHealthSystemForDummies))]
 [CanEditMultipleObjects]
 public class HealthSystemEditor : Editor
 {
     float currentHealthPercentage;
 
     // Caches
-    HealthSystemForDummies healthSystem;
+    MYHealthSystemForDummies healthSystem;
 
     SerializedProperty maximumHealth;
     SerializedProperty currentHealth;
@@ -26,7 +26,7 @@ public class HealthSystemEditor : Editor
 
     void OnEnable()
     {
-        healthSystem = target as HealthSystemForDummies;
+        healthSystem = target as MYHealthSystemForDummies;
         gameObject = healthSystem.gameObject;
 
         maximumHealth = serializedObject.FindProperty("MaximumHealth");

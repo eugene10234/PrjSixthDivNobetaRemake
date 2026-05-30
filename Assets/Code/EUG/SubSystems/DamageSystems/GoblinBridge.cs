@@ -10,11 +10,11 @@ namespace Assets.Code.EUG.AANEW.Temp
     public class GoblinBridge: EnemyProvider
     {
 
-        private HealthSystemForDummies _dummy;
+        private MYHealthSystemForDummies _dummy;
         //private Goblin _goblin;
         private void Awake()
         {
-            _dummy = GetComponent<HealthSystemForDummies>();
+            _dummy = GetComponent<MYHealthSystemForDummies>();
         }
 
         public override void TakeDamage(float amount, Vector3 position)

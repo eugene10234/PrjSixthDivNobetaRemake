@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SmoothingToggle : MonoBehaviour
 {
-    [SerializeField] HealthSystemForDummies healthSystem;
+    [SerializeField] MYHealthSystemForDummies healthSystem;
 
     // Caches
     Toggle toggle;

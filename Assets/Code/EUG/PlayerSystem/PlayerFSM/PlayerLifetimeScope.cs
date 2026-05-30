@@ -16,26 +16,11 @@ public class PlayerLifetimeScope : LifetimeScope
     [Header("組件")]
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Animator animator;
-    //[Header("除錯選項")]
-    //[SerializeField] private bool showDebugInfo = true;
-    //[SerializeField] private bool logStateTransitions = true;
+    private int InstanceID;
+
     protected override void Awake()
     {
-        // 驗證配置
-        if (playerConfig == null)
-        {
-            Debug.LogError("PlayerConfig 未設置！");
-        }
-
-        if (characterController == null)
-        {
-            characterController = GetComponent<CharacterController>();
-        }
-
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
+        InstanceID = gameObject.GetInstanceID();
 
         base.Awake();
     }

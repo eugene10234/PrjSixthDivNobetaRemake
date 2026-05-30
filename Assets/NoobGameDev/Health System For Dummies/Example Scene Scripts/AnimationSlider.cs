@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class AnimationSlider : MonoBehaviour
 {
-    [SerializeField] HealthSystemForDummies healthSystem;
+    [SerializeField] MYHealthSystemForDummies healthSystem;
 
     // Caches
     Slider slider;

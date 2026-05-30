@@ -2,10 +2,12 @@
 // EventBusProvider - EventBus 提供者（單例）
 // ========================================================================
 
+using Cysharp.Threading.Tasks;
 using Nobeta.EUG.Interfaces;
 using Nobeta.EUG.Services;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 using VContainer;
@@ -40,7 +42,11 @@ public class EventBusProvider : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    public static async UniTask<IEventBus> GetEventBusAsync()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(1000));
+        return instance?.eventBus;
+    }
     public static IEventBus GetEventBus()
     {
         return instance?.eventBus;

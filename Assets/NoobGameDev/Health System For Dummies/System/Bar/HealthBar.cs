@@ -13,14 +13,14 @@ public class HealthBar : MonoBehaviour
     float leftoverAmount = 0f;
 
     // Caches
-    HealthSystemForDummies healthSystem;
+    MYHealthSystemForDummies healthSystem;
     Image image;
     Text text;
     FollowCameraRotation followCameraRotation;
 
     private void Start()
     {
-        healthSystem = GetComponentInParent<HealthSystemForDummies>();
+        healthSystem = GetComponentInParent<MYHealthSystemForDummies>();
         image = GetComponentInChildren<Image>();
         text = GetComponentInChildren<Text>();
         followCameraRotation = GetComponent<FollowCameraRotation>();
@@ -45,7 +45,7 @@ public class HealthBar : MonoBehaviour
 
     private void ChangeHealthFill(CurrentHealth currentHealth)
     {
-        if (!healthSystem.HasAnimationWhenHealthChanges) return;
+        //if (!healthSystem.HasAnimationWhenHealthChanges) return;
 
         StopAllCoroutines();
         StartCoroutine(ChangeFillAmount(currentHealth));
